@@ -3,9 +3,9 @@
     <template>
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="纸质书录入" name="first">
-          <el-form :model="book" :rules="bookRules" ref="bookRuleFor" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="书籍名称" prop="name">
-              <el-input v-model="book.name"></el-input>
+          <el-form :model="book" :rules="bookRules" ref="bookRuleForm" label-width="100px" class="demo-ruleForm">
+            <el-form-item label="书籍名称" prop="bookName">
+              <el-input v-model="book.bookName"></el-input>
             </el-form-item>
             <el-form-item label="书籍作者" prop="author">
               <el-input v-model="book.author"></el-input>
@@ -14,10 +14,10 @@
               <el-input v-model="book.published"></el-input>
             </el-form-item>
             <el-form-item label="书籍价格" prop="price">
-              <el-input v-model="book.price"></el-input>
+              <el-input v-model.number="book.price"></el-input>
             </el-form-item>
-            <el-form-item label="书籍状态" prop="status">
-              <el-select v-model="book.status" placeholder="请选择书籍状态">
+            <el-form-item label="书籍状态" prop="bookStatus">
+              <el-select v-model="book.bookStatus" placeholder="请选择书籍状态">
                 <el-option label="在库" value="在库"></el-option>
                 <el-option label="借出" value="借出"></el-option>
                 <el-option label="损坏" value="损坏"></el-option>
@@ -34,34 +34,32 @@
             </el-form-item>      
             <el-form-item label="书籍封面" prop="img">
               <el-upload
-                class="upload-demo"
+                :multiple="false"
                 action="https://jsonplaceholder.typicode.com/posts/"
-                :on-preview="handlePreview"
-                :on-remove="handleRemove"
-                :before-remove="beforeRemove"
-                multiple
-                :limit="3"
-                :on-exceed="handleExceed"
-                :file-list="fileList">
-                <el-button size="small" type="primary">上传封面</el-button>
-                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                list-type="picture-card"
+                :on-preview="handlePictureCardPreview"
+                :on-remove="handleRemove">
+                <i class="el-icon-plus"></i>
               </el-upload>
+              <el-dialog :visible.sync="dialogVisible">
+                <img width="100%" :src="dialogImageUrl" alt="">
+              </el-dialog>
             </el-form-item>
-            <el-form-item label="书籍描述" prop="desc">
+            <el-form-item label="书籍描述" prop="bookDescribe">
               <el-input :rows="4" maxlength="100"
-                  show-word-limit type="textarea" v-model="book.desc"
+                  show-word-limit type="textarea" v-model="book.bookDescribe"
                   style="width: 500px"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="submitForm('bookRuleFor')">立即创建</el-button>
-              <el-button @click="resetForm('bookRuleFor')">重置</el-button>
+              <el-button type="primary" @click="submitForm('bookRuleForm')">立即创建</el-button>
+              <el-button @click="resetForm('bookRuleForm')">重置</el-button>
             </el-form-item>
           </el-form>
         </el-tab-pane>
           <el-tab-pane label="电子书录入" name="second">
             <el-form :model="ebook" :rules="ebookRules" ref="ebookRuleForm" label-width="100px" class="demo-ruleForm">
-              <el-form-item label="书籍名称" prop="name">
-                <el-input v-model="ebook.name"></el-input>
+              <el-form-item label="书籍名称" prop="bookName">
+                <el-input v-model="ebook.bookName"></el-input>
               </el-form-item>
               <el-form-item label="书籍作者" prop="author">
                 <el-input v-model="ebook.author"></el-input>
@@ -101,9 +99,9 @@
                   <el-button size="small" type="primary">上传文件</el-button>           
                 </el-upload>
               </el-form-item>
-              <el-form-item label="书籍描述" prop="desc">
+              <el-form-item label="书籍描述" prop="bookDescribe">
                 <el-input :rows="4" maxlength="100"
-                    show-word-limit type="textarea" v-model="ebook.desc"
+                    show-word-limit type="textarea" v-model="ebook.bookDescribe"
                     style="width: 500px"></el-input>
               </el-form-item>
               <el-form-item>
@@ -118,31 +116,32 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data () {
     return {
       activeName: 'first',
       fileList: [],
       book: {
-        name: '',
+        bookName: '',
         author: '',
         published: '',
         price: '',
-        status: '',
+        bookStatus: '',
         inputTime: '',
         category: '',
-        desc: ''
+        bookDescribe: ''
       },
       ebook: {
-        name: '',
+        bookName: '',
         author: '',
         published: '',
         category: '',
         locationg: '',
-        desc: ''
+        bookDescribe: ''
       },
       bookRules: {
-        name: [
+        bookName: [
           { required: true, message: '请输入书籍名称', trigger: 'blur' },
           { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
         ],
@@ -162,14 +161,14 @@ export default {
           { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
         ],
         category: [
-          { type: 'array', required: true, message: '请至少选择类别', trigger: 'change' }
+         
         ],
-        desc: [
+        bookDescribe: [
           { required: true, message: '请填写书籍描述', trigger: 'blur' }
         ]
       },
       ebookRules: {
-        name: [
+        bookName: [
           { required: true, message: '请输入书籍名称', trigger: 'blur' },
           { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
         ],
@@ -178,22 +177,36 @@ export default {
           { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
         ],
         category: [
-          { type: 'array', required: true, message: '请至少选择类别', trigger: 'change' }
+          // { type: 'array', required: true, message: '请至少选择类别', trigger: 'change' }
         ],
-        desc: [
+        bookDescribe: [
           { required: true, message: '请填写书籍描述', trigger: 'blur' }
         ]
-      }
+      },
+      dialogImageUrl: '',
+      dialogVisible: false
     }
   },
   methods: {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          if(formName == 'bookRuleForm'){
+            this.addBook(this.book)
+          } else {
+            this.addBook(this.ebook)
+          }
         } else {
-          console.log('error submit!!')
           return false;
+        }
+      })
+    },
+    addBook(book){
+      axios.post('/book',book).then(res => {
+        if(res.data.code == 200){
+          this.$message(res.data.message);
+        } else {
+          this.$message.error(res.data.message);
         }
       })
     },
