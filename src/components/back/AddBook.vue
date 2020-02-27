@@ -18,9 +18,9 @@
             </el-form-item>
             <el-form-item label="书籍状态" prop="bookStatus">
               <el-select v-model="book.bookStatus" placeholder="请选择书籍状态">
-                <el-option label="在库" value="在库"></el-option>
-                <el-option label="借出" value="借出"></el-option>
-                <el-option label="损坏" value="损坏"></el-option>
+                <el-option label="在库" value="0"></el-option>
+                <el-option label="借出" value="1"></el-option>
+                <el-option label="损坏" value="2"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="入馆时间">
@@ -31,19 +31,18 @@
             <el-form-item label="书籍分类" prop="category">
               <el-select v-model="book.category" placeholder="请选择书籍分类">
               </el-select>
-            </el-form-item>      
+            </el-form-item>
             <el-form-item label="书籍封面" prop="img">
               <el-upload
                 :multiple="false"
-                action="https://jsonplaceholder.typicode.com/posts/"
+                :action="server_URL"
                 list-type="picture-card"
-                :on-preview="handlePictureCardPreview"
-                :on-remove="handleRemove">
+                :class="{disabled:uploadBookImgDisabled}"
+                :on-remove="handleBookImgRemove"
+                :on-success="handleBookImgUploadSuccess"
+                :before-upload="beforeBookImgUpload">
                 <i class="el-icon-plus"></i>
               </el-upload>
-              <el-dialog :visible.sync="dialogVisible">
-                <img width="100%" :src="dialogImageUrl" alt="">
-              </el-dialog>
             </el-form-item>
             <el-form-item label="书籍描述" prop="bookDescribe">
               <el-input :rows="4" maxlength="100"
@@ -70,56 +69,55 @@
               <el-form-item label="书籍分类" prop="category">
                 <el-select v-model="ebook.category" placeholder="请选择书籍分类">
                 </el-select>
-              </el-form-item>      
+              </el-form-item>
               <el-form-item label="书籍封面" prop="img">
                 <el-upload
-                  class="upload-demo"
-                  action="https://jsonplaceholder.typicode.com/posts/"
-                  :on-preview="handlePreview"
-                  :on-remove="handleRemove"
-                  :before-remove="beforeRemove"
-                  multiple
-                  :limit="3"
-                  :on-exceed="handleExceed"
-                  :file-list="fileList">
-                  <el-button size="small" type="primary">上传封面</el-button>
+                  :action="server_URL"
+                  list-type="picture-card"
+                  :class="{disabled:uploadEbookImgDisabled}"
+                  :on-remove="handleEbookImgRemove"
+                  :on-success="handleEbookImgUploadSuccess"
+                  :before-upload="beforeEbookImgUpload"
+                  >
+                  <i class="el-icon-plus"></i>
                 </el-upload>
               </el-form-item>
               <el-form-item label="书籍文件" prop="location">
                 <el-upload
-                  class="upload-demo"
-                  action="https://jsonplaceholder.typicode.com/posts/"
-                  :on-preview="handlePreview"
-                  :on-remove="handleRemove"
-                  :before-remove="beforeRemove"
-                  multiple
-                  :limit="3"
-                  :on-exceed="handleExceed"
+                  :action="server_URL"
+                  list-type="picture-card"
+                  :class="{disabled:uploadEbookFileDisabled}"
+                  :on-remove="handleEbookFileRemove"
+                  :on-success="handleEbookFileUploadSuccess"
+                  :before-upload="beforeEbookFileUpload"
                   :file-list="fileList">
-                  <el-button size="small" type="primary">上传文件</el-button>           
+                  <i class="el-icon-plus"></i>
+                  <div class="el-upload__tip" slot="tip">只能上传txt文件</div>
                 </el-upload>
               </el-form-item>
               <el-form-item label="书籍描述" prop="bookDescribe">
                 <el-input :rows="4" maxlength="100"
                     show-word-limit type="textarea" v-model="ebook.bookDescribe"
                     style="width: 500px"></el-input>
-              </el-form-item>
+              </el-form-item> 
               <el-form-item>
                 <el-button type="primary" @click="submitForm('ebookRuleForm')">立即录入</el-button>
                 <el-button @click="resetForm('ebookRuleForm')">重置</el-button>
               </el-form-item>
-            </el-form>      
+            </el-form> 
         </el-tab-pane>
       </el-tabs>
-    </template>  
+    </template>
   </div>
 </template>
 
 <script>
+
 import axios from 'axios'
 export default {
   data () {
     return {
+      server_URL: 'http://localhost:8090/file',
       activeName: 'first',
       fileList: [],
       book: {
@@ -130,15 +128,21 @@ export default {
         bookStatus: '',
         inputTime: '',
         category: '',
-        bookDescribe: ''
+        bookDescribe: '',
+        ebook: '0',
+        location: '',
+        imgFile: ''
       },
       ebook: {
         bookName: '',
         author: '',
         published: '',
         category: '',
-        locationg: '',
-        bookDescribe: ''
+        location: '',
+        bookDescribe: '',
+        ebook: '1',
+        imgFile: '',
+        file: ''
       },
       bookRules: {
         bookName: [
@@ -160,8 +164,7 @@ export default {
         inputTime: [
           { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
         ],
-        category: [
-         
+        category: [      
         ],
         bookDescribe: [
           { required: true, message: '请填写书籍描述', trigger: 'blur' }
@@ -183,30 +186,35 @@ export default {
           { required: true, message: '请填写书籍描述', trigger: 'blur' }
         ]
       },
-      dialogImageUrl: '',
-      dialogVisible: false
+      uploadBookImgDisabled: false,
+      uploadEbookImgDisabled: false,
+      uploadEbookFileDisabled: false,
+      uploadBookImgSuccess: false,
+      uploadEbookImgSuccess: false,
+      uploadEbookFileSuccess: false
     }
   },
   methods: {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if(formName == 'bookRuleForm'){
+          if (formName === 'bookRuleForm') {
             this.addBook(this.book)
           } else {
             this.addBook(this.ebook)
           }
         } else {
-          return false;
+          return false
         }
       })
     },
-    addBook(book){
-      axios.post('/book',book).then(res => {
-        if(res.data.code == 200){
-          this.$message(res.data.message);
+    addBook (book) {
+      console.log(this)
+      axios.post('/book/dto', book).then(res => {
+        if (res.data.code === 200) {
+          this.$message(res.data.message)
         } else {
-          this.$message.error(res.data.message);
+          this.$message.error(res.data.message)
         }
       })
     },
@@ -214,19 +222,45 @@ export default {
       this.$refs[formName].resetFields()
     },
     handleClick (tab, event) {
-      console.log(tab, event)
     },
-    handleRemove (file, fileList) {
-      console.log(file, fileList)
+
+    handleBookImgRemove (file, fileList) {
+      this.book.file = ''
+      this.uploadBookImgDisabled = false
     },
-    handlePreview (file) {
-      console.log(file)
+    beforeBookImgUpload () {
+      this.uploadBookImgDisabled = true
     },
-    handleExceed (files, fileList) {
-      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+    handleBookImgUploadSuccess (response, file, fileList) {
+      this.handleBookImgUploadSuccess = true
+      this.book.imgFile = file
+      this.$message('书籍封面上传成功')
     },
-    beforeRemove (file, fileList) {
-      return this.$confirm(`确定移除 ${ file.name }？`);
+
+    handleEbookImgRemove (file, fileList) {
+      this.book.imgFile = ''
+      this.uploadEbookImgDisabled = false
+    },
+    beforeEbookImgUpload () {
+      this.uploadEbookImgDisabled = true
+    },
+    handleEbookImgUploadSuccess (response, file, fileList) {
+      this.handleEbookImgUploadSuccess = true
+      this.ebook.imgFile = file
+      this.$message('电子书封面上传成功')
+    },
+
+    handleEbookFileRemove (file, fileList) {
+      this.ebook.file = ''
+      this.uploadEbookFileDisabled = false
+    },
+    beforeEbookFileUpload () {
+      this.uploadEbookFileDisabled = true
+    },
+    handleEbookFileUploadSuccess (response, file, fileList) {
+      this.ebook.file = file
+      this.handleEbookFileUploadSuccess = true
+      this.$message('书籍文件上传成功')
     }
   }
 }
@@ -243,6 +277,10 @@ export default {
 
 .el-form{
   margin-left: 20%
+}
+
+.disabled >>> .el-upload--picture-card{
+  display: none;
 }
 
 </style>
