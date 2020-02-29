@@ -15,7 +15,10 @@ Vue.use(VueRouter)
 Vue.use(ElementUI)
 Vue.use(VCharts)
 
+
 Vue.config.productionTip = false
+
+
 
 /* eslint-disable no-new */
 new Vue({

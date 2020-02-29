@@ -17,7 +17,8 @@ import HandleBorrowing from '../components/back/HandleBorrowing.vue'
 import ReaderDetail from '../components/back/ReaderDetail.vue'
 import ReaderList from '../components/back/ReaderList.vue'
 import RecoveryPrivilege from '../components/back/RecoveryPrivilege.vue'
-import StorageStatistics from '../components/back/StorageStatistics.vue'
+import StorageStatistics from '../components/back/StorageStatistics.vue' 
+import EbookRead from '../components/front/EbookRead.vue'
 
 Vue.use(Router)
 
@@ -48,7 +49,8 @@ export default new Router({
         {path: '/back/userDetail/:id', component: ReaderDetail},
         {path: '/back/userManager', component: ReaderList},
         {path: '/back/recoveryPrivilege', component: RecoveryPrivilege},
-        {path: '/back/storageStatistics', component: StorageStatistics}
+        {path: '/back/storageStatistics', component: StorageStatistics},
+        {path: '/back/ebookRead', component: EbookRead}
       ]
     }
   ]

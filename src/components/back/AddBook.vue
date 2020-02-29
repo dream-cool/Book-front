@@ -25,12 +25,17 @@
             </el-form-item>
             <el-form-item label="入馆时间">
                 <el-form-item prop="inputTime">
-                  <el-date-picker type="date" placeholder="选择日期" v-model="book.inputTime" style="width: 30%;"></el-date-picker>
+                  <el-date-picker value-format="timestamp" type="date" placeholder="选择日期" v-model="book.inputTime" style="width: 30%;"></el-date-picker>
                 </el-form-item>
             </el-form-item>
             <el-form-item label="书籍分类" prop="category">
-              <el-select v-model="book.category" placeholder="请选择书籍分类">
-              </el-select>
+              <el-cascader 
+                    :options="categoryList"
+                    :props="optionProps"
+                    :show-all-levels="false"
+                    change-on-select
+                    @change="handleBookChange">
+              </el-cascader>
             </el-form-item>
             <el-form-item label="书籍封面" prop="img">
               <el-upload
@@ -43,6 +48,9 @@
                 :before-upload="beforeBookImgUpload">
                 <i class="el-icon-plus"></i>
               </el-upload>
+            </el-form-item>
+            <el-form-item label="书籍位置" prop="location">
+              <el-input v-model="book.location"></el-input>
             </el-form-item>
             <el-form-item label="书籍描述" prop="bookDescribe">
               <el-input :rows="4" maxlength="100"
@@ -67,8 +75,13 @@
                 <el-input v-model="ebook.published"></el-input>
               </el-form-item>
               <el-form-item label="书籍分类" prop="category">
-                <el-select v-model="ebook.category" placeholder="请选择书籍分类">
-                </el-select>
+                <el-cascader 
+                      :options="categoryList"
+                      :props="optionProps"
+                      :show-all-levels="false"
+                      change-on-select
+                      @change="handleEbookChange">
+                </el-cascader>
               </el-form-item>
               <el-form-item label="书籍封面" prop="img">
                 <el-upload
@@ -127,22 +140,33 @@ export default {
         price: '',
         bookStatus: '',
         inputTime: '',
-        category: '',
+        categoryId: '',
         bookDescribe: '',
         ebook: '0',
-        location: '',
-        imgFile: ''
+        location: ''
+      },
+      categoryList:[
+          
+      ],
+      optionProps: {
+        value: 'id',
+        label: 'title',
+        children: 'child'
+      },
+      none: {
+          id : '',
+          title : '无',
+          child: []
       },
       ebook: {
         bookName: '',
         author: '',
         published: '',
-        category: '',
+        categoryId: '',
         location: '',
         bookDescribe: '',
         ebook: '1',
-        imgFile: '',
-        file: ''
+        imgFile: ''
       },
       bookRules: {
         bookName: [
@@ -194,23 +218,57 @@ export default {
       uploadEbookFileSuccess: false
     }
   },
+  created (){
+    this.getAllCategory()
+  },
   methods: {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (formName === 'bookRuleForm') {
-            this.addBook(this.book)
+            if (this.book.categoryId === ''){
+              this.$message.error("书籍所属类别为空")
+              return false
+            }
+            if (this.book.img === ''){
+              this.$message.error("书籍封面为空")
+              return false
+            } else {
+              this.addBook(this.book)
+            }
           } else {
-            this.addBook(this.ebook)
+            if (this.ebook.categoryId === ''){
+              this.$message.error("书籍所属类别为空")
+              return false
+            }
+            if (this.ebook.img === ''){
+              this.$message.error("电子书封面为空")
+              return false
+            } else if (this.ebook.location === ''){
+              this.$message.error("电子书文件为空")
+              return false
+            } else {
+              this.addBook(this.ebook)
+            }
           }
         } else {
           return false
         }
       })
     },
+    getAllCategory (){
+       axios.get('/type/cascade').then(res => {
+        if (res.data.code === 200) {
+          this.categoryList = res.data.data
+          this.categoryList.push(this.none)
+        } else {
+          this.$message.error(res.data.message)
+        }
+      })
+    },
     addBook (book) {
-      console.log(this)
-      axios.post('/book/dto', book).then(res => {
+      console.log(book)
+      axios.post('/book', book).then(res => {
         if (res.data.code === 200) {
           this.$message(res.data.message)
         } else {
@@ -221,45 +279,55 @@ export default {
     resetForm (formName) {
       this.$refs[formName].resetFields()
     },
+
     handleClick (tab, event) {
     },
 
+
+    handleBookChange (value){
+      this.book.categoryId = value[value.length-1]
+    },
+
+    handleEbookChange (value){
+      this.ebook.categoryId = value[value.length-1]
+    },
+
     handleBookImgRemove (file, fileList) {
-      this.book.file = ''
+      this.book.img = ''
       this.uploadBookImgDisabled = false
     },
     beforeBookImgUpload () {
       this.uploadBookImgDisabled = true
     },
     handleBookImgUploadSuccess (response, file, fileList) {
-      this.handleBookImgUploadSuccess = true
-      this.book.imgFile = file
+      this.uploadBookImgSuccess = true
+      this.book.img = response.data
       this.$message('书籍封面上传成功')
     },
 
     handleEbookImgRemove (file, fileList) {
-      this.book.imgFile = ''
+      this.ebook.img = ''
       this.uploadEbookImgDisabled = false
     },
     beforeEbookImgUpload () {
       this.uploadEbookImgDisabled = true
     },
     handleEbookImgUploadSuccess (response, file, fileList) {
-      this.handleEbookImgUploadSuccess = true
-      this.ebook.imgFile = file
+      this.uploadEbookImgSuccess = true
+      this.ebook.img = response.data
       this.$message('电子书封面上传成功')
     },
 
     handleEbookFileRemove (file, fileList) {
-      this.ebook.file = ''
+      this.ebook.location = ''
       this.uploadEbookFileDisabled = false
     },
     beforeEbookFileUpload () {
       this.uploadEbookFileDisabled = true
     },
     handleEbookFileUploadSuccess (response, file, fileList) {
-      this.ebook.file = file
-      this.handleEbookFileUploadSuccess = true
+      this.ebook.location = response.data
+      this.uploadEbookFileSuccess = true
       this.$message('书籍文件上传成功')
     }
   }
