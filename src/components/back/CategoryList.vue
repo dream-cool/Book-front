@@ -28,6 +28,14 @@
             </template>
           </el-table-column>
           <el-table-column
+            label="级别"
+            width="180">
+            <template slot-scope="scope">
+              <i class="el-icon-time"></i>
+              <span style="margin-left: 10px">{{ scope.row.level }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
             label="创建时间"
             width="300">
             <template slot-scope="scope">
@@ -55,7 +63,7 @@
               @current-change="handleCurrentChange"
               :current-page.sync="pageNum"
               :page-size="categoryPage.pageSize"
-              layout="prev, pager, next, jumper"
+              layout="total, prev, pager, next, jumper"
               :total="categoryPage.total">
             </el-pagination>
           </div>

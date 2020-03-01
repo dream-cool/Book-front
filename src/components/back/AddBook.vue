@@ -17,11 +17,12 @@
               <el-input v-model.number="book.price"></el-input>
             </el-form-item>
             <el-form-item label="书籍状态" prop="bookStatus">
-              <el-select v-model="book.bookStatus" placeholder="请选择书籍状态">
-                <el-option label="在库" value="0"></el-option>
-                <el-option label="借出" value="1"></el-option>
-                <el-option label="损坏" value="2"></el-option>
-              </el-select>
+              <el-radio-group v-model="book.bookStatus">
+                <el-radio :label="0">在库</el-radio>
+                <el-radio :label="1">借出</el-radio>
+                <el-radio :label="2">损坏</el-radio>
+              </el-radio-group>
+              
             </el-form-item>
             <el-form-item label="入馆时间">
                 <el-form-item prop="inputTime">
