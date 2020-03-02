@@ -210,7 +210,7 @@ export default {
         this.$router.push({ path:'/back/bookDetail/'+row.bookId})
       },
       handleEdit(row) {
-        console.log(row);
+        this.$router.push({ path:'/back/updateBook/'+row.bookId})
       },
       handleDelete(row) {
         this.$confirm('确认删除？')

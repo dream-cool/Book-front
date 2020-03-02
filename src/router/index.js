@@ -19,6 +19,7 @@ import ReaderList from '../components/back/ReaderList.vue'
 import RecoveryPrivilege from '../components/back/RecoveryPrivilege.vue'
 import StorageStatistics from '../components/back/StorageStatistics.vue' 
 import EbookRead from '../components/front/EbookRead.vue'
+import UpdateBook from "../components/back/UpdateBook.vue"
 
 Vue.use(Router)
 
@@ -38,6 +39,7 @@ export default new Router({
         {path: '/back/addCategory', component: AddCategory},
         {path: '/back/addUser', component: AddReader},
         {path: '/back/bookDetail/:id', component: BookDetail},
+        {path: '/back/updateBook/:id', component: UpdateBook},
         {path: '/back/booksManager', component: BookList},
         {path: '/back/borrowingManager', component: BorrowingList},
         {path: '/back/borrowingStatistics', component: BorrowingStatistics},
