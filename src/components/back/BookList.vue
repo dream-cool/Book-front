@@ -210,7 +210,13 @@ export default {
         this.$router.push({ path:'/back/bookDetail/'+row.bookId})
       },
       handleEdit(row) {
-        this.$router.push({ path:'/back/updateBook/'+row.bookId})
+        console.log(row)
+        if (row.ebook == 1){
+          this.$router.push({ path:'/back/updateEbook/'+row.bookId})
+        } else {
+          this.$router.push({ path:'/back/updateBook/'+row.bookId})
+        }
+        
       },
       handleDelete(row) {
         this.$confirm('确认删除？')

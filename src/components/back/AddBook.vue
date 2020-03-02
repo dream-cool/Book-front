@@ -18,9 +18,9 @@
             </el-form-item>
             <el-form-item label="书籍状态" prop="bookStatus">
               <el-radio-group v-model="book.bookStatus">
-                <el-radio :label="0">在库</el-radio>
-                <el-radio :label="1">借出</el-radio>
-                <el-radio :label="2">损坏</el-radio>
+                <el-radio :label="'0'">在库</el-radio>
+                <el-radio :label="'1'">借出</el-radio>
+                <el-radio :label="'2'">损坏</el-radio>
               </el-radio-group>
               
             </el-form-item>

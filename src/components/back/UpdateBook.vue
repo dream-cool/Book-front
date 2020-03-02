@@ -3,93 +3,165 @@
     <el-main>
       <div class="book">
         <div class="bookImg" style="float:left">
-          <el-image :src="img" >
-            <div slot="error" class="image-slot">
-              <i class="el-icon-picture-outline"></i>
-            </div>
-          </el-image>
-          <el-cascader
-                 v-model="category"
+          <el-form :model="book" :rules="bookRules" ref="bookRuleForm" label-width="100px" class="demo-ruleForm">
+            <el-form-item label="书籍名称" prop="bookName">
+              <el-input v-model="book.bookName"></el-input>
+            </el-form-item>
+            <el-form-item label="书籍作者" prop="author">
+              <el-input v-model="book.author"></el-input>
+            </el-form-item>
+            <el-form-item label="书籍出版社" prop="published">
+              <el-input v-model="book.published"></el-input>
+            </el-form-item>
+            <el-form-item label="书籍价格" prop="price">
+              <el-input v-model.number="book.price"></el-input>
+            </el-form-item>
+            <el-form-item label="书籍状态" prop="bookStatus">
+              <el-radio-group v-model="book.bookStatus">
+                <el-radio :label="'0'">在库</el-radio>
+                <el-radio :label="'1'">借出</el-radio>
+                <el-radio :label="'2'">损坏</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="入馆时间">
+                <el-form-item prop="inputTime">
+                  <el-date-picker  
+                  value-format="yyyy-MM-dd" format="yyyy-MM-dd"
+                  type="date" placeholder="选择日期" v-model="book.inputTime"></el-date-picker>
+                </el-form-item>
+            </el-form-item>
+            <el-form-item label="书籍分类" prop="category">
+              <el-cascader
+                v-model="category"
                 :options="categoryList"
-                @change="handleChange"
+                :filterable="true"
+                change-on-select
+                @change="handleBookChange"
                 :props="optionProps"
-               >
-          </el-cascader>
+              ></el-cascader>
+            </el-form-item>
+            <el-form-item label="书籍封面" prop="img">
+              <el-image :src="img" style="float:left" v-show="!uploadBookImgSuccess">
+                <div slot="error" class="image-slot">
+                  <i class="el-icon-picture-outline"></i>
+                </div>
+              </el-image>
+              <el-upload 
+                :multiple="false"
+                :action="server_URL"
+                list-type="picture-card"
+                :class="{disabled:uploadBookImgDisabled}"
+                :on-remove="handleBookImgRemove"
+                :on-success="handleBookImgUploadSuccess"
+                :before-upload="beforeBookImgUpload">
+                <i class="el-icon-plus"></i>
+              </el-upload>
+            </el-form-item>
+            <el-form-item label="书籍位置" prop="location">
+              <el-input v-model="book.location"></el-input>
+            </el-form-item>
+            <el-form-item label="书籍描述" prop="bookDescribe">
+              <el-input :rows="4" maxlength="100"
+                  show-word-limit type="textarea" v-model="book.bookDescribe"
+                  style="width: 500px"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="submitForm('bookRuleForm')">修改</el-button>
+            </el-form-item>
+          </el-form>
         </div>
-        <div class="bookContent"  >
-          书籍名称 {{book.bookName}}
-          <br>
-          书籍作者 {{book.author}}
-           <br>
-          书籍出版社 {{book.published}}
-           <br>
-          书籍状态 {{book.status}}
-           <br>
-          书籍价格 {{book.price}}
-           <br>
-          书籍描述 {{book.bookDescribe}}
-           <br>
-          点赞数量 {{book.zanNumber}}
-           <br>
-          书籍评分 {{book.score}}
-          <el-button type="warning" icon="el-icon-star-off" @click="aa" circle>11</el-button>
-        </div>
-      </div>
-      <div class="ebook">
       </div>
     </el-main>
   </div>
 </template>
 
 <script>
-// eslint-disable-next-line no-unused-vars
 import bookList from './BookList'
 import axios from 'axios'
 
 export default {
   data () {
     return {
+      server_URL: 'http://localhost:8090/file',
+      activeName: 'first',
+      fileList: [],
+      category: [],
       optionProps: {
         value: 'id',
         label: 'title',
         children: 'child'
       },
-      categoryList: [{"id": 3,
-                    "pid": 1,
-                    "name": null,
-                    "level": 2,
-                    "sort": null,
-                    "title": "中国小说",
-                    "icon": null,
-                    "hidden": null,
-                    "createTime": "2020-02-29 22:24:26",
-                    "child": []}],
-      category: [0],
-      none: {
-        id: '0',
-        title: '无',
-        child: []
-      },
+      categoryList: [],
       id: '',
       book: { },
-      img: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg'
+      uploadBookImgDisabled: false,
+      uploadBookImgSuccess: false,
+      img: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
+      bookRules: {
+        bookName: [
+          { required: true, message: '请输入书籍名称', trigger: 'blur' },
+          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+        ],
+        author: [
+          { required: true, message: '请输入书籍作者', trigger: 'blur' },
+          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+        ],
+        published: [
+          { required: true, message: '请输入书籍出版社', trigger: 'blur' },
+          { min: 3, max: 15, message: '长度在 3 到 15 个字符', trigger: 'blur' }
+        ],
+        price: [
+          { required: true, message: '请输入书籍出版社', trigger: 'blur' },
+          { type: 'number', message: '价格必须为数字', trigger: 'blur' }
+        ],
+        inputTime: [
+          { type: 'string', required: true, message: '请选择日期', trigger: 'change' }
+        ],
+        category: [      
+        ],
+        bookDescribe: [
+          { required: true, message: '请填写书籍描述', trigger: 'blur' }
+        ]
+      }
     }
   },
   created () {
-    // this.id = this.$route.params.id
-    // this.getBookInfo(this.id)
+    this.id = this.$route.params.id
     this.getAllCategory()
-    // this.getCategoryById(this.book.categoryId)
+    this.getBookInfo(this.id)
   },
   methods: {
-      aa(){
-          this.category = [1]
-      },
+    submitForm(formName){
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          if (this.book.img === ''){
+            this.$message.error("书籍封面为空")
+            return false
+          } else {
+            this.update(this.book)
+          }
+        } else {
+          return false
+        }
+      })
+    },
+    update (book) {
+      axios.put('/book', book).then(res => {
+        if (res.data.code === 200) {
+          this.book = res.data.data.book
+          this.category = res.data.data.typeList
+          this.$message(res.data.message)
+        } else {
+          this.$message.error(res.data.message)
+        }
+      })
+    },
     getBookInfo (id) {
-      axios.get('/book/' + id)
+      axios.get('/book/detail/'+ id)
         .then(res => {
           if (res.data.code === 200) {
-            this.book = res.data.data
+            this.book = res.data.data.book
+            this.category = res.data.data.typeList
           } else {
             this.$message.error(res.data.message)
           }
@@ -99,9 +171,7 @@ export default {
       axios.get('/type/cascade').then(res => {
         if (res.data.code === 200) {
           this.categoryList = res.data.data
-          this.categoryList.push(this.none)
           this.categoryList = this.getTreeData(this.categoryList)
-          console.log(this.categoryList)
         } else {
           this.$message.error(res.data.message)
         }
@@ -120,17 +190,21 @@ export default {
       }
       return data
     },
-    getCategoryById (categoryId) {
-      axios.get('/type/12').then(res => {
-        if (res.data.code === 200) {
-          this.category = res.data.data
-        } else {
-          this.$message.error(res.data.message)
-        }
-      })
+    handleBookChange (value){
+      this.book.categoryId = value[value.length-1]
     },
-    handleChange () {
-    }
+    handleBookImgRemove (file, fileList) {
+      this.book.img = ''
+      this.uploadBookImgDisabled = false
+    },
+    beforeBookImgUpload () {
+      this.uploadBookImgDisabled = true
+    },
+    handleBookImgUploadSuccess (response, file, fileList) {
+      this.uploadBookImgSuccess = true
+      this.book.img = response.data
+      this.$message('书籍封面上传成功,请进行提交')
+    },
   }
 }
 </script>
