@@ -7,7 +7,7 @@
             label="类别ID"
             width="180">
             <template slot-scope="scope">
-              <i class="el-icon-time"></i>
+             
               <span style="margin-left: 10px">{{ scope.row.id }}</span>
             </template>
           </el-table-column>
@@ -15,7 +15,7 @@
             label="类别名称"
             width="180">
             <template slot-scope="scope">
-              <i class="el-icon-time"></i>
+              
               <span style="margin-left: 10px">{{ scope.row.title }}</span>
             </template>
           </el-table-column>
@@ -23,7 +23,7 @@
             label="父类名称"
             width="180">
             <template slot-scope="scope">
-              <i class="el-icon-time"></i>
+              
               <span style="margin-left: 10px">{{ scope.row.pname }}</span>
             </template>
           </el-table-column>
@@ -31,7 +31,7 @@
             label="级别"
             width="180">
             <template slot-scope="scope">
-              <i class="el-icon-time"></i>
+             
               <span style="margin-left: 10px">{{ scope.row.level }}</span>
             </template>
           </el-table-column>
@@ -93,7 +93,6 @@ export default {
           inputErrorMessage: '类别名称不能为空'
         }).then(({ value }) => {
           row.title = value
-          console.log(row)
           axios.put('/type', row).then(res => {
           if (res.data.code === 200) {
             this.$message(res.data.message)

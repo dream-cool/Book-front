@@ -2,7 +2,7 @@
 <div class="content">
   <el-container>
           <el-form :model="borrowing" :inline="true"  label-width="100px" class="demo-form-inline">
-          <el-form-item label="书籍">
+          <el-form-item label="书籍名称">
             <el-input v-model="borrowing.bookName" placeholder="模糊查询书籍名称" ></el-input>
           </el-form-item>
           <el-form-item label="借阅人">
@@ -19,39 +19,41 @@
                  type="date" placeholder="选择日期" v-model="borrowing.borrowingTime" ></el-date-picker>
               </el-form-item>
           </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="search()">搜索</el-button>
-            <el-button @click="resetForm()">重置</el-button>
-          </el-form-item>
+            <div class="operation" style="float:right; margin-right: 10%;">
+              <el-button type="primary" @click="search()">搜索</el-button>
+              <el-button @click="resetForm()">重置</el-button>
+            </div>
         </el-form>
       </el-container>
       <el-table
-          border
           size="small"
           tooltip-effect="dark"
           :data="borrowingList"
           style="width: 100%">
           <el-table-column
-            fixed
-            label="书籍编号"
-            width="310">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.bookId }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            fixed
+             fixed
             label="书籍名称"
             width="310">
             <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.bookName }}</span>
+              <el-popover trigger="hover" placement="top">
+                <p>书籍编号: {{ scope.row.bookId }}</p>
+                <div slot="reference" class="name-wrapper">
+                  <el-tag size="medium">{{ scope.row.bookName }}</el-tag>
+                </div>
+              </el-popover>
             </template>
           </el-table-column>
+          
           <el-table-column
             label="借阅人"
-            width="150">
+            width="250">
             <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.userName }}</span>
+              <el-popover trigger="hover" placement="top">
+                <p>用户id: {{ scope.row.userId }}</p>
+                <div slot="reference" class="name-wrapper">
+                  <el-tag size="medium">{{ scope.row.userName }}</el-tag>
+                </div>
+               </el-popover>
             </template>
           </el-table-column>
           <el-table-column

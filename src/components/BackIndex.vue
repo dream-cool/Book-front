@@ -48,7 +48,6 @@
             </template>
             <el-menu-item index="/back/categoryManager">分类列表</el-menu-item>
             <el-menu-item index="/back/addCategory">新增类别</el-menu-item>
-            <el-menu-item index="/back/categoryDetail/:id">修改类别</el-menu-item>
           </el-submenu>
           <el-submenu index="/back/grantPrivilege">
             <template slot="title">

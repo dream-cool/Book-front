@@ -42,19 +42,6 @@
                         <i class="el-icon-plus"></i>
                     </el-upload>
                 </el-form-item>
-              <el-form-item label="书籍文件" prop="location">
-                <el-upload
-                  :action="server_URL"
-                  list-type="picture-card"
-                  :class="{disabled:uploadEbookFileDisabled}"
-                  :on-remove="handleEbookFileRemove"
-                  :on-success="handleEbookFileUploadSuccess"
-                  :before-upload="beforeEbookFileUpload"
-                  :file-list="fileList">
-                  <i class="el-icon-plus"></i>
-                  <div class="el-upload__tip" slot="tip">只能上传txt文件</div>
-                </el-upload>
-              </el-form-item>
               <el-form-item label="书籍描述" prop="bookDescribe">
                 <el-input :rows="4" maxlength="100"
                     show-word-limit type="textarea" v-model="ebook.bookDescribe"

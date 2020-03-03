@@ -9,7 +9,6 @@ import BookDetail from '../components/back/BookDetail.vue'
 import BookList from '../components/back/BookList.vue'
 import BorrowingList from '../components/back/BorrowingList.vue'
 import BorrowingStatistics from '../components/back/BorrowingStatistics.vue'
-import CategoryDetail from '../components/back/CategoryDetail.vue'
 import CategoryList from '../components/back/CategoryList.vue'
 import CategoryStatistics from '../components/back/CategoryStatistics.vue'
 import GrantPrivilege from '../components/back/GrantPrivilege.vue'
@@ -47,7 +46,6 @@ export default new Router({
         {path: '/back/booksManager', component: BookList},
         {path: '/back/borrowingManager', component: BorrowingList},
         {path: '/back/borrowingStatistics', component: BorrowingStatistics},
-        {path: '/back/categoryDetail/:id', component: CategoryDetail},
         {path: '/back/categoryManager', component: CategoryList},
         {path: '/back/categoryStatistics', component: CategoryStatistics},
         {path: '/back/grantPrivilege', component: GrantPrivilege},

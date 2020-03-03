@@ -11,7 +11,8 @@
           </el-form-item>
 
           <el-form-item label="书籍价格大于" prop="price">
-            <el-input v-model.number="book.price"></el-input>
+            <el-input-number v-model="book.price" controls-position="right"
+                :min="0" :max="10000"></el-input-number>
           </el-form-item>
           
           <el-form-item label="书籍状态" prop="status">
@@ -70,18 +71,22 @@
             width="55">
           </el-table-column>
           <el-table-column
-            fixed
-            label="书籍编号"
-            width="310">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.bookId }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
             label="书籍名称"
             width="250">
             <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.bookName }}</span>
+              <el-popover trigger="hover" placement="top">
+                <p>书籍编号: {{ scope.row.bookId }}</p>
+                <p>书籍作者: {{ scope.row.author }}</p>
+                <p>出版社: {{ scope.row.published }}</p>
+                <p>价格: {{ scope.row.price }}</p>
+                <p>书籍位置: {{ scope.row.location }}</p>
+                <p>书籍状态: {{ scope.row.status }}</p>
+                <p>点赞数: {{ scope.row.zanNumber }}</p>
+                <p>得分: {{ scope.row.score }}</p>
+                <div slot="reference" class="name-wrapper">
+                  <el-tag size="medium">{{ scope.row.bookName }}</el-tag>
+                </div>
+              </el-popover>
             </template>
           </el-table-column>
           <el-table-column
@@ -98,12 +103,12 @@
           <el-table-column
             prop="inputTime"
             label="入馆时间"
-            width="100">
+            width="150">
           </el-table-column>
           <el-table-column
             prop="updateTime"
             label="修改时间"
-            width="150">
+            width="200">
           </el-table-column> 
           <el-table-column
             label="操作"
@@ -246,10 +251,24 @@ export default {
           if (res.data.code === 200) {
             this.categoryList = res.data.data
             this.categoryList.push(this.none)
+            this.categoryList = this.getTreeData(this.categoryList)
           } else {
             this.$message.error(res.data.message)
           }
         })
+      },
+      getTreeData (data) {
+        // 循环遍历json数据
+        for (var i = 0; i < data.length; i++) {
+          if (data[i].child.length < 1) {
+            // children若为空数组，则将children设为undefined
+            data[i].child = undefined
+          } else {
+            // children若不为空数组，则继续 递归调用 本方法
+            this.getTreeData(data[i].child)
+          }
+        }
+        return data
       },
       getBookInfo (pageNum, pageSize, book){
         axios({

@@ -11,9 +11,8 @@
                 :options="categoryList"
                 :props="optionProps"
                 :show-all-levels="false"
-                placeholder="搜索："
+                placeholder="默认为无                   搜索："
                 :filterable="true"
-                v-model="selectedOptions"
                 change-on-select
                 @change="handleChange">
           </el-cascader>
@@ -21,8 +20,8 @@
           <el-button v-if="active == 2" type="primary" @click="submit">提交</el-button>
       </div>
       <div class="button">      
-        <el-button v-if="active > 0" style="margin-top: 12px;" @click="last">上一步</el-button>            
-        <el-button v-if="active < 2" style="margin-top: 12px;" @click="next">下一步</el-button>    
+        <el-button style="position:fixed;right:0; margin-right:55%;" v-if="active > 0"  @click="last">上一步</el-button>            
+        <el-button style="position:fixed;left:0; margin-left:55%;" v-if="active < 2"  @click="next">下一步</el-button>    
       </div>            
     </el-main>     
   </div>
@@ -35,22 +34,17 @@ export default {
       return {
         active: 0,
         categoryList:[
-           
         ],
-
         optionProps: {
           value: 'id',
           label: 'title',
           children: 'child'
         },
-        
-
         none: {
             id : '',
             title : '无',
             child: []
         },
-
         category: {
           pid: '',
           id: '',
@@ -69,21 +63,30 @@ export default {
        axios.get('/type/cascade').then(res => {
         if (res.data.code === 200) {
           this.categoryList = res.data.data
+          
           this.categoryList.push(this.none)
+          this.categoryList = this.getTreeData(this.categoryList)
         } else {
           this.$message.error(res.data.message)
         }
       })
     },
-
-    selectedOptions (){
-
+    getTreeData (data) {
+      // 循环遍历json数据
+      for (var i = 0; i < data.length; i++) {
+        if (data[i].child.length < 1) {
+          // children若为空数组，则将children设为undefined
+          data[i].child = undefined
+        } else {
+          // children若不为空数组，则继续 递归调用 本方法
+          this.getTreeData(data[i].child)
+        }
+      }
+      return data
     },
-
     handleChange (value){
       this.category.pid = value[value.length-1]
     },
-
     next () {
       this.active++ 
     },
@@ -93,7 +96,10 @@ export default {
     },
 
     submit (){
-      console.log(this.category)
+      if (this.category.title == null || this.category.title == ''){
+        this.$message.error("请输入类别名称")
+        return false;
+      }
       axios.post('/type', this.category).then(res => {
         if (res.data.code === 200) {
           this.$message(res.data.message)
