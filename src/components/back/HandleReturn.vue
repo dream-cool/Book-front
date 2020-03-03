@@ -8,35 +8,15 @@
           <el-form-item label="借阅人">
             <el-input v-model="borrowing.userName" placeholder="模糊查询借阅人"></el-input>
           </el-form-item>
-          <el-form-item label="书籍状态">
-            <el-select v-model="borrowing.borrowingStatus" placeholder="书籍状态">
-              <el-option
-                v-for="item in borrowingStatusInfo.list"
-                :key="item.code"
-                :label="item.message"
-                :value="item.code">
-              </el-option>
-            </el-select>
+          <el-form-item label="借阅时长小于">
+               <el-input-number v-model="borrowing.duration" controls-position="right"
+                :min="1" :max="365"></el-input-number>
           </el-form-item>
-          <el-form-item label="申请时间早于">
-              <el-form-item prop="applicationTime">
+          <el-form-item label="借阅时间早于">
+              <el-form-item prop="borrowingTime">
                 <el-date-picker
-                 value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"
-                 type="date" placeholder="选择日期" v-model="borrowing.applicationTime" ></el-date-picker>
-              </el-form-item>
-          </el-form-item>
-          <el-form-item label="处理时间早于">
-              <el-form-item prop="handleTime">
-                <el-date-picker
-                 value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"
-                 type="date" placeholder="选择日期" v-model="borrowing.handleTime" ></el-date-picker>
-              </el-form-item>
-          </el-form-item>
-          <el-form-item label="归还时间早于">
-              <el-form-item prop="returnTime">
-                <el-date-picker
-                value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"
-                type="date" placeholder="选择日期" v-model="borrowing.returnTime" ></el-date-picker>
+                 value-format="yyyy-MM-dd" format="yyyy-MM-dd"
+                 type="date" placeholder="选择日期" v-model="borrowing.borrowingTime" ></el-date-picker>
               </el-form-item>
           </el-form-item>
           <el-form-item>
@@ -69,33 +49,36 @@
           </el-table-column>
           <el-table-column
             label="借阅人"
-            width="250">
+            width="150">
             <template slot-scope="scope">
               <span style="margin-left: 10px">{{ scope.row.userName }}</span>
             </template>
           </el-table-column>
-
           <el-table-column
-            prop="borrowingStatus"
-            :formatter="borrowingSatatusFormatter"
-            label="状态"
-            width="80">
+            prop="borrowingTime"
+            label="借阅时间"
+            width="150">
+          </el-table-column>
+          <el-table-column
+            label="借阅时长"
+            width="100">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.duration }}天</span>
+            </template>
           </el-table-column>
 
           <el-table-column
-            prop="applicationTime"
-            label="申请时间"
-            width="150">
+            label="逾期天数"
+            width="100">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.duration }}</span>
+            </template>
           </el-table-column>
+
           <el-table-column
-            prop="handleTime"
-            label="处理时间"
-            width="150">
-          </el-table-column>
-          <el-table-column
-            prop="returnTime"
-            label="归还时间"
-            width="150">
+            label="操作"
+            width="100">
+            <el-button type="success" @click="handleReturn">归还</el-button>
           </el-table-column>
         </el-table>
         <div class="block">
@@ -117,8 +100,12 @@ import moment from 'moment'
 export default {
   data () {
     return {
+      value: 4.5,
       borrowingList: [],
-      borrowing: {},
+      borrowing: {
+        borrowingStatus: 3,
+        duration: 365
+      },
       pageNum: 1,
       pageSize: 10,
       total: 0,
@@ -130,14 +117,24 @@ export default {
   },
   created () {
     this.getBorrowingInfo(this.pageNum, this.pageSize, this.borrowing)
-    this.getBorrowingStatusInfo()
   },
   methods: {
     handleSizeChange () {
-
     },
     handleCurrentChange () {
-
+    },
+    handleReturn () {
+      this.$confirm('确认归还？')
+        .then(_ => {
+          // axios.delete('/type/' + row.id).then(res => {
+          //   if (res.data.code === 200) {
+          //     this.$message(res.data.message)
+          //   } else {
+          //     this.$message.error(res.data.message)
+          //   }
+          // })
+        })
+        .catch(_ => {})
     },
     search () {
       this.getBorrowingInfo(this.pageNum, this.pageSize, this.borrowing)
@@ -147,10 +144,9 @@ export default {
         bookName: null,
         userName: null,
         applicationTime: null,
-        handleTime: null,
         borrowingTime: null,
-        returnTime: null,
-        borrowingStatus: null
+        borrowingStatus: 1,
+        duration: 365
       }
       this.search()
     },
@@ -166,21 +162,6 @@ export default {
           this.$message.error(res.data.message)
         }
       })
-    },
-    getBorrowingStatusInfo () {
-      axios('/borrowing/get/borrowingStatus').then(res => {
-        if (res.data.code === 200) {
-          this.borrowingStatusInfo = res.data.data
-          var obj = {code: null, message: '所有'}
-          this.borrowingStatusInfo.list.push(obj)
-          this.borrowing.borrowingStatus = null
-        } else {
-          this.$message.error(res.data.message)
-        }
-      })
-    },
-    borrowingSatatusFormatter (row, column, cellValue, index) {
-      return this.borrowingStatusInfo.obj[row.borrowingStatus]
     }
   }
 }

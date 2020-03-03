@@ -22,7 +22,7 @@
             </template>
             <el-menu-item index="/back/borrowingManager">借阅信息</el-menu-item>
             <el-menu-item index="/back/handleBorrowing">处理借阅</el-menu-item>
-            <el-menu-item index="/back/borrowingDetail/:id">修改借阅</el-menu-item>
+            <el-menu-item index="/back/handleReturn">处理归还</el-menu-item>
           </el-submenu>
           <el-submenu index="/back/userManager">
             <template slot="title">

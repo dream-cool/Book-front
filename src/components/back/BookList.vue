@@ -33,6 +33,7 @@
 
           <el-form-item label="书籍分类" prop="category">
             <el-cascader 
+                  v-model="category"
                   :options="categoryList"
                   :props="optionProps"
                   :show-all-levels="false"
@@ -139,6 +140,7 @@ export default {
   
     data() {
       return {
+        category: [''],
         bookList: [],
         pageNum: 1,
         pageSize: 10,
@@ -279,7 +281,6 @@ export default {
           this.book.categoryId = value[value.length-1]
       },
       search (){
-        console.log(this.book)
         if (this.time != null){
           this.book.inputTime = this.dateFiltter(this.time)  
         }
@@ -296,6 +297,7 @@ export default {
                 }
         this.time = null
         this.book.inputTime = null
+        this.category =  [''],
         this.search()
       }
     },

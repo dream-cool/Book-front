@@ -41,21 +41,21 @@
               ></el-cascader>
             </el-form-item>
             <el-form-item label="书籍封面" prop="img">
-              <el-image :src="img" style="float:left" v-show="!uploadBookImgSuccess">
-                <div slot="error" class="image-slot">
-                  <i class="el-icon-picture-outline"></i>
-                </div>
+              <el-image :src="book.img" :lazy='true' style="float:left" v-show="!uploadBookImgSuccess">
               </el-image>
-              <el-upload 
-                :multiple="false"
-                :action="server_URL"
-                list-type="picture-card"
-                :class="{disabled:uploadBookImgDisabled}"
-                :on-remove="handleBookImgRemove"
-                :on-success="handleBookImgUploadSuccess"
-                :before-upload="beforeBookImgUpload">
-                <i class="el-icon-plus"></i>
-              </el-upload>
+                  <el-upload 
+                    :multiple="false"
+                    :action="server_URL"
+                    list-type="picture-card"
+                    accept="image/png,image/jpg,image/jpeg"
+                    :class="{disabled:uploadBookImgDisabled}"
+                    :on-remove="handleBookImgRemove"
+                    :on-success="handleBookImgUploadSuccess"
+                    :before-upload="beforeBookImgUpload">
+                    <div class="el-upload__tip" slot="tip">只支持jpg/png文件</div>
+                    <i class="el-icon-plus"></i>
+                  </el-upload>
+              
             </el-form-item>
             <el-form-item label="书籍位置" prop="location">
               <el-input v-model="book.location"></el-input>
@@ -96,7 +96,6 @@ export default {
       book: { },
       uploadBookImgDisabled: false,
       uploadBookImgSuccess: false,
-      img: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
       bookRules: {
         bookName: [
           { required: true, message: '请输入书籍名称', trigger: 'blur' },
@@ -162,6 +161,7 @@ export default {
           if (res.data.code === 200) {
             this.book = res.data.data.book
             this.category = res.data.data.typeList
+            console.log(this.book)
           } else {
             this.$message.error(res.data.message)
           }
@@ -203,8 +203,9 @@ export default {
     handleBookImgUploadSuccess (response, file, fileList) {
       this.uploadBookImgSuccess = true
       this.book.img = response.data
-      this.$message('书籍封面上传成功,请进行提交')
-    },
+      this.update(this.book)
+      this.$message('书籍封面上传成功')
+    }
   }
 }
 </script>
@@ -216,7 +217,6 @@ export default {
 
 .el-image{
   width: 185px;
-  height: 300px;
+  height: 250px;
 }
-
 </style>

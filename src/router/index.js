@@ -14,6 +14,7 @@ import CategoryList from '../components/back/CategoryList.vue'
 import CategoryStatistics from '../components/back/CategoryStatistics.vue'
 import GrantPrivilege from '../components/back/GrantPrivilege.vue'
 import HandleBorrowing from '../components/back/HandleBorrowing.vue'
+import HandleReturn from '../components/back/HandleReturn.vue'
 import ReaderDetail from '../components/back/ReaderDetail.vue'
 import ReaderList from '../components/back/ReaderList.vue'
 import RecoveryPrivilege from '../components/back/RecoveryPrivilege.vue'
@@ -26,6 +27,7 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
+    {path: '/ebookRead', component: EbookRead},
     {
       path: '/front',
       name: 'FrontIndex',
@@ -50,11 +52,11 @@ export default new Router({
         {path: '/back/categoryStatistics', component: CategoryStatistics},
         {path: '/back/grantPrivilege', component: GrantPrivilege},
         {path: '/back/handleBorrowing', component: HandleBorrowing},
+        {path: '/back/handleReturn', component: HandleReturn},
         {path: '/back/userDetail/:id', component: ReaderDetail},
         {path: '/back/userManager', component: ReaderList},
         {path: '/back/recoveryPrivilege', component: RecoveryPrivilege},
-        {path: '/back/storageStatistics', component: StorageStatistics},
-        {path: '/back/ebookRead', component: EbookRead}
+        {path: '/back/storageStatistics', component: StorageStatistics}
       ]
     }
   ]

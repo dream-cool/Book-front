@@ -3,7 +3,6 @@
     <el-main>
       <div class="book">
         <div class="bookImg" style="float:left">
-          
              <el-form :model="ebook" :rules="ebookRules" ref="ebookRuleForm" label-width="100px" class="demo-ruleForm">
               <el-form-item label="书籍名称" prop="bookName">
                 <el-input v-model="ebook.bookName"></el-input>
@@ -25,7 +24,7 @@
                 ></el-cascader>
               </el-form-item>
                <el-form-item label="书籍封面" prop="img">
-                    <el-image :src="img" style="float:left" v-show="!uploadEbookImgSuccess">
+                    <el-image :src="ebook.img" style="float:left" v-show="!uploadEbookImgSuccess">
                         <div slot="error" class="image-slot">
                         <i class="el-icon-picture-outline"></i>
                         </div>
@@ -34,10 +33,12 @@
                         :multiple="false"
                         :action="server_URL"
                         list-type="picture-card"
+                        accept="image/png,image/jpg,image/jpeg"
                         :class="{disabled:uploadEbookImgDisabled}"
                         :on-remove="handleEbookImgRemove"
                         :on-success="handleEbookImgUploadSuccess"
                         :before-upload="beforeEbookImgUpload">
+                        <div class="el-upload__tip" slot="tip">只支持jpg/png文件</div>
                         <i class="el-icon-plus"></i>
                     </el-upload>
                 </el-form-item>
@@ -94,13 +95,12 @@ export default {
         categoryId: '',
         location: '',
         bookDescribe: '',
-        ebook: '1',
+        ebook: '1'
       },
       uploadEbookImgDisabled: false,
       uploadEbookFileDisabled: false,
       uploadEbookImgSuccess: false,
       uploadEbookFileSuccess: false,
-      img: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
       ebookRules: {
         bookName: [
           { required: true, message: '请输入书籍名称', trigger: 'blur' },
@@ -137,11 +137,9 @@ export default {
       })
     },
     update (book) {
-        console.log(book)
-        return
       axios.put('/book', book).then(res => {
         if (res.data.code === 200) {
-          this.book = res.data.data.book
+          this.ebook = res.data.data.book
           this.category = res.data.data.typeList
           this.$message(res.data.message)
         } else {
@@ -155,6 +153,7 @@ export default {
           if (res.data.code === 200) {
             this.ebook = res.data.data.book
             this.category = res.data.data.typeList
+            console.log(this.ebook)
           } else {
             this.$message.error(res.data.message)
           }
@@ -196,7 +195,7 @@ export default {
     handleEbookImgUploadSuccess (response, file, fileList) {
       this.uploadEbookImgSuccess = true
       this.ebook.img = response.data
-      this.$message('电子书封面上传成功，请提交')
+      this.update(this.ebook)
     },
 
     handleEbookFileRemove (file, fileList) {
@@ -209,7 +208,7 @@ export default {
     handleEbookFileUploadSuccess (response, file, fileList) {
       this.ebook.location = response.data
       this.uploadEbookFileSuccess = true
-      this.$message('书籍文件上传成功，请提交')
+      this.update(this.ebook)
     }
   }
 }
