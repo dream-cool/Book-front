@@ -43,7 +43,7 @@
               </el-popover>
             </template>
           </el-table-column>
-          
+
           <el-table-column
             label="借阅人"
             width="250">
@@ -73,14 +73,16 @@
             label="逾期天数"
             width="100">
             <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.duration }}</span>
+              <span style="margin-left: 10px">{{ scope.row.overdueDays }}</span>
             </template>
           </el-table-column>
 
           <el-table-column
             label="操作"
             width="100">
-            <el-button type="success" @click="handleReturn">归还</el-button>
+            <template slot-scope="scope">
+              <el-button type="success" @click="handleReturn(scope.row)">归还</el-button>
+            </template>
           </el-table-column>
         </el-table>
         <div class="block">
@@ -125,16 +127,19 @@ export default {
     },
     handleCurrentChange () {
     },
-    handleReturn () {
+    handleReturn (row) {
       this.$confirm('确认归还？')
         .then(_ => {
-          // axios.delete('/type/' + row.id).then(res => {
-          //   if (res.data.code === 200) {
-          //     this.$message(res.data.message)
-          //   } else {
-          //     this.$message.error(res.data.message)
-          //   }
-          // })
+          axios('/borrowing/handleReturn/' + row.borrowingId + '?userName=3')
+            .then(res => {
+              if (res.data.code === 200) {
+                this.book = res.data.data
+                this.$message(res.data.message)
+                this.getBorrowingInfo(this.pageNum, this.pageSize, this.borrowing)
+              } else {
+                this.$message.error(res.data.message)
+              }
+            })
         })
         .catch(_ => {})
     },
@@ -158,6 +163,7 @@ export default {
       ).then(res => {
         if (res.data.code === 200) {
           this.borrowingList = res.data.data.list
+          console.log(this.borrowingList)
           this.pageNum = res.data.data.pageNum
           this.total = res.data.data.total
         } else {

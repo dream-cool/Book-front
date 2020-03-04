@@ -51,7 +51,7 @@
               </el-popover>
             </template>
           </el-table-column>
-          
+
           <el-table-column
             label="借阅人"
             width="250">
@@ -67,15 +67,16 @@
           <el-table-column
             label="申请人信誉"
             width="200">
-           
+
             <template slot-scope="scope">
                <el-rate
-                v-model="value"
+               style="float:left"
+                v-model="value1"
                 disabled
-                show-score
                 text-color="#ff9900"
-                score-template="{value}">
-            </el-rate>
+                >
+               </el-rate>
+            {{ value2 }}
             </template>
           </el-table-column>
           <el-table-column
@@ -98,8 +99,10 @@
           <el-table-column
             label="操作"
             width="200">
-            <el-button type="success" @click="handlePass">通过</el-button>
-            <el-button type="danger" @click="handleRefuse">驳回</el-button>
+            <template slot-scope="scope">
+              <el-button type="success" @click="handlePass(scope.row)">通过</el-button>
+              <el-button type="danger" @click="handleRefuse(scope.row)">驳回</el-button>
+            </template>
           </el-table-column>
         </el-table>
         <div class="block">
@@ -121,7 +124,8 @@ import moment from 'moment'
 export default {
   data () {
     return {
-      value: 4.5,
+      value1: 4.5,
+      value2: 90,
       borrowingList: [],
       borrowing: {
         borrowingStatus: 1,
@@ -144,41 +148,52 @@ export default {
     },
     handleCurrentChange () {
     },
-    handlePass () {
+    handlePass (row) {
       this.$confirm('确认通过？')
         .then(_ => {
-          // axios.delete('/type/' + row.id).then(res => {
-          //   if (res.data.code === 200) {
-          //     this.$message(res.data.message)
-          //   } else {
-          //     this.$message.error(res.data.message)
-          //   }
-          // })
+          var data = {
+            operation: 'BORROWING_STATUS_LENT',
+            userName: 3
+          }
+          this.commit(row.borrowingId, data)
         })
         .catch(_ => {})
     },
-    handleRefuse (index, row) {
+    handleRefuse (row) {
       this.$prompt('请输入驳回信息', '驳回', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         inputPattern: /\S/,
         inputErrorMessage: '备注信息不能为空'
       }).then(({ value }) => {
-        row.title = value
-        console.log(row)
-        // axios.put('/type', row).then(res => {
-        //   if (res.data.code === 200) {
-        //     this.$message(res.data.message)
-        //   } else {
-        //     this.$message.error(res.data.message)
-        //   }
-        // })
+        var data = {
+          operation: 'BORROWING_STATUS_REFUSED',
+          userName: 3,
+          note: value
+        }
+        this.commit(row.borrowingId, data)
       }).catch(() => {
         this.$message({
           type: 'info',
           message: '取消驳回'
         })
       })
+    },
+    commit (borrowingId, data) {
+      axios({
+        url: '/borrowing/handleApplying/' + borrowingId,
+        params: data
+      })
+        .then(res => {
+          debugger
+          if (res.data.code === 200) {
+            this.book = res.data.data
+            this.$message(res.data.message)
+            this.getBorrowingInfo(this.pageNum, this.pageSize, this.borrowing)
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
     },
     search () {
       this.getBorrowingInfo(this.pageNum, this.pageSize, this.borrowing)

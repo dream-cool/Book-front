@@ -53,7 +53,7 @@
           <el-table-column
             fixed
             label="书籍名称"
-            width="310">
+            width="300">
             <template slot-scope="scope">
               <el-popover trigger="hover" placement="top">
                 <p>书籍编号: {{ scope.row.bookId }}</p>
@@ -66,7 +66,7 @@
           
           <el-table-column
             label="借阅人"
-            width="250">
+            width="150">
             <template slot-scope="scope">
               <el-popover trigger="hover" placement="top">
                 <p>用户id: {{ scope.row.userId }}</p>
@@ -86,17 +86,22 @@
           <el-table-column
             prop="applicationTime"
             label="申请时间"
-            width="220">
+            width="200">
           </el-table-column>
           <el-table-column
             prop="handleTime"
             label="处理时间"
-            width="220">
+            width="200">
+          </el-table-column>
+          <el-table-column
+            prop="borrowingTime"
+            label="借阅日期"
+            width="100">
           </el-table-column>
           <el-table-column
             prop="returnTime"
             label="归还时间"
-            width="220">
+            width="200">
           </el-table-column>
         </el-table>
         <div class="block">

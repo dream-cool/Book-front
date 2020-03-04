@@ -13,7 +13,7 @@
             <el-menu-item index="/back/booksManager">书籍列表</el-menu-item>
             <el-menu-item index="/back/addBook">新增书籍</el-menu-item>
             <el-menu-item index="/back/bookDetail/:id">修改书籍</el-menu-item>
-            <el-menu-item index="/back/ebookRead">电子书在线阅读</el-menu-item>
+            <el-menu-item index="/ebookRead">电子书在线阅读</el-menu-item>
             
           </el-submenu>
           <el-submenu index="/back/borrowingManager">
@@ -31,7 +31,6 @@
             <el-menu-item-group>
               <el-menu-item index="/back/userManager">用户列表</el-menu-item>
               <el-menu-item index="/back/addUser">添加用户</el-menu-item>
-              <el-menu-item index="/back/userDetail/:id">修改用户</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
           <el-submenu index="/back/storageStatistics">
