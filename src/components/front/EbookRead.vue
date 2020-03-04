@@ -38,6 +38,16 @@
             :total="total">
         </el-pagination>
     </el-main>
+
+    <div class="dashboard">
+      <el-progress type="dashboard" :percentage="percentage" color="#C19393"></el-progress>
+      <div>
+        <el-button-group>
+          <el-button icon="el-icon-minus" @click="decrease"></el-button>
+          <el-button icon="el-icon-plus" @click="increase"></el-button>
+        </el-button-group>
+      </div>
+    </div>
     <el-button type="info" icon="el-icon-top" circle  style="position:fixed;right:0;bottom:0"  @click="toTop"></el-button>
   </div>
 </template>
@@ -48,7 +58,11 @@ export default {
   data () {
     return {
       data: {
-        content: ''
+        content: '',
+        book: {
+          author:'',
+          inputTime:null,
+        }
       },
       URL: 'localhost:8090/download/',
       pageNum: 1,
@@ -63,7 +77,8 @@ export default {
             },
       backgroundStyle: {
           'background': '#C8B9B9'
-      }
+      },
+      percentage:0
     }
   },
   created () {
@@ -85,9 +100,24 @@ export default {
       this.getEbookContent(this.pageNum, this.pageSize)
       this.toTop()
     },
+    decrease(){
+      this.pageNum--
+      this.toTop()
+      this.getEbookContent(this.pageNum, this.pageSize)
+    },
+    increase(){
+      if (this.pageNum > (this.total / this.pageSize)){
+        return  
+      }
+      this.toTop()
+      this.pageNum++
+      this.getEbookContent(this.pageNum, this.pageSize)
+    },
     handleCurrentChange (pageNum) {
       this.getEbookContent(pageNum, this.pageSize)
       this.toTop()
+      this.percentage = (this.pageNum/(this.total/this.pageSize)*100)    
+      this.percentage = Number(this.percentage.toFixed(2))
     },
     toTop (){
       document.body.scrollTop = document.documentElement.scrollTop = 0;
@@ -103,8 +133,9 @@ export default {
             this.pageNum = res.data.data.pageNum
             this.pageSize = res.data.data.pageSize
             this.total = res.data.data.total
-            this.URL = this.URL + res.data.data.book.location    
-            console.log(res.data.data)
+            this.URL = this.URL + res.data.data.book.location
+            this.percentage = (this.pageNum/(this.total/this.pageSize)*100)
+            this.percentage = Number(this.percentage.toFixed(2))
           } else {
             this.$message.error(res.data.$message)
           }
@@ -119,11 +150,10 @@ export default {
   margin-left: 15%;
   margin-right: 15%;
 }
-.el-pagination{
-  margin-left: 40%;
+.dashboard{
+  margin-left: 90%;
   position:fixed;
   bottom:0;
-  background-color: antiquewhite
 }
 
 </style>

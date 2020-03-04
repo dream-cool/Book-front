@@ -3,57 +3,55 @@
     <el-container style="height: 880px; border: 1px solid #eee">
       <el-aside width="200px" style="background-color: rgb(256, 256, 256)">
         <el-menu default-active="2" router>
-          <el-menu-item index="/home">
+          <el-menu-item index="/back/home">
             <i class="el-icon-back"></i>返回首页
           </el-menu-item>
-          <el-submenu index="/back/booksManager">
+          <el-submenu index="/back/book">
             <template slot="title">
               <i class="el-icon-notebook-1"></i>书籍管理
             </template>
-            <el-menu-item index="/back/booksManager">书籍列表</el-menu-item>
-            <el-menu-item index="/back/addBook">新增书籍</el-menu-item>
-            <el-menu-item index="/back/bookDetail/:id">修改书籍</el-menu-item>
-            <el-menu-item index="/ebookRead">电子书在线阅读</el-menu-item>
-            
+            <el-menu-item index="/back/book/bookList">书籍列表</el-menu-item>
+            <el-menu-item index="/back/book/addBook">新增书籍</el-menu-item>
+            <el-menu-item index="/front/ebookRead">电子书在线阅读</el-menu-item>
           </el-submenu>
-          <el-submenu index="/back/borrowingManager">
+          <el-submenu index="/back/borrowing"> 
             <template slot="title">
               <i class="el-icon-document"></i>借阅管理
             </template>
-            <el-menu-item index="/back/borrowingManager">借阅信息</el-menu-item>
-            <el-menu-item index="/back/handleBorrowing">处理借阅</el-menu-item>
-            <el-menu-item index="/back/handleReturn">处理归还</el-menu-item>
+            <el-menu-item index="/back/borrowing/borrowingList">借阅信息</el-menu-item>
+            <el-menu-item index="/back/borrowing/handleBorrowing">处理借阅</el-menu-item>
+            <el-menu-item index="/back/borrowing/handleReturn">处理归还</el-menu-item>
           </el-submenu>
-          <el-submenu index="/back/userManager">
+          <el-submenu index="/back/user">
             <template slot="title">
               <i class="el-icon-user-solid"></i>读者管理
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/back/userManager">用户列表</el-menu-item>
-              <el-menu-item index="/back/addUser">添加用户</el-menu-item>
+              <el-menu-item index="/back/user/userList">用户列表</el-menu-item>
+              <el-menu-item index="/back/user/addUser">添加用户</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-          <el-submenu index="/back/storageStatistics">
+          <el-submenu index="/back/statistics">
             <template slot="title">
               <i class="el-icon-s-data"></i>统计管理
             </template>
-            <el-menu-item index="/back/storageStatistics">藏量统计</el-menu-item>
-            <el-menu-item index="/back/categoryStatistics">类别统计</el-menu-item>
-            <el-menu-item index="/back/borrowingStatistics">借阅统计</el-menu-item>
+            <el-menu-item index="/back/statistics/storageStatistics">藏量统计</el-menu-item>
+            <el-menu-item index="/back/statistics/categoryStatistics">类别统计</el-menu-item>
+            <el-menu-item index="/back/statistics/borrowingStatistics">借阅统计</el-menu-item>
           </el-submenu>
-          <el-submenu index="/back/categoryManager">
-            <template slot="title">
+          <el-submenu index="/back/category">
+            <template slot="title" >
               <i class="el-icon-s-order"></i>分类管理
             </template>
-            <el-menu-item index="/back/categoryManager">分类列表</el-menu-item>
-            <el-menu-item index="/back/addCategory">新增类别</el-menu-item>
+            <el-menu-item index="/back/category/categoryList">分类列表</el-menu-item>
+            <el-menu-item index="/back/category/addCategory">新增类别</el-menu-item>
           </el-submenu>
-          <el-submenu index="/back/grantPrivilege">
+          <el-submenu index="/back/privilege" >
             <template slot="title">
               <i class="el-icon-s-operation"></i>权限管理
             </template>
-            <el-menu-item index="/back/grantPrivilege">授予权限</el-menu-item>
-            <el-menu-item index="/back/recoveryPrivilege">回收权限</el-menu-item>
+            <el-menu-item index="/back/privilege/grantPrivilege">授予权限</el-menu-item>
+            <el-menu-item index="/back/privilege/recoveryPrivilege">回收权限</el-menu-item>
           </el-submenu>
         </el-menu>
       </el-aside>
@@ -70,6 +68,16 @@
           <span>测试人员</span>
         </el-header>
 
+        <div class="navbar clearfix">
+            <el-breadcrumb separator-class="el-icon-arrow-right">
+              <el-breadcrumb-item v-for="item in levelList" :key="item.path">
+                {{item.name}}
+              </el-breadcrumb-item>
+            </el-breadcrumb>
+
+
+        </div>
+
         <el-main>
           <router-view></router-view>
         </el-main>
@@ -80,19 +88,34 @@
 
 <script>
 export default {
-  name: 'adminIndex',
-  data () {
+  name: 'index',
+  components: {
+  },
+  data() {
     return {
-      msg: 'message',
-      active: 1
+      levelList: null
     }
   },
-
-  created () {},
-
-  methods: {},
-
-  components: {}
+  computed: {
+ 
+  },
+  watch: {
+    $route() {
+      this.getBreadcrumb()
+    }
+  },
+  methods: {
+    getBreadcrumb() {
+      //$route.matched一个数组 包含当前路由的所有嵌套路径片段的路由记录
+      let matched = this.$route.matched.filter(item => item.name)
+      this.levelList = matched
+    }
+  },
+  created() {
+    this.getBreadcrumb()
+  },
+  mounted() {
+  }
 }
 </script>
 

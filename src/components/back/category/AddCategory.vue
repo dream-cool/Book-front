@@ -63,7 +63,6 @@ export default {
        axios.get('/type/cascade').then(res => {
         if (res.data.code === 200) {
           this.categoryList = res.data.data
-          
           this.categoryList.push(this.none)
           this.categoryList = this.getTreeData(this.categoryList)
         } else {

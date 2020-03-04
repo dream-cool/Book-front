@@ -1,7 +1,6 @@
 <template>
   <div class="content">
       {{msg}}
-      <router-view></router-view>
   </div>
 </template>
 

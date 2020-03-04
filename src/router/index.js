@@ -1,60 +1,106 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Home from '@/components/back/Home.vue'
 import FrontIndex from '@/components/FrontIndex.vue'
 import BackIndex from '@/components/BackIndex.vue'
-import AddBook from '../components/back/AddBook'
-import AddCategory from '../components/back/AddCategory'
-import AddReader from '../components/back/AddReader.vue'
-import BookDetail from '../components/back/BookDetail.vue'
-import BookList from '../components/back/BookList.vue'
-import BorrowingList from '../components/back/BorrowingList.vue'
-import BorrowingStatistics from '../components/back/BorrowingStatistics.vue'
-import CategoryList from '../components/back/CategoryList.vue'
-import CategoryStatistics from '../components/back/CategoryStatistics.vue'
+import Book from '@/components/back/book/Book.vue'
+import Borrowing from '@/components/back/borrowing/Borrowing.vue'
+import Category from '@/components/back/category/Category.vue'
+import User from '@/components/back/user/User.vue'
+import Statistics from '@/components/back/statistics/Statistics.vue'
+import AddBook from '../components/back/book/AddBook'
+import AddCategory from '../components/back/category/AddCategory'
+import AddReader from '../components/back/user/AddReader.vue'
+import BookDetail from '../components/back/book/BookDetail.vue'
+import BookList from '../components/back/book/BookList.vue'
+import BorrowingList from '../components/back/borrowing/BorrowingList.vue'
+import BorrowingStatistics from '../components/back/statistics/BorrowingStatistics.vue'
+import CategoryList from '../components/back/category/CategoryList.vue'
+import CategoryStatistics from '../components/back/statistics/CategoryStatistics.vue'
 import GrantPrivilege from '../components/back/GrantPrivilege.vue'
-import HandleBorrowing from '../components/back/HandleBorrowing.vue'
-import HandleReturn from '../components/back/HandleReturn.vue'
-import ReaderDetail from '../components/back/ReaderDetail.vue'
-import ReaderList from '../components/back/ReaderList.vue'
+import HandleBorrowing from '../components/back/borrowing/HandleBorrowing.vue'
+import HandleReturn from '../components/back/borrowing/HandleReturn.vue'
+import ReaderDetail from '../components/back/user/ReaderDetail.vue'
+import ReaderList from '../components/back/user/ReaderList.vue'
 import RecoveryPrivilege from '../components/back/RecoveryPrivilege.vue'
-import StorageStatistics from '../components/back/StorageStatistics.vue' 
+import StorageStatistics from '../components/back/statistics/StorageStatistics.vue' 
 import EbookRead from '../components/front/EbookRead.vue'
-import UpdateBook from "../components/back/UpdateBook.vue"
-import UpdateEbook from "../components/back/updateEbook.vue"
+import UpdateBook from "../components/back/book/UpdateBook.vue"
+import UpdateEbook from "../components/back/book/updateEbook.vue"
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
-    {path: '/ebookRead', component: EbookRead},
+    
+    {path: '/front/ebookRead', component: EbookRead},
     {
       path: '/front',
       name: 'FrontIndex',
-      component: FrontIndex
+      component: FrontIndex,
+      children: [
+      ]
     },
     {
       path: '/back',
       name: 'BackIndex',
       component: BackIndex,
       children: [
-        {path: '/back/addBook', component: AddBook},
-        {path: '/back/addCategory', component: AddCategory},
-        {path: '/back/addUser', component: AddReader},
-        {path: '/back/bookDetail/:id', component: BookDetail},
-        {path: '/back/updateBook/:id', component: UpdateBook},
-        {path: '/back/updateEbook/:id', component: UpdateEbook},
-        {path: '/back/booksManager', component: BookList},
-        {path: '/back/borrowingManager', component: BorrowingList},
-        {path: '/back/borrowingStatistics', component: BorrowingStatistics},
-        {path: '/back/categoryManager', component: CategoryList},
-        {path: '/back/categoryStatistics', component: CategoryStatistics},
-        {path: '/back/grantPrivilege', component: GrantPrivilege},
-        {path: '/back/handleBorrowing', component: HandleBorrowing},
-        {path: '/back/handleReturn', component: HandleReturn},
-        {path: '/back/userDetail/:id', component: ReaderDetail},
-        {path: '/back/userManager', component: ReaderList},
-        {path: '/back/recoveryPrivilege', component: RecoveryPrivilege},
-        {path: '/back/storageStatistics', component: StorageStatistics}
+        {path: '/back/home', component: Home},
+        {
+          // 书籍
+          path: '/back/book', 
+          component: Book,
+          children: [
+            {path: '/back/book/addBook', component: AddBook},
+            {path: '/back/book/updateBook/:id', component: UpdateBook},
+            {path: '/back/book/updateEbook/:id', component: UpdateEbook},
+            {path: '/back/book/bookDetail/:id', component: BookDetail},
+            {path: '/back/book/bookList', component: BookList},
+          ]
+        },
+        {
+          // 类别
+          path: '/back/category', 
+          component: Category,
+          children: [
+            {path: '/back/category/addCategory', component: AddCategory},
+            {path: '/back/category/categoryList', component: CategoryList},
+          ]
+        },
+        {
+          // 用户
+          path: '/back/user', 
+          component: User,
+          children: [
+            {path: '/back/user/addUser', component: AddReader},
+            {path: '/back/user/userDetail/:id', component: ReaderDetail},
+            {path: '/back/user/userList', component: ReaderList},
+          ]
+        },
+        {
+          // 借阅
+          path: '/back/borrowing', 
+          component: Borrowing,
+          children: [
+            {path: '/back/borrowing/borrowingList', component: BorrowingList},
+            {path: '/back/borrowing/handleBorrowing', component: HandleBorrowing},
+            {path: '/back/borrowing/handleReturn', component: HandleReturn},
+          ]
+        },
+
+        {
+          // 统计
+          path: '/back/statistics', 
+          component: Statistics,
+          children: [
+            {path: '/back/statistics/borrowingStatistics', component: BorrowingStatistics},
+            {path: '/back/statistics/categoryStatistics', component: CategoryStatistics},
+            {path: '/back/statistics/storageStatistics', component: StorageStatistics}            
+          ]
+        },
+        {path: '/back/grantPrivilege', component: GrantPrivilege},      
+        {path: '/back/recoveryPrivilege', component: RecoveryPrivilege}        
       ]
     }
   ]

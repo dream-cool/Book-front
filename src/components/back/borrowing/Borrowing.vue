@@ -1,7 +1,6 @@
 <template>
   <div class="content">
-      {{msg}}
-      <router-view></router-view>
+       <router-view></router-view>
   </div>
 </template>
 
@@ -9,7 +8,7 @@
 export default {
   data () {
     return {
-      msg: '授权'
+    
     }
   }
 }
@@ -18,3 +17,4 @@ export default {
 <style scoped>
 
 </style>
+
