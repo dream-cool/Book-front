@@ -44,7 +44,8 @@
            <br>
           书籍评分 {{book.score}}
           <el-button type="warning" icon="el-icon-star-off" circle></el-button>
-          <el-button type="info" @click="dialogFormVisible = true"  circle>申请借阅</el-button>
+          <el-button v-if ="book.ebook == 0"  type="info" @click="dialogFormVisible = true"  circle>申请借阅</el-button>
+          <el-button v-if ="book.ebook == 1"  type="info" @click="goToEookRead"  circle>在线阅读</el-button>
         </div>
       </div>
       <div class="ebook">
@@ -106,6 +107,9 @@ export default {
             this.$message.error(res.data.message)
           }
         })
+    },
+    goToEookRead () {
+      this.$router.push({ path: '/front/ebookRead/' + this.id})
     }
   }
 }

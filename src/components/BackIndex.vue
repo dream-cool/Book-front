@@ -14,7 +14,7 @@
             <el-menu-item index="/back/book/addBook">新增书籍</el-menu-item>
             <el-menu-item index="/front/ebookRead">电子书在线阅读</el-menu-item>
           </el-submenu>
-          <el-submenu index="/back/borrowing"> 
+          <el-submenu index="/back/borrowing">
             <template slot="title">
               <i class="el-icon-document"></i>借阅管理
             </template>
@@ -35,7 +35,8 @@
             <template slot="title">
               <i class="el-icon-s-data"></i>统计管理
             </template>
-            <el-menu-item index="/back/statistics/storageStatistics">藏量统计</el-menu-item>
+            <el-menu-item index="/back/statistics/userStatisticsByTime">用户统计</el-menu-item>
+            <el-menu-item index="/back/statistics/storageStatisticsByTime">藏量统计</el-menu-item>
             <el-menu-item index="/back/statistics/categoryStatistics">类别统计</el-menu-item>
             <el-menu-item index="/back/statistics/borrowingStatistics">借阅统计</el-menu-item>
           </el-submenu>
@@ -69,12 +70,6 @@
         </el-header>
 
         <div class="navbar clearfix">
-            <el-breadcrumb separator-class="el-icon-arrow-right">
-              <el-breadcrumb-item v-for="item in levelList" :key="item.path">
-                {{item.name}}
-              </el-breadcrumb-item>
-            </el-breadcrumb>
-
 
         </div>
 
@@ -91,30 +86,24 @@ export default {
   name: 'index',
   components: {
   },
-  data() {
+  data () {
     return {
       levelList: null
     }
   },
   computed: {
- 
+
   },
   watch: {
-    $route() {
-      this.getBreadcrumb()
-    }
+
   },
   methods: {
-    getBreadcrumb() {
-      //$route.matched一个数组 包含当前路由的所有嵌套路径片段的路由记录
-      let matched = this.$route.matched.filter(item => item.name)
-      this.levelList = matched
-    }
+
   },
-  created() {
-    this.getBreadcrumb()
+  created () {
+
   },
-  mounted() {
+  mounted () {
   }
 }
 </script>

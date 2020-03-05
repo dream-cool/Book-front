@@ -211,14 +211,14 @@ export default {
       this.multipleSelection = val
     },
     handleQuery (row) {
-      this.$router.push({ path: '/back/bookDetail/' + row.bookId})
+      this.$router.push({ path: '/back/book/bookDetail/' + row.bookId})
     },
     handleEdit (row) {
       console.log(row)
       if (row.ebook == 1) {
-        this.$router.push({ path: '/back/updateEbook/' + row.bookId})
+        this.$router.push({ path: '/back/book/updateEbook/' + row.bookId})
       } else {
-        this.$router.push({ path: '/back/updateBook/' + row.bookId})
+        this.$router.push({ path: '/back/book/updateBook/' + row.bookId})
       }
     },
     handleDelete (row) {
@@ -267,10 +267,10 @@ export default {
       return data
     },
     getBookInfo (pageNum, pageSize, book) {
-      axios({
-        url: '/book?pageNum=' + pageNum + '&pageSize=' + pageSize,
-        params: book
-      }).then(res => {
+      axios.post(
+        '/book/all?pageNum=' + pageNum + '&pageSize=' + pageSize,
+        book
+      ).then(res => {
         if (res.data.code === 200) {
           this.bookList = res.data.data.list
           this.bookList.map(book => {

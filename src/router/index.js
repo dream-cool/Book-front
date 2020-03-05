@@ -23,7 +23,8 @@ import HandleReturn from '../components/back/borrowing/HandleReturn.vue'
 import ReaderDetail from '../components/back/user/ReaderDetail.vue'
 import ReaderList from '../components/back/user/ReaderList.vue'
 import RecoveryPrivilege from '../components/back/RecoveryPrivilege.vue'
-import StorageStatistics from '../components/back/statistics/StorageStatistics.vue' 
+import StorageStatisticsByTime from '../components/back/statistics/StorageStatisticsByTime.vue' 
+import UserStatisticsByTime from '../components/back/statistics/UserStatisticsByTime.vue'
 import EbookRead from '../components/front/EbookRead.vue'
 import UpdateBook from "../components/back/book/UpdateBook.vue"
 import UpdateEbook from "../components/back/book/updateEbook.vue"
@@ -33,7 +34,7 @@ Vue.use(Router)
 export default new Router({
   routes: [
     
-    {path: '/front/ebookRead', component: EbookRead},
+    {path: '/front/ebookRead/:id', component: EbookRead},
     {
       path: '/front',
       name: 'FrontIndex',
@@ -96,7 +97,8 @@ export default new Router({
           children: [
             {path: '/back/statistics/borrowingStatistics', component: BorrowingStatistics},
             {path: '/back/statistics/categoryStatistics', component: CategoryStatistics},
-            {path: '/back/statistics/storageStatistics', component: StorageStatistics}            
+            {path: '/back/statistics/storageStatisticsByTime', component: StorageStatisticsByTime},
+            {path: '/back/statistics/userStatisticsByTime', component: UserStatisticsByTime}
           ]
         },
         {path: '/back/grantPrivilege', component: GrantPrivilege},      

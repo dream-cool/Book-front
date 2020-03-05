@@ -14,20 +14,19 @@
         <br>
         <br>
         <span class="demonstration" style="float:left;margin-left: 10%;">作者:  {{data.book.author}}</span>
-        <span class="demonstration" style="float:left;margin-left: 18%;">上传时间: {{data.book.inputTime}} </span>
-        <span class="demonstration" style="float:left;margin-left: 24%;">大小: {{data.fileSize}}</span>
+        <span class="demonstration" style="float:left;margin-left: 14%;">上传时间: {{data.book.inputTime}} </span>
+        <span class="demonstration" style="float:left;margin-left: 14%;">大小: {{data.fileSize}}</span>
         <span class="demonstration" style="float:left;margin-left: 0%;">
           <el-link type="primary" :href = 'URL'>下载</el-link>
         </span>
         <br>
         <br>
-       
 
         <br>
         <br>
       </div>
      <p :style="fontStyle"  v-html="data.content"></p>
-      
+
      <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
@@ -54,14 +53,15 @@
 
 <script>
 import axios from 'axios'
+import moment from 'moment'
 export default {
   data () {
     return {
       data: {
         content: '',
         book: {
-          author:'',
-          inputTime:null,
+          author: '',
+          inputTime: null
         }
       },
       URL: 'localhost:8090/download/',
@@ -71,43 +71,42 @@ export default {
       fontSize: 20,
       backgroundColor: '#C8B9B9',
       fontColor: '#000000',
-      fontStyle:{
-                'font-size': '20px',
-                'color': '#510D0D'
-            },
-      backgroundStyle: {
-          'background': '#C8B9B9'
+      fontStyle: {
+        'font-size': '20px',
+        'color': '#510D0D'
       },
-      percentage:0
+      backgroundStyle: {
+        'background': '#C8B9B9'
+      },
+      percentage: 0
     }
   },
   created () {
     this.getEbookContent(this.pageNum, this.pageSize)
-   
   },
   methods: {
     handleBackgroundColorChange () {
       this.backgroundStyle.background = this.backgroundColor
     },
-    handleFontChange (){
+    handleFontChange () {
       this.fontStyle = {
-        'font-size': this.fontSize+'px',
+        'font-size': this.fontSize + 'px',
         'color': this.fontColor
-        }
+      }
     },
     handleSizeChange (val) {
       this.pageSize = val
       this.getEbookContent(this.pageNum, this.pageSize)
       this.toTop()
     },
-    decrease(){
+    decrease () {
       this.pageNum--
       this.toTop()
       this.getEbookContent(this.pageNum, this.pageSize)
     },
-    increase(){
-      if (this.pageNum > (this.total / this.pageSize)){
-        return  
+    increase () {
+      if (this.pageNum > (this.total / this.pageSize)) {
+        return
       }
       this.toTop()
       this.pageNum++
@@ -116,15 +115,15 @@ export default {
     handleCurrentChange (pageNum) {
       this.getEbookContent(pageNum, this.pageSize)
       this.toTop()
-      this.percentage = (this.pageNum/(this.total/this.pageSize)*100)    
+      this.percentage = (this.pageNum / (this.total / this.pageSize) * 100)
       this.percentage = Number(this.percentage.toFixed(2))
     },
-    toTop (){
-      document.body.scrollTop = document.documentElement.scrollTop = 0;
+    toTop () {
+      document.body.scrollTop = document.documentElement.scrollTop = 0
     },
     getEbookContent (pageNum, pageSize) {
       console.log(pageSize)
-      axios.get('/book/ebook/ac24efded0df436b85aa5812c1dbf319?pageNum='+pageNum+ '&pageSize='+pageSize)
+      axios.get('/book/ebook/' + this.$route.params.id + '?pageNum=' + pageNum + '&pageSize=' + pageSize)
         .then(res => {
           if (res.data.code === 200) {
             this.data = res.data.data
@@ -134,7 +133,7 @@ export default {
             this.pageSize = res.data.data.pageSize
             this.total = res.data.data.total
             this.URL = this.URL + res.data.data.book.location
-            this.percentage = (this.pageNum/(this.total/this.pageSize)*100)
+            this.percentage = (this.pageNum / (this.total / this.pageSize) * 100)
             this.percentage = Number(this.percentage.toFixed(2))
           } else {
             this.$message.error(res.data.$message)
