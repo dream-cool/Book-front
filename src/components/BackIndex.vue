@@ -12,7 +12,6 @@
             </template>
             <el-menu-item index="/back/book/bookList">书籍列表</el-menu-item>
             <el-menu-item index="/back/book/addBook">新增书籍</el-menu-item>
-            <el-menu-item index="/front/ebookRead">电子书在线阅读</el-menu-item>
           </el-submenu>
           <el-submenu index="/back/borrowing">
             <template slot="title">

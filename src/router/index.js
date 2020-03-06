@@ -27,7 +27,7 @@ import StorageStatisticsByTime from '../components/back/statistics/StorageStatis
 import UserStatisticsByTime from '../components/back/statistics/UserStatisticsByTime.vue'
 import EbookRead from '../components/front/EbookRead.vue'
 import UpdateBook from "../components/back/book/UpdateBook.vue"
-import UpdateEbook from "../components/back/book/updateEbook.vue"
+import UpdateEbook from "../components/back/book/UpdateEbook.vue"
 
 Vue.use(Router)
 
@@ -94,6 +94,9 @@ export default new Router({
           // 统计
           path: '/back/statistics', 
           component: Statistics,
+          meta: {
+            requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+          },
           children: [
             {path: '/back/statistics/borrowingStatistics', component: BorrowingStatistics},
             {path: '/back/statistics/categoryStatistics', component: CategoryStatistics},

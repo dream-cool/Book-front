@@ -1,5 +1,7 @@
 <template>
   <div class="content" :style="backgroundStyle" >
+     <el-button icon="el-icon-back" @click="backBookDeatil" style="margin-left: 15%; margin-top: 2%;">返回首页</el-button>
+
     <el-main>
       <div class="header">
         <span class="demonstration" style="float:left;margin-left: 15%;">背景颜色</span>
@@ -91,7 +93,7 @@ export default {
     handleFontChange () {
       this.fontStyle = {
         'font-size': this.fontSize + 'px',
-        'color': this.fontColor
+        'color': this.fontStyle.color
       }
     },
     handleSizeChange (val) {
@@ -101,11 +103,14 @@ export default {
     },
     decrease () {
       this.pageNum--
+      if (this.pageNum < 1) {
+        return
+      }
       this.toTop()
       this.getEbookContent(this.pageNum, this.pageSize)
     },
     increase () {
-      if (this.pageNum > (this.total / this.pageSize)) {
+      if (this.pageNum >= (this.total / this.pageSize)) {
         return
       }
       this.toTop()
@@ -120,6 +125,9 @@ export default {
     },
     toTop () {
       document.body.scrollTop = document.documentElement.scrollTop = 0
+    },
+    backBookDeatil () {
+      this.$router.push({ path: '/back/book/bookDetail/' + this.$route.params.id })
     },
     getEbookContent (pageNum, pageSize) {
       console.log(pageSize)
