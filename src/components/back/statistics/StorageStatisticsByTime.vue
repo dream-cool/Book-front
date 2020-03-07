@@ -6,9 +6,6 @@
       :data-empty="dataEmpty"
       :settings="chartSettings">
       </ve-line>
-
-      
-
       <el-date-picker style="margin-left: 30%"
         v-model="timeRange"
         type="daterange"

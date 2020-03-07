@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/components/back/Home.vue'
 import FrontIndex from '@/components/FrontIndex.vue'
 import BackIndex from '@/components/BackIndex.vue'
 import Book from '@/components/back/book/Book.vue'
@@ -22,71 +21,94 @@ import HandleBorrowing from '../components/back/borrowing/HandleBorrowing.vue'
 import HandleReturn from '../components/back/borrowing/HandleReturn.vue'
 import ReaderDetail from '../components/back/user/ReaderDetail.vue'
 import ReaderList from '../components/back/user/ReaderList.vue'
-import RecoveryPrivilege from '../components/back/RecoveryPrivilege.vue'
 import StorageStatisticsByTime from '../components/back/statistics/StorageStatisticsByTime.vue' 
 import UserStatisticsByTime from '../components/back/statistics/UserStatisticsByTime.vue'
 import EbookRead from '../components/front/EbookRead.vue'
 import UpdateBook from "../components/back/book/UpdateBook.vue"
 import UpdateEbook from "../components/back/book/UpdateEbook.vue"
+import Login from "../components/Login.vue"
+import NoAuthority from '../components/403.vue'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
     
+    {path: '/login', component: Login},
     {path: '/front/ebookRead/:id', component: EbookRead},
     {
       path: '/front',
-      name: 'FrontIndex',
+      name: '前台',
       component: FrontIndex,
       children: [
       ]
     },
     {
       path: '/back',
-      name: 'BackIndex',
+      name: '首页',
       component: BackIndex,
+      meta:{requireAuth:true, permissions: 'admin' },
       children: [
-        {path: '/back/home', component: Home},
+        {path: '/noAuthority', component: NoAuthority},
         {
           // 书籍
           path: '/back/book', 
           component: Book,
+          name: '书籍管理',
           children: [
-            {path: '/back/book/addBook', component: AddBook},
-            {path: '/back/book/updateBook/:id', component: UpdateBook},
-            {path: '/back/book/updateEbook/:id', component: UpdateEbook},
-            {path: '/back/book/bookDetail/:id', component: BookDetail},
-            {path: '/back/book/bookList', component: BookList},
+            {path: '/back/book/addBook', component: AddBook, name: '新增书籍', 
+             meta:{ requireAuth:true,  permissions: 'bookW' }},
+            {path: '/back/book/updateBook/:id', component: UpdateBook, name: '修改纸质书', 
+             meta:{ requireAuth:true,  permissions: 'bookW' }},
+            {path: '/back/book/updateEbook/:id', component: UpdateEbook, name: '修改电子书',
+             meta:{ requireAuth:true,  permissions: 'bookW' }},
+            {path: '/back/book/bookDetail/:id', component: BookDetail, name: '书籍详情',
+             meta:{ requireAuth:true,  permissions: 'bookR' }},
+            {path: '/back/book/bookList', component: BookList, name: '书籍列表',
+             meta:{ requireAuth:true,  permissions: 'bookW' }},
           ]
         },
         {
           // 类别
           path: '/back/category', 
           component: Category,
+          name: '类别管理',
+          meta:{requireAuth:true},
           children: [
-            {path: '/back/category/addCategory', component: AddCategory},
-            {path: '/back/category/categoryList', component: CategoryList},
+            {path: '/back/category/addCategory', component: AddCategory, name: '新增类别', 
+             meta:{requireAuth:true,  permissions: 'categoryW' }},
+            {path: '/back/category/categoryList', component: CategoryList, name: '类别列表', 
+             meta:{requireAuth:true, permissions: 'categoryW'}},
           ]
         },
         {
           // 用户
           path: '/back/user', 
           component: User,
+          name: '用户管理',
+          meta:{requireAuth:true},
           children: [
-            {path: '/back/user/addUser', component: AddReader},
-            {path: '/back/user/userDetail/:id', component: ReaderDetail},
-            {path: '/back/user/userList', component: ReaderList},
+            {path: '/back/user/addUser', component: AddReader, name: '新增用户', 
+             meta:{requireAuth:true,  permissions: 'userW' }},
+            {path: '/back/user/userDetail/:id', component: ReaderDetail, name: '用户详情', 
+             meta:{requireAuth:true,  permissions: 'userR' }},
+            {path: '/back/user/userList', component: ReaderList, name: '用户列表', 
+             meta:{requireAuth:true,  permissions: 'userW' }},
           ]
         },
         {
           // 借阅
           path: '/back/borrowing', 
           component: Borrowing,
+          name: '借阅管理',
+          meta:{requireAuth:true},
           children: [
-            {path: '/back/borrowing/borrowingList', component: BorrowingList},
-            {path: '/back/borrowing/handleBorrowing', component: HandleBorrowing},
-            {path: '/back/borrowing/handleReturn', component: HandleReturn},
+            {path: '/back/borrowing/borrowingList', component: BorrowingList, name: '借阅列表',
+              meta:{requireAuth:true,  permissions: 'borrowingR' }},
+            {path: '/back/borrowing/handleBorrowing', component: HandleBorrowing, name: '处理借阅', 
+              meta:{requireAuth:true,  permissions: 'borrowingW' }},
+            {path: '/back/borrowing/handleReturn', component: HandleReturn, name: '处理归还', 
+              meta:{requireAuth:true,  permissions: 'borrowingW' }},
           ]
         },
 
@@ -94,18 +116,24 @@ export default new Router({
           // 统计
           path: '/back/statistics', 
           component: Statistics,
+          name: '统计管理',
+          meta:{requireAuth:true},
           meta: {
             requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
           },
           children: [
-            {path: '/back/statistics/borrowingStatistics', component: BorrowingStatistics},
-            {path: '/back/statistics/categoryStatistics', component: CategoryStatistics},
-            {path: '/back/statistics/storageStatisticsByTime', component: StorageStatisticsByTime},
-            {path: '/back/statistics/userStatisticsByTime', component: UserStatisticsByTime}
+            {path: '/back/statistics/borrowingStatistics', component: BorrowingStatistics,
+             name: '书籍状态统计', meta:{requireAuth:true,  permissions: 'statisticsR' }},
+            {path: '/back/statistics/categoryStatistics', component: CategoryStatistics,
+             name: '书籍分类统计', meta:{requireAuth:true,  permissions: 'statisticsR' }},
+            {path: '/back/statistics/storageStatisticsByTime', component: StorageStatisticsByTime,
+             name: '书籍新增统计', meta:{requireAuth:true,  permissions: 'statisticsR' }},
+            {path: '/back/statistics/userStatisticsByTime', component: UserStatisticsByTime, 
+            name: '用户新增统计', meta:{requireAuth:true,  permissions: 'statisticsR' }}
           ]
         },
-        {path: '/back/grantPrivilege', component: GrantPrivilege},      
-        {path: '/back/recoveryPrivilege', component: RecoveryPrivilege}        
+        {path: '/back/grantPrivilege', component: GrantPrivilege, name: '授权', 
+           meta:{requireAuth:true, permissions: 'privilege' }},      
       ]
     }
   ]
