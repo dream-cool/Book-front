@@ -116,10 +116,12 @@ export default {
       borrowingStatusInfo: {
         list: [],
         obj: {}
-      }
+      },
+      user: {}
     }
   },
   created () {
+    this.user = JSON.parse(window.localStorage.getItem('userDetail'))
     this.getBorrowingInfo(this.pageNum, this.pageSize, this.borrowing)
   },
   methods: {
@@ -130,7 +132,7 @@ export default {
     handleReturn (row) {
       this.$confirm('确认归还？')
         .then(_ => {
-          axios('/borrowing/handleReturn/' + row.borrowingId + '?userName=3')
+          axios('/borrowing/handleReturn/' + row.borrowingId + '?userName='+this.user.userName)
             .then(res => {
               if (res.data.code === 200) {
                 this.book = res.data.data

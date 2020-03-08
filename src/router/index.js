@@ -12,6 +12,7 @@ import AddCategory from '../components/back/category/AddCategory'
 import AddReader from '../components/back/user/AddReader.vue'
 import BookDetail from '../components/back/book/BookDetail.vue'
 import BookList from '../components/back/book/BookList.vue'
+import BookInfo from '../components/back/book/BookInfo.vue'
 import BorrowingList from '../components/back/borrowing/BorrowingList.vue'
 import BorrowingStatistics from '../components/back/statistics/BorrowingStatistics.vue'
 import CategoryList from '../components/back/category/CategoryList.vue'
@@ -21,6 +22,7 @@ import HandleBorrowing from '../components/back/borrowing/HandleBorrowing.vue'
 import HandleReturn from '../components/back/borrowing/HandleReturn.vue'
 import ReaderDetail from '../components/back/user/ReaderDetail.vue'
 import ReaderList from '../components/back/user/ReaderList.vue'
+import UserInfo from '../components/back/user/UserInfo.vue'
 import StorageStatisticsByTime from '../components/back/statistics/StorageStatisticsByTime.vue' 
 import UserStatisticsByTime from '../components/back/statistics/UserStatisticsByTime.vue'
 import EbookRead from '../components/front/EbookRead.vue'
@@ -28,6 +30,8 @@ import UpdateBook from "../components/back/book/UpdateBook.vue"
 import UpdateEbook from "../components/back/book/UpdateEbook.vue"
 import Login from "../components/Login.vue"
 import NoAuthority from '../components/403.vue'
+import MessageInfo from '../components/MessageInfo.vue'
+import UpdatePassword from '../components/front/UpdatePassword.vue'
 
 Vue.use(Router)
 
@@ -51,11 +55,21 @@ export default new Router({
       children: [
         {path: '/noAuthority', component: NoAuthority},
         {
+         path: '/messageInfo', component: MessageInfo, name: '我的信息',
+         meta:{ requireAuth:true }
+        },
+        {
+          path: '/updatePassword', component: UpdatePassword, name: '修改密码',
+          meta:{ requireAuth:true }
+         },
+        {
           // 书籍
           path: '/back/book', 
           component: Book,
           name: '书籍管理',
           children: [
+            {path: '/back/book/bookInfo', component: BookInfo, name: '书籍信息', 
+             meta:{ requireAuth:true,  permissions: 'bookR' }},
             {path: '/back/book/addBook', component: AddBook, name: '新增书籍', 
              meta:{ requireAuth:true,  permissions: 'bookW' }},
             {path: '/back/book/updateBook/:id', component: UpdateBook, name: '修改纸质书', 
@@ -88,6 +102,8 @@ export default new Router({
           name: '用户管理',
           meta:{requireAuth:true},
           children: [
+            {path: '/back/user/userInfo', component: UserInfo, name: '用户信息', 
+             meta:{requireAuth:true,  permissions: 'userR' }},
             {path: '/back/user/addUser', component: AddReader, name: '新增用户', 
              meta:{requireAuth:true,  permissions: 'userW' }},
             {path: '/back/user/userDetail/:id', component: ReaderDetail, name: '用户详情', 

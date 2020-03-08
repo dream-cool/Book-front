@@ -12,6 +12,8 @@ import Vuex from 'vuex'
 
 import iView from 'iview'
 
+import back from './components/BackIndex.vue'
+
 
 
 axios.defaults.baseURL = 'http://localhost:8090'
@@ -63,13 +65,11 @@ axios.interceptors.response.use(
 )
  
 router.beforeEach((to, from, next) => {
-  iView.LoadingBar.start();//loadong 效果
   var token = localStorage.getItem('token');//获取本地存储的token
   var userDetail = JSON.parse(localStorage.getItem('userDetail'))
   if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
     if (token != null &&  token !== "") {  // 通过vuex state获取当前的token是否存
-      if(userDetail != null ){
-        debugger
+      if(to.meta.permissions){
         if(userDetail.permission != null && userDetail.permission[to.meta.permissions]){
           next()
         } else {
@@ -78,9 +78,10 @@ router.beforeEach((to, from, next) => {
             query: {redirect: to.fullPath}  // 将跳转的路由path作为参数，登录成功后跳转到该路由
           })
         }
+      } else {
+        next()
       }
-    }
-    else {
+    } else {
       next({
         path: '/login',
         query: {redirect: to.fullPath}  // 将跳转的路由path作为参数，登录成功后跳转到该路由

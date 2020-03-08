@@ -70,19 +70,21 @@ export default {
         borrowingTime: ''
       },
       img: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
-      dialogFormVisible: false
+      dialogFormVisible: false,
+      user: {}
     }
   },
   created () {
+    this.user = JSON.parse(window.localStorage.getItem('userDetail'))
     this.id = this.$route.params.id
     this.getBookInfo(this.id)
   },
   methods: {
     applyBorrowing () {
-      this.borrowing.userId = 2
+      this.borrowing.userId = this.user.userId
       this.borrowing.bookId = this.id
       if (this.book.bookStatus != 0) {
-        this.$message.error('该书籍已在申请中')
+        this.$message.error('该书籍暂不在库,无法申请')
         return
       }
       axios.post('/borrowing', this.borrowing)

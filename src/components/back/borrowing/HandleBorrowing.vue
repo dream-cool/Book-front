@@ -137,10 +137,12 @@ export default {
       borrowingStatusInfo: {
         list: [],
         obj: {}
-      }
+      },
+      user: {}
     }
   },
   created () {
+    this.user = JSON.parse(window.localStorage.getItem('userDetail'))
     this.getBorrowingInfo(this.pageNum, this.pageSize, this.borrowing)
   },
   methods: {
@@ -153,7 +155,7 @@ export default {
         .then(_ => {
           var data = {
             operation: 'BORROWING_STATUS_LENT',
-            userName: 3
+            userName: this.user.userName
           }
           this.commit(row.borrowingId, data)
         })
@@ -168,7 +170,7 @@ export default {
       }).then(({ value }) => {
         var data = {
           operation: 'BORROWING_STATUS_REFUSED',
-          userName: 3,
+          userName: this.user.userName,
           note: value
         }
         this.commit(row.borrowingId, data)

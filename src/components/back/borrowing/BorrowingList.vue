@@ -1,5 +1,43 @@
 <template>
 <div class="content">
+   <div class="borrowingDetail">
+        <el-dialog title="借阅流程" :visible.sync="dialogFormVisible" >
+           <el-timeline style="width:700px">
+              <el-timeline-item v-if="borrowingDetail.returnOperator != null" :timestamp="borrowingDetail.returnTime" placement="top">
+                <el-card>
+                  <h4>归还书籍</h4>
+                  <p>管理员{{borrowingDetail.returnOperator}} 于 {{borrowingDetail.returnTime}} 
+                    处理了用户 {{borrowingDetail.userName}} 归还 {{borrowingDetail.bookName}}书籍，
+                    书籍编号为 {{borrowingDetail.bookId}}</p>
+                  <p v-if="borrowingDetail.borrowingStatus == '5'">逾期归还, 逾期 {{borrowingDetail.overdueDays}} 天</p>
+                  <p v-if="borrowingDetail.borrowingStatus == '6'"> 正常归还</p>
+                </el-card>
+              </el-timeline-item>
+              <el-timeline-item :timestamp="borrowingDetail.handleTime" placement="top">
+                <el-card>
+                  <h4>处理借阅</h4>
+                  <p>管理员 {{borrowingDetail.borrowingOperator}} 于 {{borrowingDetail.handleTime}} 进行处理 </p>
+                   <p v-if="borrowingDetail.note == null">同意借阅</p>
+                    <p v-if="borrowingDetail.note != null">已驳回，驳回理由：{{borrowingDetail.note}}</p>
+                </el-card>
+              </el-timeline-item>
+              <el-timeline-item :timestamp="borrowingDetail.applicationTime" placement="top">
+                <el-card>
+                  <h4>申请借阅</h4>
+                  <p>用户 {{borrowingDetail.userName}} 于 {{borrowingDetail.applicationTime}} 发起申请,
+                  借阅书籍 {{borrowingDetail.bookName}} ,从 {{borrowingDetail.borrowingTime}} 开始借阅,
+                    借阅{{borrowingDetail.duration}}天。
+                  </p>
+                </el-card>
+              </el-timeline-item>
+            </el-timeline>
+          <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+          </div>
+        </el-dialog>
+    </div>
+
+
   <el-container>
           <el-form :model="borrowing" :inline="true"  label-width="100px" class="demo-form-inline">
           <el-form-item label="书籍名称">
@@ -84,16 +122,6 @@
             width="120">
           </el-table-column>
           <el-table-column
-            prop="applicationTime"
-            label="申请时间"
-            width="200">
-          </el-table-column>
-          <el-table-column
-            prop="handleTime"
-            label="处理时间"
-            width="200">
-          </el-table-column>
-          <el-table-column
             prop="borrowingTime"
             label="借阅日期"
             width="100">
@@ -102,6 +130,14 @@
             prop="returnTime"
             label="归还时间"
             width="200">
+          </el-table-column>
+          <el-table-column
+            label="操作"
+            width="250"
+            >
+            <template slot-scope="scope">
+              <el-button @click="handleQuery(scope.row)" size="mini">查看流程</el-button>
+            </template>
           </el-table-column>
         </el-table>
         <div class="block">
@@ -131,7 +167,9 @@ export default {
       borrowingStatusInfo: {
         list: [],
         obj: {}
-      }
+      },
+      borrowingDetail:{},
+      dialogFormVisible: false
     }
   },
   created () {
@@ -144,6 +182,20 @@ export default {
     },
     handleCurrentChange () {
 
+    },
+    handleQuery(row){
+      axios.get(
+        '/borrowing/'+row.borrowingId 
+      ).then(res => {
+        if (res.data.code === 200) {
+          this.borrowingDetail = res.data.data
+          console.log(this.borrowingDetail.returnTime )
+          // this.borrowingDetail.overdueDays = 
+        } else {
+          this.$message.error(res.data.message)
+        }
+      })
+      this.dialogFormVisible = true
     },
     search () {
       this.getBorrowingInfo(this.pageNum, this.pageSize, this.borrowing)
@@ -177,7 +229,7 @@ export default {
       axios('/borrowing/get/borrowingStatus').then(res => {
         if (res.data.code === 200) {
           this.borrowingStatusInfo = res.data.data
-          var obj = {code: null, message: '所有'}
+          var obj = {code: null, message: '全部'}
           this.borrowingStatusInfo.list.push(obj)
           this.borrowing.borrowingStatus = null
         } else {
