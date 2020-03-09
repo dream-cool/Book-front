@@ -25,7 +25,7 @@
                 <el-radio :label="'1'">借出</el-radio>
                 <el-radio :label="'2'">损坏</el-radio>
               </el-radio-group>
-              
+
             </el-form-item>
             <el-form-item label="入馆时间">
                 <el-form-item prop="inputTime">
@@ -33,7 +33,7 @@
                 </el-form-item>
             </el-form-item>
             <el-form-item label="书籍分类" prop="category">
-              <el-cascader 
+              <el-cascader
                     :options="categoryList"
                     :props="optionProps"
                     :show-all-levels="false"
@@ -79,7 +79,7 @@
                 <el-input v-model="ebook.published"></el-input>
               </el-form-item>
               <el-form-item label="书籍分类" prop="category">
-                <el-cascader 
+                <el-cascader
                       :options="categoryList"
                       :props="optionProps"
                       :show-all-levels="false"
@@ -116,12 +116,12 @@
                 <el-input :rows="4" maxlength="100"
                     show-word-limit type="textarea" v-model="ebook.bookDescribe"
                     style="width: 500px"></el-input>
-              </el-form-item> 
+              </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="submitForm('ebookRuleForm')">立即录入</el-button>
                 <el-button @click="resetForm('ebookRuleForm')">重置</el-button>
               </el-form-item>
-            </el-form> 
+            </el-form>
         </el-tab-pane>
       </el-tabs>
     </template>
@@ -149,8 +149,8 @@ export default {
         ebook: '0',
         location: ''
       },
-      categoryList:[
-          
+      categoryList: [
+
       ],
       optionProps: {
         value: 'id',
@@ -158,9 +158,9 @@ export default {
         children: 'child'
       },
       none: {
-          id : '',
-          title : '无',
-          child: []
+        id: '',
+        title: '无',
+        child: []
       },
       ebook: {
         bookName: '',
@@ -192,7 +192,7 @@ export default {
         inputTime: [
           { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
         ],
-        category: [      
+        category: [
         ],
         bookDescribe: [
           { required: true, message: '请填写书籍描述', trigger: 'blur' }
@@ -222,7 +222,7 @@ export default {
       uploadEbookFileSuccess: false
     }
   },
-  created (){
+  created () {
     this.getAllCategory()
   },
   methods: {
@@ -230,26 +230,26 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (formName === 'bookRuleForm') {
-            if (this.book.categoryId === ''){
-              this.$message.error("书籍所属类别为空")
+            if (this.book.categoryId === '') {
+              this.$message.error('书籍所属类别为空')
               return false
             }
-            if (this.book.img === ''){
-              this.$message.error("书籍封面为空")
+            if (this.book.img === '') {
+              this.$message.error('书籍封面为空')
               return false
             } else {
               this.addBook(this.book)
             }
           } else {
-            if (this.ebook.categoryId === ''){
-              this.$message.error("书籍所属类别为空")
+            if (this.ebook.categoryId === '') {
+              this.$message.error('书籍所属类别为空')
               return false
             }
-            if (this.ebook.img === ''){
-              this.$message.error("电子书封面为空")
+            if (this.ebook.img === '') {
+              this.$message.error('电子书封面为空')
               return false
-            } else if (this.ebook.location === ''){
-              this.$message.error("电子书文件为空")
+            } else if (this.ebook.location === '') {
+              this.$message.error('电子书文件为空')
               return false
             } else {
               this.addBook(this.ebook)
@@ -260,8 +260,8 @@ export default {
         }
       })
     },
-    getAllCategory (){
-       axios.get('/type/cascade').then(res => {
+    getAllCategory () {
+      axios.get('/type/cascade').then(res => {
         if (res.data.code === 200) {
           this.categoryList = res.data.data
           this.categoryList.push(this.none)
@@ -287,13 +287,12 @@ export default {
     handleClick (tab, event) {
     },
 
-
-    handleBookChange (value){
-      this.book.categoryId = value[value.length-1]
+    handleBookChange (value) {
+      this.book.categoryId = value[value.length - 1]
     },
 
-    handleEbookChange (value){
-      this.ebook.categoryId = value[value.length-1]
+    handleEbookChange (value) {
+      this.ebook.categoryId = value[value.length - 1]
     },
 
     handleBookImgRemove (file, fileList) {

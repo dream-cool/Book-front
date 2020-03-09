@@ -1,7 +1,7 @@
 <template>
   <div class="backIndex" v-loading="fullscreenLoading" >
     <el-container style="height: 800px; border: 1px solid #eee;"   >
-    
+
       <el-aside width="200px">
         <el-menu default-active="2" router >
           <el-menu-item index="/login">
@@ -76,8 +76,8 @@
       <el-container>
         <el-header style="text-align: right; font-size: 12px; background-color: rgb(238, 241, 246)">
           <el-badge is-dot class="item" v-if="messageList.length > 0"> </el-badge>
-            <el-dropdown  @command="handleCommand" style="margin-top:1%">
-              <i class="el-icon-user" style="font-size: 25px; margin-right: 15px;"></i>
+            <el-dropdown  @command="handleCommand" style="margin-top:0.5%">
+             <el-avatar :size="50" :src="user.img" style="margin-right: 15px;"></el-avatar>
               <el-dropdown-menu slot="dropdown" style="margin-top:-1%">
                 <el-dropdown-item command="userDeatil">个人中心</el-dropdown-item>
                 <el-badge :value="messageList.length" :max="99" class="item">
@@ -87,21 +87,19 @@
                 <el-dropdown-item command="logout">退出</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-         
-          <span>您好，{{user.userName}}</span>
+          <span style="font-size: 20px">您好，{{user.userName}}</span>
         </el-header>
 
         <div class="navbar clearfix" style="margin-top: 1%">
               <el-breadcrumb  separator-class="el-icon-arrow-right" >
-                <el-breadcrumb-item 
+                <el-breadcrumb-item
                   v-for="item in routerList" v-bind:key="item.path"
                   >
                    {{item.name}}
-                  
+
                 </el-breadcrumb-item>
               </el-breadcrumb>
         </div>
-
         <el-main>
           <router-view></router-view>
         </el-main>
@@ -120,23 +118,23 @@ export default {
     return {
       levelList: null,
       routerList: [],
-      user:{
-        permission:{}
+      user: {
+        permission: {}
       },
       message: {
       },
-      messageList:[],
+      messageList: [],
       pageNum: 1,
       pageSize: 10,
       fullscreenLoading: false
     }
   },
   computed: {
-    
+
   },
   watch: {
     $route: {
-    handler: function(val, oldVal){
+      handler: function (val, oldVal) {
         this.routerList = this._routerRoot._route.matched
       },
       // 深度观察监听
@@ -144,52 +142,52 @@ export default {
     }
   },
   methods: {
-    
-    showRouter(){
-      
+
+    showRouter () {
+
     },
-    startLoad(){
+    startLoad () {
       this.fullscreenLoading = true
     },
-    handleCommand(com){
-      if(com == 'logout'){
+    handleCommand (com) {
+      if (com == 'logout') {
         this.logout()
       }
-      if(com == 'queryMessage'){
+      if (com == 'queryMessage') {
         this.goToMessage()
       }
-      if(com == 'updatePassword'){
+      if (com == 'updatePassword') {
         this.goToUpdatePW()
       }
     },
-    goToUpdatePW() {
-      this.$router.push({path:'/updatePassword'})
+    goToUpdatePW () {
+      this.$router.push({path: '/updatePassword'})
     },
-    goToMessage(){
-      this.$router.push({path:'/messageInfo'})
+    goToMessage () {
+      this.$router.push({path: '/messageInfo'})
     },
-    logout(){
-      window.localStorage.removeItem("userDetail")
-      window.localStorage.removeItem("token")
-      this.$router.push({path:'/login'})
+    logout () {
+      window.localStorage.removeItem('userDetail')
+      window.localStorage.removeItem('token')
+      this.$router.push({path: '/login'})
     },
-    getMessage(pageNum, pageSize, message){
+    getMessage (pageNum, pageSize, message) {
       this.message.userId = this.user.userId
       this.message.status = 0
       axios({
-        url: '/message?pageNum=' + pageNum + '&pageSize=' + pageSize, 
+        url: '/message?pageNum=' + pageNum + '&pageSize=' + pageSize,
         params: message
-        }).then(res => {
-          if (res.data.code === 200) {
-            this.messageList = res.data.data.list
-            this.pageNum = res.data.data.pageNum
-            this.pageSize = res.data.data.pageSize
-          } else {
-            this.$message.error(res.data.message)
-          }
-          setTimeout(() => {
-              this.getMessage(this.pageNum, this.pageSize, this.message)
-          }, 10000)
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.messageList = res.data.data.list
+          this.pageNum = res.data.data.pageNum
+          this.pageSize = res.data.data.pageSize
+        } else {
+          this.$message.error(res.data.message)
+        }
+        setTimeout(() => {
+          this.getMessage(this.pageNum, this.pageSize, this.message)
+        }, 10000)
       })
     }
   },
