@@ -33,6 +33,7 @@ import NoAuthority from '../components/403.vue'
 import MessageInfo from '../components/MessageInfo.vue'
 import UpdatePassword from '../components/front/UpdatePassword.vue'
 import Home from '../components/back/Home.vue'
+import Personal  from '../components/Personal.vue'
 
 Vue.use(Router)
 
@@ -66,6 +67,12 @@ export default new Router({
           path: '/messageInfo',
           component: MessageInfo,
           name: '我的信息',
+          meta: { requireAuth: true }
+        },
+        {
+          path: '/personal',
+          component: Personal,
+          name: '个人中心',
           meta: { requireAuth: true }
         },
         {

@@ -3,7 +3,7 @@
       <el-tabs v-model="activeName">
         <el-tab-pane label="旧密码修改" name="updateByOldPW">
             <el-form :model="pw" :rules="userRule" ref="userRule" label-width="100px" class="demo-ruleForm">
-                <el-form-item label="旧密码" @blur="checkOld"  prop="oldPassword">
+                <el-form-item label="旧密码" prop="oldPassword">
                     <el-input type="password" v-model="pw.oldPassword"></el-input>
                 </el-form-item>
                 <el-form-item label="新密码" prop="newPassword">
@@ -15,14 +15,31 @@
               <el-form-item>
                 <el-button type="primary" @click="submitForm('userRule')">立即修改</el-button>
                 <el-button @click="resetForm('userRule')">重置</el-button>
-                <el-button @click="checkOld">重置</el-button>
               </el-form-item>
             </el-form>
         </el-tab-pane>
-        <el-tab-pane label="邮箱验证码修改" name="updateByEmail">
-            邮箱验证码修改</el-tab-pane>
-        </el-tabs>
-
+        <el-tab-pane label="邮箱验证码修改"  name="updateByEmail">
+          <el-link v-if="user.email == null" >你还没有绑定邮箱</el-link>    
+            <el-steps v-if="user.email != null" :active="active"  finish-status="success">
+              <el-step title="校验邮箱验证码">
+              </el-step>
+              <el-step title="录入新密码">
+              </el-step>
+            </el-steps>
+            <div class="first" v-if="active == 0">
+               <el-input label="邮箱" :disabled="true" v-model="user.email" style="margin-left: 10%;margin-top: 10%;"></el-input>
+               <el-input  v-model="code" placeholder="请输入邮箱验证码" style="margin-left: 10%;margin-top: 10%;"></el-input>
+              <br>
+                <el-button @click="sendMessage" style="margin-left: 20%;margin-top: 10%"> 立即发送 </el-button>
+                <el-button @click="checkCode"> 验证 </el-button>
+            </div>
+            <div class="second" v-if="active == 1">
+              <el-input type="password" placeholder="请输入新密码" v-model="newPassword" style="margin-left: 10%;margin-top: 10%;"></el-input>
+              <el-input type="password" placeholder="请确认新密码" v-model="confirmNewPassword" style="margin-left: 10%;margin-top: 10%;"></el-input>
+              <el-button @click="commitNewPW"> 提交 </el-button>
+            </div>                          
+        </el-tab-pane>
+      </el-tabs>
   </div>
 </template>
 
@@ -39,56 +56,122 @@ export default {
         newPassword: '',
         confirmNewPassword: ''
       },
-
       checkOldPW: false,
       userRule: {
         oldPassword: [
           { required: true, message: '请输入旧密码', trigger: 'blur' },
-          { min: 6, max: 16, message: '长度至少8个字符', trigger: 'blur' }
+          { min: 6, max: 16, message: '长度至少6个字符', trigger: 'blur' }
         ],
         newPassword: [
           { required: true, message: '请输入新密码', trigger: 'blur' },
-          { min: 6, max: 16, message: '长度至少8个字符', trigger: 'blur' }
+          { min: 6, max: 16, message: '长度至少6个字符', trigger: 'blur' }
         ],
         confirmNewPassword: [
           { required: true, message: '请输入确认密码', trigger: 'blur' },
-          { min: 6, max: 16, message: '长度至少8个字符', trigger: 'blur' }
+          { min: 6, max: 16, message: '长度至少6个字符', trigger: 'blur' }
         ]
-      }
+      },
+      active: 0,
+      code: '',
+      newPassword: '',
+      confirmNewPassword: '',
     }
   },
   created () {
     this.user = JSON.parse(window.localStorage.getItem('userDetail'))
   },
   methods: {
-    checkOld () {
-      axios.get('/type/cascade').then(res => {
-        if (res.data.code === 200) {
-          this.categoryList = res.data.data
-          this.categoryList.push(this.none)
-        } else {
-          this.$message.error(res.data.message)
-        }
-      })
-    },
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
-        if (valid && this.checkOldPW) {
-
+        if (valid) {
+          if(this.newPassword != this.confirmNewPassword){
+            this.$message.error('两次密码不一致')
+            return
+          }
+          axios({
+              url: '/user/updatePWByOldPW',
+              params: {
+                'userId': this.user.userId,
+                'oldPassword': this.pw.oldPassword,
+                'newPassword': this.pw.newPassword
+              }
+             }).then(res => {
+              if (res.data.code === 200) {
+                this.$message(res.data.message)
+              } else {
+                this.$message.error(res.data.message)
+              }
+          })
         }
       })
     },
     resetForm (formName) {
-      this.oldPassword = ''
-      this.newPassword = ''
-      this.confirmNewPassword = ''
+      this.pw.oldPassword = ''
+      this.pw.newPassword = ''
+      this.pw.confirmNewPassword = ''
+    },
+    sendMessage(){
+      axios({
+              url: '/user/sendVerificationLogin',
+              params: {
+                'email': this.user.email,
+              }
+             }).then(res => {
+              if (res.data.code === 200) {
+                this.$message(res.data.message)
+              } else {
+                this.$message.error(res.data.message)
+              }
+          })
+    },
+    checkCode(){
+        axios({
+              url: '/user/verificationCheck',
+              params: {
+                'email': this.user.email,
+                'password': this.code,
+              }
+             }).then(res => {
+              if (res.data.code === 200) {
+                this.$message(res.data.message)
+                this.active = 1
+              } else {
+                this.$message.error(res.data.message)
+              }
+          })
+    },
+    commitNewPW(){
+      if(this.newPassword == null || this.confirmNewPassword == null){
+        this.$message.error('请输入密码')
+      }
+      if(this.newPassword.length < 6 || this.confirmNewPassword.length < 6){
+        this.$message.error('密码长度不能小于6位')
+      }
+      axios({
+              url: '/user/updatePWByVerificationCode',
+              params: {
+                'userId': this.user.userId,
+                'newPassword': this.newPassword,
+              }
+             }).then(res => {
+              if (res.data.code === 200) {
+                this.$message(res.data.message)
+                this.active = 0
+              } else {
+                this.$message.error(res.data.message)
+              }
+          })
     }
-
+    
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.el-input{
+
+  width: 400px;
+}
 
 </style>

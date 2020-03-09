@@ -71,12 +71,12 @@
             <template slot-scope="scope">
                <el-rate
                style="float:left"
-                v-model="value1"
+                v-model="scope.row.user.credit/20"
                 disabled
                 text-color="#ff9900"
                 >
                </el-rate>
-            {{ value2 }}
+            {{ scope.row.user.credit }}
             </template>
           </el-table-column>
           <el-table-column
@@ -124,8 +124,6 @@ import moment from 'moment'
 export default {
   data () {
     return {
-      value1: 4.5,
-      value2: 90,
       borrowingList: [],
       borrowing: {
         borrowingStatus: 1,

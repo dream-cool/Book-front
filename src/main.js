@@ -66,10 +66,11 @@ axios.interceptors.response.use(
  
 router.beforeEach((to, from, next) => {
   var token = localStorage.getItem('token');//获取本地存储的token
-  var userDetail = JSON.parse(localStorage.getItem('userDetail'))
+
   if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
     if (token != null &&  token !== "") {  // 通过vuex state获取当前的token是否存
       if(to.meta.permissions){
+        var userDetail = JSON.parse(localStorage.getItem('userDetail'))
         if(userDetail.permission != null && userDetail.permission[to.meta.permissions]){
           next()
         } else {

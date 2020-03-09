@@ -1,6 +1,6 @@
 <template>
   <div class="backIndex" v-loading="fullscreenLoading" >
-    <el-container style="height: 800px; border: 1px solid #eee;"   >
+    <el-container style="height: 850px; border: 1px solid #eee;"   >
 
       <el-aside width="200px">
         <el-menu default-active="2" router >
@@ -79,7 +79,7 @@
             <el-dropdown  @command="handleCommand" style="margin-top:0.5%">
              <el-avatar :size="50" :src="user.img" style="margin-right: 15px;"></el-avatar>
               <el-dropdown-menu slot="dropdown" style="margin-top:-1%">
-                <el-dropdown-item command="userDeatil">个人中心</el-dropdown-item>
+                <el-dropdown-item command="userDetail">个人中心</el-dropdown-item>
                 <el-badge :value="messageList.length" :max="99" class="item">
                   <el-dropdown-item command="queryMessage">消息</el-dropdown-item>
                 </el-badge>
@@ -150,22 +150,20 @@ export default {
       this.fullscreenLoading = true
     },
     handleCommand (com) {
+      if (com == 'userDetail'){
+        this.$router.push({path: '/personal'})
+      }
       if (com == 'logout') {
         this.logout()
       }
       if (com == 'queryMessage') {
-        this.goToMessage()
+        this.$router.push({path: '/messageInfo'})
       }
       if (com == 'updatePassword') {
-        this.goToUpdatePW()
+        this.$router.push({path: '/updatePassword'})
+        
       }
-    },
-    goToUpdatePW () {
-      this.$router.push({path: '/updatePassword'})
-    },
-    goToMessage () {
-      this.$router.push({path: '/messageInfo'})
-    },
+    },    
     logout () {
       window.localStorage.removeItem('userDetail')
       window.localStorage.removeItem('token')
