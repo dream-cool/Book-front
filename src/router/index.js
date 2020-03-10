@@ -34,6 +34,7 @@ import MessageInfo from '../components/MessageInfo.vue'
 import UpdatePassword from '../components/front/UpdatePassword.vue'
 import Home from '../components/back/Home.vue'
 import Personal  from '../components/Personal.vue'
+import Index from '../components/front/Index.vue'
 
 Vue.use(Router)
 
@@ -45,8 +46,15 @@ export default new Router({
     {
       path: '/front',
       name: '前台',
+      redirect () {
+        return '/front/home'
+      },
       component: FrontIndex,
       children: [
+        {path: '/front/home',
+          component: Index,
+          meta: {}
+        },
       ]
     },
     {

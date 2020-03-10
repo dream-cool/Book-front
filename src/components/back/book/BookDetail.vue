@@ -20,14 +20,14 @@
 
       <div class="book">
         <div class="bookImg" style="float:left">
-          <el-image :src="img" >
+          <el-image v-if="book.img != null" :src="book.img" >
             <div slot="error" class="image-slot">
               <i class="el-icon-picture-outline"></i>
             </div>
           </el-image>
         </div>
 
-        <div class="bookContent"  >
+        <div class="bookContent"  style="margin-left: 20%" >
           书籍名称 {{book.bookName}}
           <br>
           书籍作者 {{book.author}}
@@ -69,7 +69,6 @@ export default {
         duration: 30,
         borrowingTime: ''
       },
-      img: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
       dialogFormVisible: false,
       user: {}
     }
@@ -78,6 +77,7 @@ export default {
     this.user = JSON.parse(window.localStorage.getItem('userDetail'))
     this.id = this.$route.params.id
     this.getBookInfo(this.id)
+    
   },
   methods: {
     applyBorrowing () {
@@ -100,10 +100,10 @@ export default {
       this.dialogFormVisible = false
     },
     getBookInfo (id) {
-      axios.get('/book/' + id)
+      axios.get('/book/detail/' + id)
         .then(res => {
           if (res.data.code === 200) {
-            this.book = res.data.data
+            this.book = res.data.data.book
             this.borrowing.borrowingTime = new Date().getTime() + 86400000
           } else {
             this.$message.error(res.data.message)

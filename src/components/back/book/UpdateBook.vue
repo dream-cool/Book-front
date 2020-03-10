@@ -42,7 +42,7 @@
               ></el-cascader>
             </el-form-item>
             <el-form-item label="书籍封面" prop="img">
-              <el-image :src="book.img" :lazy='true' style="float:left" v-show="!uploadBookImgSuccess">
+              <el-image  v-if="book.img != null && !uploadBookImgSuccess" :src="book.img" style="float:left">
               </el-image>
                   <el-upload 
                     :multiple="false"
@@ -204,8 +204,7 @@ export default {
     handleBookImgUploadSuccess (response, file, fileList) {
       this.uploadBookImgSuccess = true
       this.book.img = response.data
-      this.update(this.book)
-      this.$message('书籍封面上传成功')
+      this.$message('书籍封面上传成功,请提交修改')
     }
   }
 }

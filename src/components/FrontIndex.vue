@@ -38,7 +38,12 @@
             <h3 class="medium">{{ item }}</h3>
           </el-carousel-item>
         </el-carousel>
-        <el-drawer title="足迹" :visible.sync="drawer" :direction="direction">
+
+        <router-view></router-view>
+        
+      </el-main>
+
+      <el-drawer title="足迹" :visible.sync="drawer" :direction="direction">
           <div class="block" v-for="fit in 6" :key="fit">
             <time class="time">{{ fit }}</time>
             <el-image
@@ -49,7 +54,6 @@
             <el-divider></el-divider>
           </div>
         </el-drawer>
-      </el-main>
 
       <el-footer>Footer</el-footer>
   </el-container>

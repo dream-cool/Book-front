@@ -24,7 +24,7 @@
                 ></el-cascader>
               </el-form-item>
                <el-form-item label="书籍封面" prop="img">
-                    <el-image :src="ebook.img" style="float:left" v-show="!uploadEbookImgSuccess">
+                    <el-image v-if="!uploadEbookImgSuccess && ebook.img != null" :src="ebook.img" style="float:left" >
                         <div slot="error" class="image-slot">
                         <i class="el-icon-picture-outline"></i>
                         </div>
@@ -182,7 +182,8 @@ export default {
     handleEbookImgUploadSuccess (response, file, fileList) {
       this.uploadEbookImgSuccess = true
       this.ebook.img = response.data
-      this.update(this.ebook)
+      console.log(this.ebook)
+      this.$message('书籍封面上传成功,请提交修改')
     },
 
     handleEbookFileRemove (file, fileList) {
