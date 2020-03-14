@@ -35,6 +35,7 @@ import UpdatePassword from '../components/front/UpdatePassword.vue'
 import Home from '../components/back/Home.vue'
 import Personal  from '../components/Personal.vue'
 import Index from '../components/front/Index.vue'
+import Test from '../components/Test.vue'
 
 Vue.use(Router)
 
@@ -53,6 +54,14 @@ export default new Router({
       children: [
         {path: '/front/home',
           component: Index,
+          meta: {}
+        },
+        {path: '/front/bookDetail/:id',
+          component: BookDetail,
+          name: '书籍详情',
+          meta: {}},
+        {path: '/front/test',
+          component: Test,
           meta: {}
         },
       ]
@@ -111,10 +120,7 @@ export default new Router({
               component: UpdateEbook,
               name: '修改电子书',
               meta: { requireAuth: true, permissions: 'bookW' }},
-            {path: '/back/book/bookDetail/:id',
-              component: BookDetail,
-              name: '书籍详情',
-              meta: { requireAuth: true, permissions: 'bookR' }},
+            
             {path: '/back/book/bookList',
               component: BookList,
               name: '书籍列表',

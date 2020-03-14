@@ -1,14 +1,17 @@
 <template>
-  <div class="hello">
+  <div class="hello" >
       <el-row :gutter="20" bodar>
-        <el-col :span="4" v-for="(book,index) in bookList" :key="index" > 
-            {{book.bookName}}
-             <el-image v-if="book.img != null" 
-              :src="'http://localhost:8090/download/'+book.img" style="float:left"
-              :href="'/back/book/bookDetail/'+book.bookId"
+        <el-col :span="3" v-for="(book,index) in bookList" :key="index" >  
+             <el-image v-if="book.img != null"  style="folat:left"
+              :src='"http://localhost:8090/download/"+book.img' 
+               @click="goToBookDetail(book.bookId)"
               ></el-image>
+
+              <p style="color: #000;font-size: 14px;font-weight: bold margin-top: 0px; " >  {{book.bookName}}  </p>
+              <p style="font-size: 14px;color: #AEA7A7;margin-top: -10px; ">{{book.author}}</p>
+              <p style="font-size: 14px;color: #AEA7A7;margin-top: -10px;float:left">借阅次数：</p>
+              <p style="font-size: 14px;color: #AEA7A7;margin-top: -10px;">100</p>      
         </el-col>
-         
       </el-row>
   </div>
 </template>
@@ -17,7 +20,7 @@
 import axios from 'axios'
 import moment from 'moment'
 export default {
-  name: 'HelloWorld',
+  name: 'Hello',
   data () {
     return {
       Sever_URL: 'localhost:8090/download/',
@@ -26,16 +29,20 @@ export default {
       pageSize: 30,
       total: 0,
       book: {},
+      url: ''
     }
   },
   created() {
     this.getBookInfo(this.pageNum, this.pageSize, this.book)
   },
   methods: {
+    goToBookDetail(bookId){
+      document.body.style.overflow = null
+      this.$router.push({path: '/front/bookDetail/'+bookId})
+    },
     getBookInfo (pageNum, pageSize, book) {
       axios.post(
-        '/book/all?pageNum=' + pageNum + '&pageSize=' + pageSize,
-        book
+        '/book/all?pageNum=' + pageNum + '&pageSize=' + pageSize, book
       ).then(res => {
         if (res.data.code === 200) {
           this.bookList = res.data.data.list
@@ -43,7 +50,6 @@ export default {
             book.inputTime = moment(book.inputTime).format('YYYY-MM-DD')
             return book
           })
-          console.log(this.bookList)
           this.pageNum = res.data.data.pageNum
           this.total = res.data.data.total
         } else {
@@ -59,15 +65,14 @@ export default {
 <style scoped>
 .el-col{
   margin-top: 5%;
-  height: 300px;
+  height: 250px;
   margin-left: 5%;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
 }
 .el-row{
   margin-left: 5%;
 }
 .el-image{
-  width: 185px;
-  height: 250px;
+  width: 150px;
+  height: 150px;
 }
 </style>

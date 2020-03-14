@@ -7,6 +7,7 @@ import VueRouter from 'vue-router'
 import axios from 'axios'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import "./assets/icon/iconfont.css";
 import VCharts from 'v-charts'
 import Vuex from 'vuex'
 
