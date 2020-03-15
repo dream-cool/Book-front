@@ -3,7 +3,7 @@
     <el-container>
       <el-header>
         <el-menu
-          :default-active="activeIndex"
+          default-active="/front/home"
           class="el-menu-demo"
           mode="horizontal"
           router
@@ -22,18 +22,21 @@
             <p>电子书</p>
           </el-menu-item>
 
-
-
-          <el-submenu index="4" style="float: right;width: 100px">
-            <template slot="title">        
-              <el-avatar :size="50" :src="circleUrl"></el-avatar>
-            </template>
-            <el-menu-item index="4-1">个人中心</el-menu-item>
-            <el-menu-item index="4-2">修改密码</el-menu-item>
-            <el-menu-item index="4-3">我的借阅</el-menu-item>
-            <el-menu-item @click="drawer = true">浏览记录</el-menu-item>
-            <el-menu-item index="4-5">退出</el-menu-item>
-          </el-submenu>
+          <el-menu-item v-if="user == null" index="/login" style="float: right;width: 100px"> <p>登录</p> </el-menu-item>
+            <el-submenu index="" v-if="user != null"  style="float: right;width: 100px;">
+              <template slot="title">        
+                <el-avatar :size="50"  :src='"http://localhost:8090/download/"+user.avatar' style="margin-right: 15px;">{{user.userName}}</el-avatar>
+              </template>
+              <el-menu-item index="/front/personal">个人中心</el-menu-item>
+              <el-badge :value="11" :max="99" class="item">
+                <el-menu-item index="/front/messageInfo">消息</el-menu-item>
+              </el-badge>
+              <el-menu-item index="/front/borrowing">我的借阅</el-menu-item>
+              <el-menu-item index="/front/collection">我的收藏</el-menu-item>
+              <el-menu-item index="" @click="openReadRecord">浏览记录</el-menu-item>
+              <el-menu-item index="/front/updatePassword">修改密码</el-menu-item>
+              <el-menu-item index="" @click="logout">退出</el-menu-item>
+            </el-submenu>
         </el-menu>
       </el-header>
         <el-main >
@@ -46,16 +49,31 @@
         </el-main>
      
 
-      <el-drawer title="足迹" :visible.sync="drawer" :direction="direction">
-          <div class="block" v-for="fit in 6" :key="fit">
-            <time class="time">{{ fit }}</time>
-            <el-image
-              style="width: 100px; height: 100px"
-              :fit="fit">
-            </el-image>
-            <el-divider></el-divider>
+      <el-drawer  :visible.sync="drawer" direction="ltr" :with-header="false">
+          <div v-for="(item,i) in records" :key="i" class="record-list" >
+            <div  style="margin-top: 10%;margin-left: 10%">
+                <el-image class="header-img"  :src='"http://localhost:8090/download/"+ item.bookImg' 
+                      style="float: left;height: 100px; width: 100px" @click="goToBookDetail(item.bookId)"></el-image>
+                <div class="author-info" style="margint-left:5%;margin-top: 50px;height: 100px;">
+                    <span class="author-name" style="color: #000;font-size: 18px;font-weight: bold">
+                        {{item.bookName}}</span>
+                        <br>
+                    <span class="author-time" 
+                      style="font-size: 13px; font-color: #655E5E;">{{item.descr}}</span>
+                    <br>
+                    <span class="author-time" 
+                      style="font-size: 14px;color: #AEA7A7;float:bottom">{{item.browsingTime}}</span>
+                </div>
+            </div>
           </div>
-        </el-drawer>
+          <el-pagination style="margin-top: 10%; margin-left: 5%"
+            @current-change="handleCurrentChange"
+            :page-size="pageSize"
+            :current-page.sync="pageNum"
+            layout="total, prev, pager, next, jumper"
+            :total="total">
+          </el-pagination>
+      </el-drawer>
 
       <el-footer>Footer</el-footer>
   </el-container>
@@ -63,23 +81,52 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'Index',
   data () {
     return {
-      circleUrl: '../../static/favicon.ico',
+      user: {},
       drawer: false,
-      direction: 'rtl',
-      activeIndex: '1',
-      activeIndex2: '1'
+      records:[],
+      total: 0,
+      pageSize: 5,
+      pageNum: 1,
     }
   },
   created () {
+    this.user = JSON.parse(window.localStorage.getItem('userDetail'))
   },
 
   methods: {
     handleSelect () {
 
+    },
+    logout () {
+      window.localStorage.removeItem('userDetail')
+      window.localStorage.removeItem('token')
+      this.$router.push({path: '/login'})
+    },
+    goToBookDetail(bookId){
+      document.body.style.overflow = null
+      this.$router.push({path: '/front/bookDetail/'+bookId})
+      this.drawer = false
+    },
+    handleCurrentChange(){
+      this.openReadRecord()
+    },
+    openReadRecord(){
+      axios.post("/record/all?pageSize="+this.pageSize+"&pageNum="+this.pageNum, 
+          {userId: this.user.userId })
+      .then(res =>{
+        if(res.data.code === 200){
+          this.records = res.data.data.list
+          this.pageSize = res.data.data.pageSize
+          this.pageNum = res.data.data.pageNum
+          this.total = res.data.data.total
+        }
+      })
+      this.drawer = true
     }
   }
 }

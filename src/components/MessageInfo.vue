@@ -101,9 +101,8 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .hello{
-    height:700px; 
     width: 800px;
-    margin-left: 20%;
+    margin-left: 10%;
 }
 
 </style>

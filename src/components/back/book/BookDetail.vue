@@ -42,12 +42,14 @@
            <br>
 
           <div>
-              <el-link v-if="isLike"  icon="iconfont icon-like" style="margin-left:0px;margin-top:30px" :underline="false" @click="like">4515 </el-link>
-              <el-link v-if="!isLike" icon="iconfont icon-cancel-like" style="margin-left:0px;margin-top:30px" :underline="false" @click="like">4515 </el-link>
-              <el-link v-if="isCollect" icon="iconfont icon-collect"  :underline="false" style="margin-left:40px;margin-top:30px" @click="collect"></el-link>
-              <el-link v-if="!isCollect" icon="iconfont icon-cancel-collect"  :underline="false" style="margin-left:40px;margin-top:30px" @click="collect"></el-link>
+              <el-link v-if="userCollection.isLike"  icon="iconfont icon-like" style="margin-left:0px;margin-top:30px" :underline="false" @click="bookLike"> 
+                <p> {{book.zanNumber}}</p>   </el-link>
+              <el-link v-if="!userCollection.isLike" icon="iconfont icon-cancel-like" style="margin-left:0px;margin-top:30px" :underline="false" @click="bookLike"> 
+                <p> {{book.zanNumber}} </p> </el-link>
+              <el-link v-if="userCollection.isCollect" icon="iconfont icon-collect"  :underline="false" style="margin-left:40px;margin-top:30px" @click="collect"></el-link>
+              <el-link v-if="!userCollection.isCollect" icon="iconfont icon-cancel-collect"  :underline="false" style="margin-left:40px;margin-top:30px" @click="collect"></el-link>
               <el-link  icon="el-icon-s-comment" style="font-size: 30px;margin-left:60px;margin-top:30px" :underline="false"  @click=""></el-link>
-              <el-rate v-model="comment.score" disabled show-score text-color="#ff9900" style="margin-top:20px"></el-rate>
+              <el-rate v-model="book.score" disabled show-score text-color="#ff9900" style="margin-top:20px"></el-rate>
               <el-button v-if ="book.ebook == 0"  type="info" @click="dialogFormVisible = true"  circle style="margin-top:20px">申请借阅</el-button>
               <el-button v-if ="book.ebook == 1"  type="info" @click="goToEookRead"  circle style="margin-top:20px">在线阅读</el-button>
           </div> 
@@ -56,7 +58,7 @@
       
       <div class="comment">
         <div class="deploy-comment" style="margin-top: 10%">
-             <el-input
+            <el-input
               type="textarea"
               placeholder="请输入评论"
               v-model="comment.content"
@@ -67,19 +69,25 @@
             >
             </el-input>
             <el-rate v-model="comment.score"></el-rate>
-            <el-button >评论</el-button>
+            <el-button @click="publishComments">评论</el-button>
         </div>
          
         <div  style="margin-top: 5%">
-          <el-radio v-model="order" label="time">按时间排序</el-radio>
-          <el-radio v-model="order" label="score">按评分排序</el-radio>
+          <el-radio v-model="sortWay" @change="getCommentInfo(id, sortWay)" label="zan_number">按热度排序</el-radio>
+          <el-radio v-model="sortWay" @change="getCommentInfo(id, sortWay)" label="comment_time">按时间排序</el-radio>
+          <el-radio v-model="sortWay" @change="getCommentInfo(id, sortWay)" label="score">按评分排序</el-radio>
           <div v-for="(item,i) in comments" :key="i" class="comment-list" style="margin-top: 2%">
-            <el-avatar class="header-img" :size="40" :src="item.headImg" style="float: left"></el-avatar>
+            <el-avatar class="header-img" :size="40" :src="'http://localhost:8090/download/'+item.user.avatar" style="float: left"></el-avatar>
             <div class="author-info" style="margint-left:5%">
                 <span class="author-name" style="color: #000;font-size: 18px;font-weight: bold">
-                    {{item.name}}</span>
-                <span class="author-time" style="font-size: 14px;color: #AEA7A7">{{item.time}}</span>
-                <el-rate v-model="comment.score" disabled show-score text-color="#ff9900"></el-rate>
+                    {{item.user.userName}}</span>
+                
+                <span class="author-time" style="font-size: 14px;color: #AEA7A7">{{item.commentTime}}</span>
+                <el-link v-if="item.isLike"  icon="iconfont icon-like" style="margin-left:50px;" :underline="false" @click="commentLike(item.commentId,i)"> 
+                <p> {{item.zanNumber}} </p> </el-link>
+                <el-link v-if="!item.isLike" icon="iconfont icon-cancel-like" style="margin-left:50px;" :underline="false" @click="commentLike(item.commentId,i)"> 
+                <p> {{item.zanNumber}} </p> </el-link>
+                <el-rate v-model="item.score" disabled show-score text-color="#ff9900"></el-rate>
             </div>
             <!-- <div class="icon-btn">
                 <span @click="showReplyInput(i,item.name,item.id)"><i class="el-icon-s-comment"></i>{{item.commentNum}}</span>
@@ -87,10 +95,17 @@
             </div> -->
             <div class="talk-box">
                 <p>
-                    <span class="reply" style="font-size: 18px; font-color: #655E5E">{{item.comment}}</span>
+                    <span class="reply" style="font-size: 18px; font-color: #655E5E">{{item.content}}</span>
                 </p>
             </div>
           </div>
+          <el-pagination
+            @current-change="handleCurrentChange"
+            :current-page="pageNum"            
+            :page-size="pageSize"
+            layout="total, prev, pager, next, jumper"
+            :total="total">
+          </el-pagination>
         </div>
 
         
@@ -107,8 +122,6 @@ export default {
       id: '',
       book: {
       },
-      isLike:false,
-      isCollect: false,
       borrowing: {
         duration: 30,
         borrowingTime: ''
@@ -118,74 +131,92 @@ export default {
       comment:{
         score: 1,
       },
-      order:'time',
-      comments:[{
-                    name:'Lana Del Rey',
-                    id:19870621,
-                    headImg:'https://ae01.alicdn.com/kf/Hd60a3f7c06fd47ae85624badd32ce54dv.jpg',
-                    comment:'我发布一张新专辑Norman Fucking Rockwell,大家快来听啊',
-                    time:'2019年9月16日 18:43',
-                    commentNum:2,
-                    like:15,
-                    inputShow:false,
-                    reply:[]
-                },
-                {
-                    name:'Lana Del Rey',
-                    id:19870621,
-                    headImg:'https://ae01.alicdn.com/kf/Hd60a3f7c06fd47ae85624badd32ce54dv.jpg',
-                    comment:'我发布一张新专辑Norman Fucking Rockwell,大家快来听啊',
-                    time:'2019年9月16日 18:43',
-                    commentNum:2,
-                    like:15,
-                    inputShow:false,
-                    reply:[]
-                },
-                {
-                    name:'Lana Del Rey',
-                    id:19870621,
-                    headImg:'https://ae01.alicdn.com/kf/Hd60a3f7c06fd47ae85624badd32ce54dv.jpg',
-                    comment:'我发布一张新专辑Norman Fucking Rockwell,大家快来听啊',
-                    time:'2019年9月16日 18:43',
-                    commentNum:2,
-                    like:15,
-                    inputShow:false,
-                    reply:[]
-                },{
-                    name:'Lana Del Rey',
-                    id:19870621,
-                    headImg:'https://ae01.alicdn.com/kf/Hd60a3f7c06fd47ae85624badd32ce54dv.jpg',
-                    comment:'我发布一张新专辑Norman Fucking Rockwell,大家快来听啊',
-                    time:'2019年9月16日 18:43',
-                    commentNum:2,
-                    like:15,
-                    inputShow:false,
-                    reply:[]
-                }],
+      sortWay:'zan_number',
+      userCollection:{},
+      comments:[],
+      pageNum: 1,
+      pageSize: 10,
+      total: 0
+                  
     }
   },
   created () {
     this.user = JSON.parse(window.localStorage.getItem('userDetail'))
     this.id = this.$route.params.id
     this.getBookInfo(this.id)
-    
+    this.addReadBookRecord()
+    this.getCollectionInfo()
+    this.getCommentInfo(this.id, this.sortWay)
   },
   methods: {
     collect(){
-        this.isCollect = !this.isCollect
-        if(this.isCollect){
+        if(this.user == null){
+          return
+        }
+        this.userCollection.isCollect = !this.userCollection.isCollect
+        this.updateCollectionInfo(this.userCollection)
+        if(this.userCollection.isCollect){
           this.$message("您收藏了该书籍")
         } else {
           this.$message("您取消了收藏")
         }
     },
-    like(){
-        this.isLike = !this.isLike
-        if(this.isLike){
+    bookLike(){
+        if(this.user == null){
+            return
+        }
+        this.userCollection.isLike = !this.userCollection.isLike
+        this.updateCollectionInfo(this.userCollection)
+        if(this.userCollection.isLike){
+          this.book.zanNumber++
           this.$message("您点赞了该书籍")
         } else {
+          this.book.zanNumber--
           this.$message("您取消了点赞")
         }
+    },
+    commentLike(commentId, index){
+        if(this.user == null){
+           return
+        }
+        this.comments[index].isLike = !this.comments[index].isLike
+        this.updateCommentInfo(commentId,this.user.userId, this.comments[index].isLike)
+        if(this.comments[index].isLike){
+          this.comments[index].zanNumber++
+          this.$message("点赞成功")
+        } else {
+          this.comments[index].zanNumber--
+          this.$message("您取消了点赞")
+        }
+    },
+    updateCommentInfo (commentId, userId, isLike){
+        axios.put("/commentLike", {
+            userId: userId,
+            commentId: commentId,
+            isLike: isLike
+        })
+    },
+    handleCurrentChange(){
+        this.getCommentInfo(this.id, this.sortWay)
+    },
+    publishComments(){
+      if(this.user != null || this.comment.content == null){
+        axios.post('/comment', 
+          {
+            userId: this.user.userId,
+            bookId: this.id,
+            content: this.comment.content,
+            score: this.comment.score,            
+        })
+          .then(res => {
+            if (res.data.code === 200) {
+              this.comment = res.data.data
+              this.$message(res.data.message)
+            } else {
+              this.$message.error(res.data.message)
+            }
+          })
+      }
     },
     applyBorrowing () {
       this.borrowing.userId = this.user.userId
@@ -216,6 +247,48 @@ export default {
             this.$message.error(res.data.message)
           }
         })
+    },
+    getCollectionInfo(){
+      if( this.user != null){
+        axios.get('/userCollection/' + this.user.userId+ '/'+this.id)
+        .then(res => {
+          if (res.data.code === 200) {
+            this.userCollection = res.data.data
+          } 
+        })
+      }
+    },
+    getCommentInfo(bookId, sortWay){
+        axios.post('/comment/all?pageNum=' + this.pageNum+ '&pageSize='+this.pageSize+'&userId='+this.user.userId,{
+              bookId: bookId,
+              sortWay: sortWay
+            }
+        )
+        .then(res => {
+          if (res.data.code === 200) {
+            this.comments = res.data.data.list
+            this.pageSize = res.data.data.pageSize
+            this.pageNum = res.data.data.pageNum
+            this.total = res.data.data.total
+            debugger
+          } 
+        })
+    },
+    updateCollectionInfo(userCollection){
+      if( userCollection != null){
+        axios.put('/userCollection', userCollection)
+        .then(res => {
+          if (res.data.code === 200) {
+            this.userCollection = res.data.data
+          } 
+        })
+      }
+    },
+    addReadBookRecord(){
+      if (this.user != null){
+          axios.post('/record', {userId: this.user.userId, bookId: this.id})
+          .then(res => {})
+      }
     },
     goToEookRead () {
       this.$router.push({ path: '/front/ebookRead/' + this.id})

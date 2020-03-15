@@ -64,6 +64,24 @@ export default new Router({
           component: Test,
           meta: {}
         },
+        {
+          path: '/front/messageInfo',
+          component: MessageInfo,
+          name: '我的信息',
+          meta: { requireAuth: true }
+        },
+        {
+          path: '/front/personal',
+          component: Personal,
+          name: '个人中心',
+          meta: { requireAuth: true }
+        },
+        {
+          path: '/front/updatePassword',
+          component: UpdatePassword,
+          name: '修改密码',
+          meta: { requireAuth: true }
+        },
       ]
     },
     {
@@ -81,19 +99,19 @@ export default new Router({
           meta: {requireAuth: true, permissions: 'admin' }
         },
         {
-          path: '/messageInfo',
+          path: '/back/messageInfo',
           component: MessageInfo,
           name: '我的信息',
           meta: { requireAuth: true }
         },
         {
-          path: '/personal',
+          path: '/back/personal',
           component: Personal,
           name: '个人中心',
           meta: { requireAuth: true }
         },
         {
-          path: '/updatePassword',
+          path: '/back/updatePassword',
           component: UpdatePassword,
           name: '修改密码',
           meta: { requireAuth: true }
