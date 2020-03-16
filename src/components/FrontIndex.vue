@@ -51,20 +51,22 @@
 
       <el-drawer  :visible.sync="drawer" direction="ltr" :with-header="false">
           <div v-for="(item,i) in records" :key="i" class="record-list" >
-            <div  style="margin-top: 10%;margin-left: 10%">
-                <el-image class="header-img"  :src='"http://localhost:8090/download/"+ item.bookImg' 
-                      style="float: left;height: 100px; width: 100px" @click="goToBookDetail(item.bookId)"></el-image>
-                <div class="author-info" style="margint-left:5%;margin-top: 50px;height: 100px;">
-                    <span class="author-name" style="color: #000;font-size: 18px;font-weight: bold">
-                        {{item.bookName}}</span>
-                        <br>
-                    <span class="author-time" 
-                      style="font-size: 13px; font-color: #655E5E;">{{item.descr}}</span>
-                    <br>
-                    <span class="author-time" 
-                      style="font-size: 14px;color: #AEA7A7;float:bottom">{{item.browsingTime}}</span>
-                </div>
-            </div>
+            <el-card style="margin-top: 20px" >
+                  <el-image class="header-img"  :src='"http://localhost:8090/download/"+ item.bookImg' 
+                        style="float: left;height: 100px; width: 100px" @click="goToBookDetail(item.bookId)"></el-image>
+                  <div class="author-info" style="margint-left:5%;height: 100px;">
+                      <span class="author-name" style="color: #000;font-size: 18px;font-weight: bold">
+                          {{item.bookName}}</span>
+                      <el-link @click="deleteRecord(item.recordId)" icon="el-icon-delete" :underline="false" 
+                        style="margin-left: 20px;float:right; font-size:20px" ></el-link>
+                          <br>
+                      <span class="author-time" 
+                        style="font-size: 13px; font-color: #655E5E;">{{item.descr}}</span>
+                      <br>
+                      <span class="author-time" 
+                        style="font-size: 14px;color: #AEA7A7;float:bottom">{{item.browsingTime}}</span>
+                  </div>
+            </el-card >
           </div>
           <el-pagination style="margin-top: 10%; margin-left: 5%"
             @current-change="handleCurrentChange"
@@ -127,6 +129,19 @@ export default {
         }
       })
       this.drawer = true
+    },
+    deleteRecord(recordId){
+      if(this.user != null){
+        axios.delete("/record/"+recordId)
+        .then(res => {
+            if(res.data.code === 200){
+              this.$message(res.data.message)
+            } else {
+              this.$message.error(res.data.message)
+            }
+            this.openReadRecord()
+        })
+      }
     }
   }
 }

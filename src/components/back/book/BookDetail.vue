@@ -77,36 +77,62 @@
           <el-radio v-model="sortWay" @change="getCommentInfo(id, sortWay)" label="comment_time">按时间排序</el-radio>
           <el-radio v-model="sortWay" @change="getCommentInfo(id, sortWay)" label="score">按评分排序</el-radio>
           <div v-for="(item,i) in comments" :key="i" class="comment-list" style="margin-top: 2%">
-            <el-avatar class="header-img" :size="40" :src="'http://localhost:8090/download/'+item.user.avatar" style="float: left"></el-avatar>
-            <div class="author-info" style="margint-left:5%">
-                <span class="author-name" style="color: #000;font-size: 18px;font-weight: bold">
-                    {{item.user.userName}}</span>
-                
-                <span class="author-time" style="font-size: 14px;color: #AEA7A7">{{item.commentTime}}</span>
-                <el-link v-if="item.isLike"  icon="iconfont icon-like" style="margin-left:50px;" :underline="false" @click="commentLike(item.commentId,i)"> 
-                <p> {{item.zanNumber}} </p> </el-link>
-                <el-link v-if="!item.isLike" icon="iconfont icon-cancel-like" style="margin-left:50px;" :underline="false" @click="commentLike(item.commentId,i)"> 
-                <p> {{item.zanNumber}} </p> </el-link>
-                <el-rate v-model="item.score" disabled show-score text-color="#ff9900"></el-rate>
-            </div>
-            <!-- <div class="icon-btn">
-                <span @click="showReplyInput(i,item.name,item.id)"><i class="el-icon-s-comment"></i>{{item.commentNum}}</span>
-                <i class="el-icon-caret-top"></i>{{item.like}}
-            </div> -->
-            <div class="talk-box">
-                <p>
-                    <span class="reply" style="font-size: 18px; font-color: #655E5E">{{item.content}}</span>
-                </p>
-            </div>
+            <el-card style="width: 1000px">
+              <el-avatar class="header-img" :size="40" :src="'http://localhost:8090/download/'+item.user.avatar" style="float: left"></el-avatar>
+              <div class="author-info" style="margint-left:5%">
+                  <span class="author-name" style="color: #000;font-size: 18px;font-weight: bold">
+                      {{item.user.userName}}</span>
+                  <span class="author-time" style="font-size: 14px;color: #AEA7A7">{{item.commentTime}}</span>
+                  <el-link v-if="item.isLike"  icon="iconfont icon-like" style="margin-left:50px;" :underline="false" @click="commentLike(item.commentId,i)"> 
+                  <p> {{item.zanNumber}} </p> </el-link>
+                  <el-link v-if="!item.isLike" icon="iconfont icon-cancel-like" style="margin-left:50px;" :underline="false" @click="commentLike(item.commentId,i)"> 
+                  <p> {{item.zanNumber}} </p> </el-link>
+                  <el-link v-if="user != null && user.userId == item.userId" @click="deleteComment(item.commentId)" icon="el-icon-delete" 
+                        :underline="false" style="margin-left: 20px; font-size:25px" ></el-link>
+                  <el-rate v-model="item.score" disabled show-score text-color="#ff9900"></el-rate>
+              </div>
+              <!-- <div class="icon-btn">
+                  <span @click="showReplyInput(i,item.name,item.id)"><i class="el-icon-s-comment"></i>{{item.commentNum}}</span>
+                  <i class="el-icon-caret-top"></i>{{item.like}}
+              </div> -->
+              <div class="talk-box" >
+                      <span class="reply" style="font-size: 18px; font-color: #655E5E">{{item.content}}</span>
+              </div>
+            </el-card>
           </div>
           <el-pagination
             @current-change="handleCurrentChange"
-            :current-page="pageNum"            
+            :current-page.sync="pageNum"
             :page-size="pageSize"
             layout="total, prev, pager, next, jumper"
             :total="total">
           </el-pagination>
         </div>
+
+
+        <el-dialog title="我的收藏" :visible.sync="dialogCollectionVisible" 
+          style="margin-left: 20%;width: 60%">
+          
+           <el-radio-group  v-model="userCollection.groupName" >
+              <el-radio v-for="(item,index) in collectGroupList" :key="index"  
+                  style="width: 250px;margin-left: 100px;margin-top: 20px"
+               :label="item.name" border></el-radio>
+
+               <el-input
+                  placeholder="新建收藏分组"
+                  v-model="collectGroup.name"
+                  style="margin-top: 50px;margin-left:100px;width:250px"
+                  clearable>
+                </el-input>
+                <el-button icon="el-icon-plus" style="margin-left:10px" @click="addCollectGroup"></el-button>
+          </el-radio-group >
+         
+
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogCollectionVisible = false">取 消</el-button>
+            <el-button type="primary" @click="commitCollect">确 定</el-button>
+          </div>
+        </el-dialog>
 
         
       </div>
@@ -127,17 +153,24 @@ export default {
         borrowingTime: ''
       },
       dialogFormVisible: false,
+      dialogCollectionVisible: false,
       user: {},
       comment:{
         score: 1,
+        content: ''
       },
       sortWay:'zan_number',
-      userCollection:{},
+      userCollection:{
+        groupName: null
+      },
+      collectGroupList: [],
+      collectGroup: {
+        name:null
+      },
       comments:[],
       pageNum: 1,
       pageSize: 10,
-      total: 0
-                  
+      total: 0,
     }
   },
   created () {
@@ -153,13 +186,46 @@ export default {
         if(this.user == null){
           return
         }
-        this.userCollection.isCollect = !this.userCollection.isCollect
-        this.updateCollectionInfo(this.userCollection)
-        if(this.userCollection.isCollect){
-          this.$message("您收藏了该书籍")
+        if(!this.userCollection.isCollect){
+          console.log(this.userCollection)
+          this.getCollectGroupInfo()
+          this.dialogCollectionVisible = true;
         } else {
-          this.$message("您取消了收藏")
+          this.userCollection.isCollect = !this.userCollection.isCollect
+          this.updateCollectionInfo(this.userCollection)
+          this.$message("取消收藏")
         }
+    },
+    commitCollect(){
+        if(this.userCollection.groupName == null || this.userCollection.groupName.trim().length <= 0){
+          this.$message.error("请选择分组")
+          return
+        }
+        this.userCollection.isCollect = true
+        axios.put('/userCollection', this.userCollection)
+        .then(res => {
+          if (res.data.code === 200) {
+            this.userCollection = res.data.data
+            this.$message("收藏成功")
+            this.dialogCollectionVisible = false
+          } else {
+            this.$message.error("收藏失败")
+          }
+        })
+    },
+    addCollectGroup(){
+      axios.post("/collectionGroup", {
+        name: this.collectGroup.name,
+        userId: this.user.userId
+      }).then( res => {
+        if (res.data.code === 200) {
+            this.collectGroup.name = null
+            this.getCollectGroupInfo()
+            this.$message(res.data.message)
+          } else {
+            this.$message.error(res.data.message)
+          }
+      })
     },
     bookLike(){
         if(this.user == null){
@@ -197,10 +263,11 @@ export default {
         })
     },
     handleCurrentChange(){
+        console.log(this.pageNum)
         this.getCommentInfo(this.id, this.sortWay)
     },
     publishComments(){
-      if(this.user != null || this.comment.content == null){
+      if(this.user != null || this.comment.content.trim().length != 0){
         axios.post('/comment', 
           {
             userId: this.user.userId,
@@ -208,15 +275,31 @@ export default {
             content: this.comment.content,
             score: this.comment.score,            
         })
-          .then(res => {
-            if (res.data.code === 200) {
-              this.comment = res.data.data
-              this.$message(res.data.message)
-            } else {
-              this.$message.error(res.data.message)
-            }
-          })
+        .then(res => {
+          if (res.data.code === 200) {
+            this.comment = res.data.data
+            this.comment.content = ''
+            this.getCommentInfo(this.id, this.sortWay)
+            this.$message(res.data.message)
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+        
       }
+    },
+    deleteComment(commentId){
+        if(this.user != null){
+          axios.delete("/comment/"+commentId)
+          .then(res => {
+              if(res.data.code === 200){
+                this.$message(res.data.message)
+              } else {
+                this.$message.error(res.data.message)
+              }
+              this.getCommentInfo(this.id, this.sortWay)
+          })  
+        }
     },
     applyBorrowing () {
       this.borrowing.userId = this.user.userId
@@ -258,6 +341,16 @@ export default {
         })
       }
     },
+    getCollectGroupInfo(){
+        axios.get('/collectionGroup/user/' + this.user.userId)
+        .then(res => {
+          if (res.data.code === 200) {
+            this.collectGroupList = res.data.data
+          } else {
+            this.$message.error("获取收藏夹分组信息失败")
+          }
+        })
+    },
     getCommentInfo(bookId, sortWay){
         axios.post('/comment/all?pageNum=' + this.pageNum+ '&pageSize='+this.pageSize+'&userId='+this.user.userId,{
               bookId: bookId,
@@ -270,7 +363,6 @@ export default {
             this.pageSize = res.data.data.pageSize
             this.pageNum = res.data.data.pageNum
             this.total = res.data.data.total
-            debugger
           } 
         })
     },

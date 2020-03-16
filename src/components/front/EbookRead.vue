@@ -10,7 +10,7 @@
         <br>
         <el-color-picker v-model="backgroundColor" @change="handleBackgroundColorChange" style="float:left;margin-left: 15%;"></el-color-picker>
         <div class="block" style="float:left;margin-left: 16%; width:200px;">
-          <el-slider :max="50" show-stops @change="handleFontChange" v-model="fontSize"></el-slider>
+          <el-slider :max="50" show-stops @input="handleFontChange" v-model="fontSize"></el-slider>
         </div>
         <el-color-picker v-model="fontColor" @change="handleFontChange" style="float:left;margin-left: 18%;"></el-color-picker>
         <br>

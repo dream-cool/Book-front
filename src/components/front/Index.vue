@@ -2,15 +2,17 @@
   <div class="hello" >
       <el-row :gutter="20" bodar>
         <el-col :span="3" v-for="(book,index) in bookList" :key="index" >  
-             <el-image v-if="book.img != null"  style="folat:left"
-              :src='"http://localhost:8090/download/"+book.img' 
-               @click="goToBookDetail(book.bookId)"
-              ></el-image>
-
-              <p style="color: #000;font-size: 14px;font-weight: bold margin-top: 0px; " >  {{book.bookName}}  </p>
-              <p style="font-size: 14px;color: #AEA7A7;margin-top: -10px; ">{{book.author}}</p>
-              <p style="font-size: 14px;color: #AEA7A7;margin-top: -10px;float:left">借阅次数：</p>
-              <p style="font-size: 14px;color: #AEA7A7;margin-top: -10px;">100</p>      
+            <el-card :body-style="{ padding: '0px' }" style="width: 220px">
+              <el-image v-if="book.img != null"  style="margin-left: 20px"
+                :src='"http://localhost:8090/download/"+book.img' 
+                @click="goToBookDetail(book.bookId)"
+                ></el-image>
+              <div style="padding-left: 20px;padding-right: 20px;">
+                <p style="color: #000;font-size: 14px;font-weight: bold margin-top: -20px; " >  {{book.bookName}}  </p>
+                <p style="font-size: 14px;color: #AEA7A7;margin-top: -10px;float:left ">{{book.author}}</p>
+                <p style="font-size: 14px;color: #AEA7A7;margin-top: -10px;float:right">借阅:100</p>
+              </div>
+            </el-card>
         </el-col>
       </el-row>
   </div>
@@ -65,14 +67,13 @@ export default {
 <style scoped>
 .el-col{
   margin-top: 5%;
-  height: 250px;
   margin-left: 5%;
 }
 .el-row{
   margin-left: 5%;
 }
 .el-image{
-  width: 150px;
-  height: 150px;
+  width: 180px;
+  height: 180px;
 }
 </style>

@@ -35,6 +35,7 @@ import UpdatePassword from '../components/front/UpdatePassword.vue'
 import Home from '../components/back/Home.vue'
 import Personal  from '../components/Personal.vue'
 import Index from '../components/front/Index.vue'
+import UserCollection from '../components/front/UserCollection.vue'
 import Test from '../components/Test.vue'
 
 Vue.use(Router)
@@ -74,6 +75,12 @@ export default new Router({
           path: '/front/personal',
           component: Personal,
           name: '个人中心',
+          meta: { requireAuth: true }
+        },
+        {
+          path: '/front/collection',
+          component: UserCollection,
+          name: '我的收藏',
           meta: { requireAuth: true }
         },
         {
