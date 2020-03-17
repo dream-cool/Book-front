@@ -1,9 +1,8 @@
 <template>
-  <div class="backIndex" v-loading="fullscreenLoading" >
-    <el-container style="height: 850px; border: 1px solid #eee;"   >
-
+  <div class="backIndex"  >
+    <el-container style="height: 900px; border: 1px solid #eee;"   >
       <el-aside width="200px">
-        <el-menu default-active="2" router >
+        <el-menu default-active="/back" router >
           <el-menu-item index="/login">
             <i class="el-icon-s-home"></i>登录
           </el-menu-item>
@@ -125,8 +124,7 @@ export default {
       },
       messageList: [],
       pageNum: 1,
-      pageSize: 10,
-      fullscreenLoading: false
+      pageSize: 10
     }
   },
   computed: {
@@ -211,4 +209,7 @@ export default {
 a {
   text-decoration: none;
 }
+
+
+
 </style>

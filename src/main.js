@@ -11,11 +11,11 @@ import "./assets/icon/iconfont.css";
 import VCharts from 'v-charts'
 import Vuex from 'vuex'
 
-import iView from 'iview'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 
-import back from './components/BackIndex.vue'
-
-
+NProgress.inc(0.5)
+NProgress.configure({ easing: 'ease', speed: 800, showSpinner: false })
 
 axios.defaults.baseURL = 'http://localhost:8090'
 
@@ -30,6 +30,7 @@ Vue.use(Vuex)
 
 
 axios.interceptors.request.use(
+  
   config => {
     // const token = getCookie('名称');注意使用的时候需要引入cookie方法，推荐js-cookie
     config.data = JSON.stringify(config.data);
@@ -38,13 +39,14 @@ axios.interceptors.request.use(
       'Access-Control-Allow-Headers': 'X-Requested-With, Authorization'
     }
     var token = localStorage.getItem('token')
-    
+    NProgress.start()
     if(token){
       config.headers.token = token
     }
     return config;
   },
   error => {
+    NProgress.done()
     return Promise.reject(err);
   }
 );
@@ -58,6 +60,7 @@ axios.interceptors.response.use(
         querry:{redirect:router.currentRoute.fullPath}//从哪个页面跳转
       })
     }
+    NProgress.done()
     return response;
   },
   error => {
@@ -66,8 +69,8 @@ axios.interceptors.response.use(
 )
  
 router.beforeEach((to, from, next) => {
+  NProgress.start()
   var token = localStorage.getItem('token');//获取本地存储的token
-
   if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
     if (token != null &&  token !== "") {  // 通过vuex state获取当前的token是否存
       if(to.meta.permissions){
@@ -96,7 +99,7 @@ router.beforeEach((to, from, next) => {
 })
  
 router.afterEach(route => {
-  iView.LoadingBar.finish();
+  NProgress.done()
 });
 
 
