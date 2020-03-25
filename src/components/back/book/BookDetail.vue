@@ -73,30 +73,87 @@
         </div>
          
         <div  style="margin-top: 5%">
-          <el-radio v-model="sortWay" @change="getCommentInfo(id, sortWay)" label="zan_number">按热度排序</el-radio>
+          <el-radio v-model="sortWay" @change="getCommentInfo(id, sortWay)" label="zan_number">按点赞排序</el-radio>
           <el-radio v-model="sortWay" @change="getCommentInfo(id, sortWay)" label="comment_time">按时间排序</el-radio>
           <el-radio v-model="sortWay" @change="getCommentInfo(id, sortWay)" label="score">按评分排序</el-radio>
           <div v-for="(item,i) in comments" :key="i" class="comment-list" style="margin-top: 2%">
             <el-card style="width: 1000px">
-              <el-avatar class="header-img" :size="40" :src="'http://localhost:8090/download/'+item.user.avatar" style="float: left"></el-avatar>
+              <el-avatar class="header-img" :size="40" :src="'http://localhost:8090/download/'+item.avatar" style="float: left"></el-avatar>
               <div class="author-info" style="margint-left:5%">
                   <span class="author-name" style="color: #000;font-size: 18px;font-weight: bold">
-                      {{item.user.userName}}</span>
+                      {{item.userName}}</span>
                   <span class="author-time" style="font-size: 14px;color: #AEA7A7">{{item.commentTime}}</span>
                   <el-link v-if="item.isLike"  icon="iconfont icon-like" style="margin-left:50px;" :underline="false" @click="commentLike(item.commentId,i)"> 
                   <p> {{item.zanNumber}} </p> </el-link>
                   <el-link v-if="!item.isLike" icon="iconfont icon-cancel-like" style="margin-left:50px;" :underline="false" @click="commentLike(item.commentId,i)"> 
                   <p> {{item.zanNumber}} </p> </el-link>
+                  
+                  
+
                   <el-link v-if="user != null && user.userId == item.userId" @click="deleteComment(item.commentId)" icon="el-icon-delete" 
                         :underline="false" style="margin-left: 20px; font-size:25px" ></el-link>
+                  <el-link type="primary" v-if="user != null" @click="item.replaying = !item.replaying" 
+                        :underline="false" style="margin-left: 20px; font-size:15px" >回复</el-link>
                   <el-rate v-model="item.score" disabled show-score text-color="#ff9900"></el-rate>
               </div>
-              <!-- <div class="icon-btn">
-                  <span @click="showReplyInput(i,item.name,item.id)"><i class="el-icon-s-comment"></i>{{item.commentNum}}</span>
-                  <i class="el-icon-caret-top"></i>{{item.like}}
-              </div> -->
+             
               <div class="talk-box" >
                       <span class="reply" style="font-size: 18px; font-color: #655E5E">{{item.content}}</span>
+              </div>
+              <div v-if="item.replaying" class="deploy-comment" style="margin-top: 2%;margin-left: 10%">
+                  <el-input
+                    type="textarea"
+                    placeholder="回复评论"
+                    v-model="item.commitContent"
+                    maxlength="300"
+                    show-word-limit
+                    :rows="5"
+                    style="width: 800px;"
+                  >
+                  </el-input>
+                  <el-button @click="replyComment(item.commentId,item)">评论</el-button>
+              </div>
+
+              <div  v-if="item.children != null && item.children.length > 0" style="margin-top: 2%;margin-left: 10%" >
+                  <div v-if="index < item.showNumbers" v-for="(children,index) in item.children" :key="index"  class="comment-list" style="margin-top: 2%">
+                      <el-card style="width: 1000px;background: rgb(236,236,236)">
+                        <el-avatar class="header-img" :size="30" :src="'http://localhost:8090/download/'+children.avatar" style="float: left"></el-avatar>
+                        <div class="author-info" style="margint-left:5%">
+                            <span class="author-name" style="font-size: 18px">
+                                  {{children.userName}}
+                            </span>
+                            <span v-if="children.replyUserName != null">
+                                回复 {{children.replyUserName}}
+                            </span>
+                            <span class="author-time" style="font-size: 14px;color: #AEA7A7">{{children.commentTime}}</span>
+                            <el-link v-if="user != null && user.userId == children.userId" @click="deleteComment(children.commentId)" icon="el-icon-delete" 
+                                  :underline="false" style="margin-left: 20px; font-size:25px" ></el-link>
+                            <el-link type="primary" v-if="user != null" @click="children.replaying = !children.replaying" 
+                                  :underline="false" style="margin-left: 20px; font-size:15px" >回复</el-link>
+                        </div>
+                      
+                        <div class="talk-box" >
+                                <span class="reply" style="font-size: 18px; font-color: #655E5E">{{children.content}}</span>
+                        </div>
+                        <div v-if="children.replaying" class="deploy-comment" style="margin-top: 2%;margin-left: 10%">
+                            <el-input
+                              type="textarea"
+                              placeholder="回复评论"
+                              v-model="children.commitContent"
+                              maxlength="300"
+                              show-word-limit
+                              :rows="5"
+                              style="width: 690px;"
+                            >
+                            </el-input>
+                            <el-button @click="replyComment(item.commentId,children)">评论</el-button>
+                        </div>
+                      </el-card>
+                      
+                  </div>
+                <el-link v-if="item.children.length > item.showNumbers" type="primary" 
+                  style="margin-top: 20px; font-size:15px"
+                  :underline="false" @click="item.showNumbers += 5">加载更多</el-link>
               </div>
             </el-card>
           </div>
@@ -148,6 +205,7 @@ export default {
       id: '',
       book: {
       },
+      isReplay: false,
       borrowing: {
         duration: 30,
         borrowingTime: ''
@@ -265,6 +323,32 @@ export default {
     handleCurrentChange(){
         console.log(this.pageNum)
         this.getCommentInfo(this.id, this.sortWay)
+    },
+    replyComment(commentPid, comment){
+      if(this.user != null || comment.content.trim().length != 0){
+        if(commentPid == comment.commentId){
+          comment.userName = null
+        }
+        axios.post('/comment', 
+          {
+            userId: this.user.userId,
+            bookId: this.id,
+            content: comment.commitContent,
+            commentPid: commentPid,
+            replyId: comment.commentId,
+            replyUserName: comment.userName
+        })
+        .then(res => {
+          if (res.data.code === 200) {
+            comment.replaying = false
+            comment.content = ''
+            this.getCommentInfo(this.id, this.sortWay)
+            this.$message(res.data.message)
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+      }
     },
     publishComments(){
       if(this.user != null || this.comment.content.trim().length != 0){
