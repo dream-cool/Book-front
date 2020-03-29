@@ -193,8 +193,7 @@ export default {
             ids.push(book.bookId)
           })
           // todo
-          axios.get({
-            url: '/book/delete/batch',
+          axios.get( '/book/delete/batch',{
             params: { ids: [1, 2, 3]}
           }).then(res => {
             if (res.data.code === 200) {

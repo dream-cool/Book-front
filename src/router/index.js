@@ -18,6 +18,7 @@ import BorrowingStatistics from '../components/back/statistics/BorrowingStatisti
 import CategoryList from '../components/back/category/CategoryList.vue'
 import CategoryStatistics from '../components/back/statistics/CategoryStatistics.vue'
 import GrantPrivilege from '../components/back/GrantPrivilege.vue'
+import Dictionary from '../components/back/Dictionary.vue'
 import HandleBorrowing from '../components/back/borrowing/HandleBorrowing.vue'
 import HandleReturn from '../components/back/borrowing/HandleReturn.vue'
 import ReaderDetail from '../components/back/user/ReaderDetail.vue'
@@ -36,6 +37,9 @@ import Home from '../components/back/Home.vue'
 import Personal  from '../components/Personal.vue'
 import Index from '../components/front/Index.vue'
 import UserCollection from '../components/front/UserCollection.vue'
+import Ebook from '../components/front/Ebook.vue'
+import LendBook from '../components/front/LendBook.vue'
+import MyBorrowing from '../components/front/MyBorrowing.vue'
 import Test from '../components/Test.vue'
 
 Vue.use(Router)
@@ -84,10 +88,28 @@ export default new Router({
           meta: { requireAuth: true }
         },
         {
+          path: '/front/myborrowing',
+          component: MyBorrowing,
+          name: '我的借阅',
+          meta: { requireAuth: true }
+        },
+        {
           path: '/front/updatePassword',
           component: UpdatePassword,
           name: '修改密码',
           meta: { requireAuth: true }
+        },
+        {
+          path: '/front/ebook',
+          component: Ebook,
+          name: '电子书',
+          meta: {}
+        },
+        {
+          path: '/front/lendBook',
+          component: LendBook,
+          name: '借出',
+          meta: {}
         },
       ]
     },
@@ -244,10 +266,17 @@ export default new Router({
               meta: {requireAuth: true, permissions: 'statisticsR' }}
           ]
         },
+        {
+          path: '/back/dictionary',
+          component: Dictionary,
+          name: '字典管理',
+          meta: {requireAuth: true}
+        },
         {path: '/back/grantPrivilege',
           component: GrantPrivilege,
           name: '授权',
-          meta: {requireAuth: true, permissions: 'privilege' }}
+          meta: {requireAuth: true, permissions: 'privilege' }
+        }
       ]
     }
   ]

@@ -13,7 +13,7 @@
                   <p v-if="borrowingDetail.borrowingStatus == '6'"> 正常归还</p>
                 </el-card>
               </el-timeline-item>
-              <el-timeline-item :timestamp="borrowingDetail.handleTime" placement="top">
+              <el-timeline-item v-if="borrowingDetail.handleTime != null && borrowingDetail.handleTime != undefined" :timestamp="borrowingDetail.handleTime" placement="top">
                 <el-card>
                   <h4>处理借阅</h4>
                   <p>管理员 {{borrowingDetail.borrowingOperator}} 于 {{borrowingDetail.handleTime}} 进行处理 </p>
@@ -47,7 +47,7 @@
             <el-input v-model="borrowing.userName" placeholder="模糊查询借阅人"></el-input>
           </el-form-item>
           <el-form-item label="书籍状态">
-            <el-select v-model="borrowing.borrowingStatus" placeholder="书籍状态">
+            <el-select v-model="borrowing.borrowingStatus" clearable placeholder="全部">
               <el-option
                 v-for="item in borrowingStatusInfo.list"
                 :key="item.code"
@@ -229,9 +229,6 @@ export default {
       axios('/borrowing/get/borrowingStatus').then(res => {
         if (res.data.code === 200) {
           this.borrowingStatusInfo = res.data.data
-          var obj = {code: null, message: '全部'}
-          this.borrowingStatusInfo.list.push(obj)
-          this.borrowing.borrowingStatus = null
         } else {
           this.$message.error(res.data.message)
         }

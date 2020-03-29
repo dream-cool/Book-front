@@ -14,7 +14,7 @@
                 <el-input v-model="ebook.published"></el-input>
               </el-form-item>
               <el-form-item label="书籍分类" prop="category">
-                <el-cascader
+                <el-cascader style="width: 300px"
                     v-model="category"
                     :options="categoryList"
                     :filterable="true"
@@ -24,22 +24,15 @@
                 ></el-cascader>
               </el-form-item>
                <el-form-item label="书籍封面" prop="img">
-                    <el-image v-if="!uploadEbookImgSuccess && ebook.img != null" :src="ebook.img" style="float:left" >
-                        <div slot="error" class="image-slot">
-                        <i class="el-icon-picture-outline"></i>
-                        </div>
-                    </el-image>
                     <el-upload 
-                        :multiple="false"
-                        :action="server_URL"
-                        list-type="picture-card"
-                        accept="image/png,image/jpg,image/jpeg"
-                        :class="{disabled:uploadEbookImgDisabled}"
-                        :on-remove="handleEbookImgRemove"
-                        :on-success="handleEbookImgUploadSuccess"
-                        :before-upload="beforeEbookImgUpload">
-                        <div class="el-upload__tip" slot="tip">只支持jpg/png文件</div>
-                        <i class="el-icon-plus"></i>
+                      :multiple="false"
+                      :action="server_URL+'/file'"
+                      accept="image/png,image/jpg,image/jpeg"
+                      list-type="picture-card"
+                      :on-success="handleEbookImgUploadSuccess">
+                      <div class="el-upload__tip" slot="tip">只支持jpg/png/jpeg文件</div>
+                          <el-avatar v-if="ebook.img != null "  shape="square"
+                          :size="150"  :src='server_URL+"/download/"+ebook.img' style="float:left">{{ebook.bookName}}</el-avatar>
                     </el-upload>
                 </el-form-item>
               <el-form-item label="书籍描述" prop="bookDescribe">
@@ -64,7 +57,7 @@ import axios from 'axios'
 export default {
   data () {
     return {
-      server_URL: 'http://localhost:8090/file',
+      server_URL: axios.defaults.baseURL,
       activeName: 'first',
       fileList: [],
       category: [],
@@ -84,10 +77,6 @@ export default {
         bookDescribe: '',
         ebook: '1'
       },
-      uploadEbookImgDisabled: false,
-      uploadEbookFileDisabled: false,
-      uploadEbookImgSuccess: false,
-      uploadEbookFileSuccess: false,
       ebookRules: {
         bookName: [
           { required: true, message: '请输入书籍名称', trigger: 'blur' },
@@ -172,33 +161,18 @@ export default {
     handleEbookChange (value){
       this.ebook.categoryId = value[value.length-1]
     },
-    handleEbookImgRemove (file, fileList) {
-      this.ebook.img = ''
-      this.uploadEbookImgDisabled = false
-    },
-    beforeEbookImgUpload () {
-      this.uploadEbookImgDisabled = true
-    },
     handleEbookImgUploadSuccess (response, file, fileList) {
-      this.uploadEbookImgSuccess = true
       this.ebook.img = response.data
-      console.log(this.ebook)
-      this.$message('书籍封面上传成功,请提交修改')
-    },
-
-    handleEbookFileRemove (file, fileList) {
-      this.ebook.location = ''
-      this.uploadEbookFileDisabled = false
-    },
-    beforeEbookFileUpload () {
-      this.uploadEbookFileDisabled = true
-    },
-    handleEbookFileUploadSuccess (response, file, fileList) {
-      this.ebook.location = response.data
-      this.uploadEbookFileSuccess = true
-      this.update(this.ebook)
+      axios.put('/book', this.ebook).then(res => {
+        if (res.data.code === 200) {
+            this.book = res.data.data
+            location.reload()
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+      }
     }
-  }
 }
 </script>
 

@@ -66,6 +66,9 @@
             <el-menu-item index="/back/category/addCategory" >
               <i class="el-icon-s-operation"></i>新增类别</el-menu-item>
           </el-submenu>
+          <el-menu-item index="/back/dictionary">
+            <i class="el-icon-s-operation"></i>字典管理
+          </el-menu-item>
           <el-menu-item index="/back/grantPrivilege" v-if="user.role == '3'" >
             <i class="el-icon-s-operation"></i>权限
           </el-menu-item>
@@ -76,17 +79,18 @@
         <el-header style="text-align: right; font-size: 12px; background-color: rgb(238, 241, 246)">
           <el-badge is-dot class="item" v-if="messageList.length > 0"> </el-badge>
             <el-dropdown  @command="handleCommand" style="margin-top:0.5%">
-             <el-avatar :size="50"  :src='"http://localhost:8090/download/"+user.avatar' style="margin-right: 15px;">{{user.userName}}</el-avatar>
+             <el-avatar :size="50"  :src='Server_URL+"/download/"+user.avatar' style="margin-right: 15px;">{{user.userName}}</el-avatar>
               <el-dropdown-menu slot="dropdown" style="margin-top:-1%">
                 <el-dropdown-item command="userDetail">个人中心</el-dropdown-item>
-                <el-badge :value="messageList.length" :max="99" class="item">
+                <el-badge v-if="messageList.length > 0" :value="messageList.length" :max="99" class="item">
                   <el-dropdown-item command="queryMessage">消息</el-dropdown-item>
                 </el-badge>
+                <el-dropdown-item v-else command="queryMessage">消息</el-dropdown-item>
                 <el-dropdown-item command="updatePassword">修改密码</el-dropdown-item>
                 <el-dropdown-item command="logout">退出</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-          <span style="font-size: 20px">您好，{{user.userName}}</span>
+          <span style="font-size: 20px">{{user.userName}},您好</span>
         </el-header>
 
         <div class="navbar clearfix" style="margin-top: 1%">
@@ -115,6 +119,7 @@ export default {
   },
   data () {
     return {
+      Server_URL: axios.defaults.baseURL,
       levelList: null,
       routerList: [],
       user: {
@@ -144,21 +149,18 @@ export default {
     showRouter () {
 
     },
-    startLoad () {
-      this.fullscreenLoading = true
-    },
     handleCommand (com) {
       if (com == 'userDetail'){
-        this.$router.push({path: '/personal'})
+        this.$router.push({path: '/back/personal'})
       }
       if (com == 'logout') {
         this.logout()
       }
       if (com == 'queryMessage') {
-        this.$router.push({path: '/messageInfo'})
+        this.$router.push({path: '/back/messageInfo'})
       }
       if (com == 'updatePassword') {
-        this.$router.push({path: '/updatePassword'})
+        this.$router.push({path: '/back/updatePassword'})
         
       }
     },    
@@ -183,9 +185,10 @@ export default {
         }
         setTimeout(() => {
           this.getMessage(this.pageNum, this.pageSize, this.message)
-        }, 10000)
+        }, 1000000)
       })
-    }
+    },
+    
   },
   created () {
     this.user = JSON.parse(window.localStorage.getItem('userDetail'))

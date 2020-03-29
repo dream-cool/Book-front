@@ -18,20 +18,24 @@
           <el-menu-item index="2">
             <p>热门</p>
           </el-menu-item>
-          <el-menu-item index="3">
+          <el-menu-item index="/front/lendBook">
+            <p>借出</p>
+          </el-menu-item>
+          <el-menu-item index="/front/ebook">
             <p>电子书</p>
           </el-menu-item>
 
           <el-menu-item v-if="user == null" index="/login" style="float: right;width: 100px"> <p>登录</p> </el-menu-item>
             <el-submenu index="" v-if="user != null"  style="float: right;width: 100px;">
               <template slot="title">        
-                <el-avatar :size="50"  :src='"http://localhost:8090/download/"+user.avatar' style="margin-right: 15px;">{{user.userName}}</el-avatar>
+                <el-avatar :size="50"  :src='Server_URL + "/download/"+user.avatar' style="margin-right: 15px;">{{user.userName}}</el-avatar>
               </template>
               <el-menu-item index="/front/personal">个人中心</el-menu-item>
-              <el-badge :value="11" :max="99" class="item">
+              <el-badge v-if="messageList.length > 0" :value="messageList.length" :max="99" class="item">
                 <el-menu-item index="/front/messageInfo">消息</el-menu-item>
               </el-badge>
-              <el-menu-item index="/front/borrowing">我的借阅</el-menu-item>
+              <el-menu-item v-else index="/front/messageInfo">消息</el-menu-item>
+              <el-menu-item index="/front/myborrowing">我的借阅</el-menu-item>
               <el-menu-item index="/front/collection">我的收藏</el-menu-item>
               <el-menu-item index="" @click="openReadRecord">浏览记录</el-menu-item>
               <el-menu-item index="/front/updatePassword">修改密码</el-menu-item>
@@ -52,7 +56,8 @@
       <el-drawer  :visible.sync="drawer" direction="ltr" :with-header="false">
           <div v-for="(item,i) in records" :key="i" class="record-list" >
             <el-card style="margin-top: 20px" >
-                  <el-image class="header-img"  :src='"http://localhost:8090/download/"+ item.bookImg' 
+              
+                  <el-image class="header-img"  :src='Server_URL +"/download/"+ item.bookImg' 
                         style="float: left;height: 100px; width: 100px" @click="goToBookDetail(item.bookId)"></el-image>
                   <div class="author-info" style="margint-left:5%;height: 100px;">
                       <span class="author-name" style="color: #000;font-size: 18px;font-weight: bold">
@@ -88,16 +93,21 @@ export default {
   name: 'Index',
   data () {
     return {
+      Server_URL: axios.defaults.baseURL,
       user: {},
       drawer: false,
       records:[],
       total: 0,
       pageSize: 5,
       pageNum: 1,
+      message: {
+      },
+      messageList: []
     }
   },
   created () {
     this.user = JSON.parse(window.localStorage.getItem('userDetail'))
+    this.getMessage(this.pageNum, this.pageSize, this.message)
   },
 
   methods: {
@@ -142,6 +152,25 @@ export default {
             this.openReadRecord()
         })
       }
+    },
+    getMessage (pageNum, pageSize, message) {
+      this.message.userId = this.user.userId
+      this.message.status = 0
+      axios({
+        url: '/message?pageNum=' + pageNum + '&pageSize=' + pageSize,
+        params: message
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.messageList = res.data.data.list
+          this.pageNum = res.data.data.pageNum
+          this.pageSize = res.data.data.pageSize
+        } else {
+          this.$message.error(res.data.message)
+        }
+        setTimeout(() => {
+          this.getMessage(this.pageNum, this.pageSize, this.message)
+        }, 1000000)
+      })
     }
   }
 }

@@ -14,18 +14,16 @@
           </el-form>
           <div slot="footer" class="dialog-footer">
             <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="applyBorrowing">确 定</el-button>
+            <el-button type="primary" @click="confirmBorrowing">确 定</el-button>
           </div>
         </el-dialog>
 
       <div class="book">
          
         <div class="bookImg" style="float:left;margin-right: 5%; height: 400px" >
-          <el-image v-if="book.img != null" :src="book.img" >
-            <div slot="error" class="image-slot">
-              <i class="el-icon-picture-outline"></i>
-            </div>
-          </el-image>
+          <el-avatar v-if="book.img != null" :size="300" shape="square" object-fit='fill' style="object-fit: fill;" :src="Server_URl+'/download/'+book.img" >
+           {{book.bookName}}
+          </el-avatar>
         </div>
 
         <div class="bookContent" style="margin-left: 100px;width:800px">
@@ -49,8 +47,9 @@
               <el-link v-if="userCollection.isCollect" icon="iconfont icon-collect"  :underline="false" style="margin-left:40px;margin-top:30px" @click="collect"></el-link>
               <el-link v-if="!userCollection.isCollect" icon="iconfont icon-cancel-collect"  :underline="false" style="margin-left:40px;margin-top:30px" @click="collect"></el-link>
               <el-link  icon="el-icon-s-comment" style="font-size: 30px;margin-left:60px;margin-top:30px" :underline="false"  @click=""></el-link>
-              <el-rate v-model="book.score" disabled show-score text-color="#ff9900" style="margin-top:20px"></el-rate>
-              <el-button v-if ="book.ebook == 0"  type="info" @click="dialogFormVisible = true"  circle style="margin-top:20px">申请借阅</el-button>
+              <el-rate v-if="book.score != null" v-model="book.score" disabled show-score text-color="#ff9900" style="margin-top:20px"></el-rate>
+              <p v-else > 该书籍还没有人进行评分呢！</p>
+              <el-button v-if ="book.ebook == 0"  type="info" @click="applyBorrowing"  circle style="margin-top:20px">申请借阅</el-button>
               <el-button v-if ="book.ebook == 1"  type="info" @click="goToEookRead"  circle style="margin-top:20px">在线阅读</el-button>
           </div> 
         </div>
@@ -78,7 +77,7 @@
           <el-radio v-model="sortWay" @change="getCommentInfo(id, sortWay)" label="score">按评分排序</el-radio>
           <div v-for="(item,i) in comments" :key="i" class="comment-list" style="margin-top: 2%">
             <el-card style="width: 1000px">
-              <el-avatar class="header-img" :size="40" :src="'http://localhost:8090/download/'+item.avatar" style="float: left"></el-avatar>
+              <el-avatar class="header-img" :size="40" :src="Server_URl+'/download/'+item.avatar" style="float: left"></el-avatar>
               <div class="author-info" style="margint-left:5%">
                   <span class="author-name" style="color: #000;font-size: 18px;font-weight: bold">
                       {{item.userName}}</span>
@@ -117,7 +116,7 @@
               <div  v-if="item.children != null && item.children.length > 0" style="margin-top: 2%;margin-left: 10%" >
                   <div v-if="index < item.showNumbers" v-for="(children,index) in item.children" :key="index"  class="comment-list" style="margin-top: 2%">
                       <el-card style="width: 1000px;background: rgb(236,236,236)">
-                        <el-avatar class="header-img" :size="30" :src="'http://localhost:8090/download/'+children.avatar" style="float: left"></el-avatar>
+                        <el-avatar class="header-img" :size="30" :src="Server_URl+'/download/'+children.avatar" style="float: left"></el-avatar>
                         <div class="author-info" style="margint-left:5%">
                             <span class="author-name" style="font-size: 18px">
                                   {{children.userName}}
@@ -202,6 +201,7 @@ export default {
   
   data () {
     return {
+      Server_URl: axios.defaults.baseURL,
       id: '',
       book: {
       },
@@ -364,6 +364,7 @@ export default {
             this.comment = res.data.data
             this.comment.content = ''
             this.getCommentInfo(this.id, this.sortWay)
+            this.getBookInfo(this.id)
             this.$message(res.data.message)
           } else {
             this.$message.error(res.data.message)
@@ -385,13 +386,24 @@ export default {
           })  
         }
     },
-    applyBorrowing () {
-      this.borrowing.userId = this.user.userId
-      this.borrowing.bookId = this.id
+    applyBorrowing(){
+      if(this.user == null){
+        this.goToLogin()
+        return
+      }
+      if(this.user.credit < 60){
+        this.$message.error('当前信誉分为'+ this.user.credit+ '，信誉分过低，无法申请')
+        return
+      }
       if (this.book.bookStatus != 0) {
         this.$message.error('该书籍暂不在库,无法申请')
         return
       }
+      this.dialogFormVisible = true
+    },
+    confirmBorrowing () {
+      this.borrowing.userId = this.user.userId
+      this.borrowing.bookId = this.id
       axios.post('/borrowing', this.borrowing)
         .then(res => {
           if (res.data.code === 200) {
@@ -404,6 +416,7 @@ export default {
         })
       this.dialogFormVisible = false
     },
+    
     getBookInfo (id) {
       axios.get('/book/detail/' + id)
         .then(res => {
@@ -468,6 +481,9 @@ export default {
     },
     goToEookRead () {
       this.$router.push({ path: '/front/ebookRead/' + this.id})
+    },
+    goToLogin(){
+      this.$router.push({path: '/login'})
     }
   }
 }

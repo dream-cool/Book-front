@@ -33,6 +33,7 @@
             </el-form-item>
             <el-form-item label="书籍分类" prop="category">
               <el-cascader
+                style="width: 300px"
                 v-model="category"
                 :options="categoryList"
                 :filterable="true"
@@ -42,21 +43,16 @@
               ></el-cascader>
             </el-form-item>
             <el-form-item label="书籍封面" prop="img">
-              <el-image  v-if="book.img != null && !uploadBookImgSuccess" :src="book.img" style="float:left">
-              </el-image>
                   <el-upload 
                     :multiple="false"
-                    :action="server_URL"
-                    list-type="picture-card"
+                    :action="server_URL+'/file'"
                     accept="image/png,image/jpg,image/jpeg"
-                    :class="{disabled:uploadBookImgDisabled}"
-                    :on-remove="handleBookImgRemove"
-                    :on-success="handleBookImgUploadSuccess"
-                    :before-upload="beforeBookImgUpload">
-                    <div class="el-upload__tip" slot="tip">只支持jpg/png文件</div>
-                    <i class="el-icon-plus"></i>
+                    list-type="picture-card"
+                    :on-success="handleBookImgUploadSuccess">
+                    <div class="el-upload__tip" slot="tip">只支持jpg/png/jpeg文件</div>
+                        <el-avatar v-if="book.img != null "  shape="square"
+                        :size="150"  :src='server_URL+"/download/"+book.img' style="float:left">{{book.bookName}}</el-avatar>
                   </el-upload>
-              
             </el-form-item>
             <el-form-item label="书籍位置" prop="location">
               <el-input v-model="book.location"></el-input>
@@ -83,7 +79,7 @@ import axios from 'axios'
 export default {
   data () {
     return {
-      server_URL: 'http://localhost:8090/file',
+      server_URL: axios.defaults.baseURL,
       activeName: 'first',
       fileList: [],
       category: [],
@@ -95,8 +91,6 @@ export default {
       categoryList: [],
       id: '',
       book: { },
-      uploadBookImgDisabled: false,
-      uploadBookImgSuccess: false,
       bookRules: {
         bookName: [
           { required: true, message: '请输入书籍名称', trigger: 'blur' },
@@ -194,20 +188,19 @@ export default {
     handleBookChange (value){
       this.book.categoryId = value[value.length-1]
     },
-    handleBookImgRemove (file, fileList) {
-      this.book.img = ''
-      this.uploadBookImgDisabled = false
-    },
-    beforeBookImgUpload () {
-      this.uploadBookImgDisabled = true
-    },
     handleBookImgUploadSuccess (response, file, fileList) {
-      this.uploadBookImgSuccess = true
       this.book.img = response.data
-      this.$message('书籍封面上传成功,请提交修改')
+      axios.put('/book', this.book).then(res => {
+        if (res.data.code === 200) {
+            this.book = res.data.data
+            location.reload()
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
+      }
     }
   }
-}
 </script>
 
 <style scoped>

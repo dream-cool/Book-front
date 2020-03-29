@@ -134,7 +134,7 @@ import axios from 'axios'
 export default {
   data () {
     return {
-      server_URL: 'http://localhost:8090/file',
+      server_URL: axios.defaults.baseURL + '/file',
       activeName: 'first',
       fileList: [],
       book: {

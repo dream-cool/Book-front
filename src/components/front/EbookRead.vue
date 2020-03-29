@@ -1,6 +1,6 @@
 <template>
   <div class="content" :style="backgroundStyle" >
-     <el-button icon="el-icon-back" @click="backBookDeatil" style="margin-left: 15%; margin-top: 2%;">返回首页</el-button>
+     <el-button icon="el-icon-back" @click="backBookDeatil" style="margin-left: 15%; margin-top: 2%;">返回书籍详情</el-button>
 
     <el-main>
       <div class="header">
@@ -30,6 +30,7 @@
      <p :style="fontStyle"  v-html="data.content"></p>
 
      <el-pagination
+            background
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page.sync="pageNum"
@@ -66,7 +67,7 @@ export default {
           inputTime: null
         }
       },
-      URL: 'localhost:8090/download/',
+      URL: axios.defaults.baseURL+'/download/',
       pageNum: 1,
       pageSize: 100,
       total: 0,
@@ -80,13 +81,53 @@ export default {
       backgroundStyle: {
         'background': '#C8B9B9'
       },
-      percentage: 0
+      percentage: 0,
+      user:{}
     }
   },
   created () {
+    this.user = JSON.parse(window.localStorage.getItem('userDetail'))
+    if(this.user == null){
+      this.goToLogin()
+    }
     this.getEbookContent(this.pageNum, this.pageSize)
+    this.checkReadEBookRecord()
   },
   methods: {
+    checkReadEBookRecord(){
+        axios.post('/record/all?pageNum=1&pageSize=10000', 
+          {
+            userId: this.user.userId, 
+            bookId: this.id
+          }
+        )
+        .then(res => {
+          if(res.data.code == 200){
+            debugger
+            if(res.data.data.list != null && res.data.data.list.length > 0){
+              let recordNum = res.data.data.list[0].bookPage
+              if(recordNum <= 1){
+                return
+              }
+              this.$confirm('记忆您上次阅读到第'+recordNum+'页,是否跳转?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'info'
+              }).then(() => {
+                this.handleCurrentChange(recordNum)
+              }).catch(() => {
+                this.addReadEBookRecord(this.pageNum)
+              });
+            }
+          } else {
+            this.addReadEBookRecord(this.pageNum)
+          }
+          
+        })
+    },
+    addReadEBookRecord(pageNum){
+        axios.post('/record', {userId: this.user.userId, bookId: this.id, bookPage: pageNum}).then(res => {})
+    },
     handleBackgroundColorChange () {
       this.backgroundStyle.background = this.backgroundColor
     },
@@ -119,6 +160,7 @@ export default {
     },
     handleCurrentChange (pageNum) {
       this.getEbookContent(pageNum, this.pageSize)
+      this.addReadEBookRecord(pageNum)
       this.toTop()
       this.percentage = (this.pageNum / (this.total / this.pageSize) * 100)
       this.percentage = Number(this.percentage.toFixed(2))
@@ -127,7 +169,7 @@ export default {
       document.body.scrollTop = document.documentElement.scrollTop = 0
     },
     backBookDeatil () {
-      this.$router.push({ path: '/back/book/bookDetail/' + this.$route.params.id })
+      this.$router.push({ path: '/front/bookDetail/' + this.$route.params.id })
     },
     getEbookContent (pageNum, pageSize) {
       console.log(pageSize)
@@ -147,7 +189,12 @@ export default {
             this.$message.error(res.data.$message)
           }
         })
+    },
+    goToLogin(){
+      this.$router.push({path: '/login'})
     }
+    
+    
   }
 }
 </script>

@@ -4,16 +4,27 @@
         <el-col :span="3" v-for="(book,index) in bookList" :key="index" >  
             <el-card :body-style="{ padding: '0px' }" style="width: 220px">
               <el-image v-if="book.img != null"  style="margin-left: 20px"
-                :src='"http://localhost:8090/download/"+book.img' 
+                :src='Sever_URL + "/download/"+book.img' 
                 @click="goToBookDetail(book.bookId)"
                 ></el-image>
               <div style="padding-left: 20px;padding-right: 20px;">
                 <p style="color: #000;font-size: 14px;font-weight: bold margin-top: -20px; " >  {{book.bookName}}  </p>
                 <p style="font-size: 14px;color: #AEA7A7;margin-top: -10px;float:left ">{{book.author}}</p>
-                <p style="font-size: 14px;color: #AEA7A7;margin-top: -10px;float:right">借阅:100</p>
+                <p v-if="book.ebook == 0" style="font-size: 14px;color: #AEA7A7;margin-top: -10px;float:right">借阅: {{book.borrowingNumber}}</p>
               </div>
             </el-card>
         </el-col>
+      </el-row>
+      <el-row>
+        <el-pagination
+          style="margin-top: 30px"
+          background
+          @current-change="handleCurrentChange"
+          :current-page="pageNum"
+          :page-size="pageSize"
+          layout="total, prev, pager, next, jumper"
+          :total="total">
+        </el-pagination>
       </el-row>
   </div>
 </template>
@@ -23,24 +34,35 @@ import axios from 'axios'
 import moment from 'moment'
 export default {
   name: 'Hello',
+  props: ['bookCondition'],
   data () {
     return {
-      Sever_URL: 'localhost:8090/download/',
+      Sever_URL: axios.defaults.baseURL,
       bookList: [],
       pageNum: 1,
       pageSize: 30,
       total: 0,
-      book: {},
+      book: {
+        ebook: 0,
+        bookStatus: '0'
+      },
       url: ''
     }
   },
   created() {
+    if(this.bookCondition != null && this.bookCondition != 'undenfied' ){
+      this.book = this.bookCondition 
+    }
+    console.log(this.bookCondition)
     this.getBookInfo(this.pageNum, this.pageSize, this.book)
   },
   methods: {
     goToBookDetail(bookId){
       document.body.style.overflow = null
       this.$router.push({path: '/front/bookDetail/'+bookId})
+    },
+    handleCurrentChange(val){
+      this.getBookInfo(val, this.pageSize, this.book)
     },
     getBookInfo (pageNum, pageSize, book) {
       axios.post(

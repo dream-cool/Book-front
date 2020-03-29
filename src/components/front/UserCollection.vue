@@ -16,7 +16,7 @@
                         <el-col :span="4" v-for="(useCollection,index) in item" :key="index"  >  
                             <el-card :body-style="{ padding: '0px' }" style="width: 220px">
                               <el-image v-if="useCollection.bookImg != null"  style="margin-left: 20px"
-                                :src='"http://localhost:8090/download/"+useCollection.bookImg' 
+                                :src='Sever_URL+"/download/"+useCollection.bookImg' 
                                 @click="goToBookDetail(useCollection.bookId)"
                                 ></el-image>
                               <div style="padding-left: 20px;padding-right: 20px;">
@@ -46,7 +46,7 @@ export default {
   name: 'Hello',
   data () {
     return {
-      Sever_URL: 'localhost:8090/download/',
+      Sever_URL: axios.defaults.baseURL,
       pageNum: 1,
       pageSize: 30,
       total: 0,
