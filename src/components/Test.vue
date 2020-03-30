@@ -11,10 +11,10 @@
 </template>
 
 <script>
-import Menu from '../components/Menu.vue'
+import Menu from '../components/common/Menu.vue'
 export default {
   components: {
-    Menu
+    Menu:Menu
   },
   data () {
     return {

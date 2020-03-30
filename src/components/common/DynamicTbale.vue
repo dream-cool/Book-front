@@ -1,22 +1,17 @@
 <template>
     <div class="dynamic-table">
     <el-table id="el-table" :data="table.data">
-    <el-table-column id="el-table-column" type="index" align="left" header-align="left" label="编号" width="50px">
-    <template #header>
-        编号
-    </template>
-    </el-table-column>
     <el-table-column id="el-table-column1" v-for="(column,index) in columns" :key="index" :show-overflow-tooltip="column.showOverflowTooltip" :column-key="column.columnKey" :selectable="column.selectable" :type="column.type" :align="column.align" :filter-method="column.filterMethod" :filter-placement="column.filterPlacement" :prop="column.prop" :sort-orders="column.sortOrders" :filter-multiple="column.filterMultiple" :header-align="column.headerAlign" :label-class-name="column.labelClassName" :reserve-selection="column.reserveSelection" :sort-method="column.sortMethod" :resizable="column.resizable" :filtered-value="column.filteredValue" :index="column.index" :label="column.label" :sortable="column.sortable" :filters="column.filters" :class-name="column.className" :formatter="column.formatter" :render-header="column.renderHeader" :sort-by="column.sortBy" :width="column.width" :fixed="column.fixed" :min-width="column.minWidth">
     <template id="el-free-tag20" slot-scope="{row,$index}">
-        <el-input id="el-free-tag21" v-if="showEditState(column, $index) &amp;&amp; column.editType == 'el-input' " v-model="row[column.prop]">
+        <el-input id="el-free-tag21" v-if="showEditState(column, $index) && column.editType == 'el-input' " v-model="row[column.prop]">
         </el-input>
-        <el-input-number id="el-free-tag22" v-if="showEditState(column, $index) &amp;&amp; column.editType == 'el-input-number' " v-model="row[column.prop]">
+        <el-input-number id="el-free-tag22" v-if="showEditState(column, $index) && column.editType == 'el-input-number' " v-model="row[column.prop]">
         </el-input-number>
-        <el-switch id="el-free-tag12" v-if="showEditState(column, $index) &amp;&amp;column.editType == 'el-switch' " v-model="row[column.prop]" :active-text="column.attribute.activeText" :inactive-text="column.attribute.inactiveText">
+        <el-switch id="el-free-tag12" v-if="showEditState(column, $index) &&column.editType == 'el-switch' " v-model="row[column.prop]" :active-text="column.attribute.activeText" :inactive-text="column.attribute.inactiveText">
         </el-switch>
-        <el-select id="el-select1" placeholder="请选择" v-if="showEditState(column, $index) &amp;&amp;  column.editType == 'el-select' " v-model="row[column.prop]">
-        <el-option id="el-option1" v-for="item in column.attribute.options" :key="item.value" :label="item.label" :value="item.value">
-        </el-option>
+          <el-select id="el-select1" placeholder="请选择" v-if="showEditState(column, $index) &&  column.editType == 'el-select' " v-model="row[column.prop]">
+            <el-option id="el-option1" v-for="item in column.attribute.options" :key="item.value" :label="item.label" :value="item.value">
+          </el-option>
         </el-select>
         <span id="el-free-tag14" v-if="!showEditState(column, $index) "> {{ column.formatter == null ? row[column.prop] : column.formatter(row[column.prop]) }} </span>
     </template>
@@ -46,6 +41,11 @@ export default {
     }
   },
   created () {
+     debugger
+    if(this.table == null || this.table.data == null){
+      return
+    }
+   
     // 使用一个数组来控制表格中哪列是在编辑中
     for (let i = 0; i < this.table.data.length; i++) {
       this.showEdit[i] = false
@@ -67,7 +67,7 @@ export default {
       }
       if (operation.intention == 'add') {
         this.handleAdd()
-        operation.click()
+        operation.click(index, row)
       }
       if (operation.intention == 'save') {
         this.handleSave(index, row)
@@ -142,6 +142,7 @@ export default {
           obj[column.prop] = column.initialValue
         }
       })
+      debugger
       this.table.data.push(obj)
       this.handleEdit(this.table.data.length - 1, obj)
     },

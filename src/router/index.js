@@ -1,5 +1,7 @@
 /* eslint-disable standard/object-curly-even-spacing */
 import Router from 'vue-router'
+import Vue from 'vue'
+Vue.use(Router)
 
 const BackIndex = resolve => require(['@/components/BackIndex.vue'], resolve)
 const Book = resolve => require(['@/components/back/book/Book.vue'], resolve)
@@ -18,7 +20,7 @@ const BorrowingStatistics = resolve => require(['@/components/back/statistics/Bo
 const CategoryList = resolve => require(['@/components/back/category/CategoryList.vue'], resolve)
 const CategoryStatistics = resolve => require(['@/components/back/statistics/CategoryStatistics.vue'], resolve)
 const GrantPrivilege = resolve => require(['@/components/back/GrantPrivilege.vue'], resolve)
-const Dictionary = resolve => require(['@/components/back/Dictionary.vue'], resolve)
+const DictionaryList = resolve => require(['@/components/back/DictionaryList.vue'], resolve)
 const HandleBorrowing = resolve => require(['@/components/back/borrowing/HandleBorrowing.vue'], resolve)
 const HandleReturn = resolve => require(['@/components/back/borrowing/HandleReturn.vue'], resolve)
 const ReaderDetail = resolve => require(['@/components/back/user/ReaderDetail.vue'], resolve)
@@ -41,6 +43,7 @@ const Ebook = resolve => require(['@/components/front/Ebook.vue'], resolve)
 const LendBook = resolve => require(['@/components/front/LendBook.vue'], resolve)
 const MyBorrowing = resolve => require(['@/components/front/MyBorrowing.vue'], resolve)
 const Test = resolve => require(['@/components/Test.vue'], resolve)
+const Test1 = resolve => require(['@/components/Test1.vue'], resolve)
 const FrontIndex = resolve => require(['@/components/FrontIndex.vue'], resolve)
 export default new Router({
   routes: [
@@ -65,6 +68,10 @@ export default new Router({
           meta: {}},
         {path: '/front/test',
           component: Test,
+          meta: {}
+        },
+        {path: '/front/test1',
+          component: Test1,
           meta: {}
         },
         {
@@ -262,7 +269,7 @@ export default new Router({
         },
         {
           path: '/back/dictionary',
-          component: Dictionary,
+          component: DictionaryList,
           name: '字典管理',
           meta: {requireAuth: true}
         },
