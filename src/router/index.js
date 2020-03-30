@@ -1,49 +1,47 @@
-import Vue from 'vue'
+/* eslint-disable standard/object-curly-even-spacing */
 import Router from 'vue-router'
-import FrontIndex from '@/components/FrontIndex.vue'
-import BackIndex from '@/components/BackIndex.vue'
-import Book from '@/components/back/book/Book.vue'
-import Borrowing from '@/components/back/borrowing/Borrowing.vue'
-import Category from '@/components/back/category/Category.vue'
-import User from '@/components/back/user/User.vue'
-import Statistics from '@/components/back/statistics/Statistics.vue'
-import AddBook from '../components/back/book/AddBook'
-import AddCategory from '../components/back/category/AddCategory'
-import AddReader from '../components/back/user/AddReader.vue'
-import BookDetail from '../components/back/book/BookDetail.vue'
-import BookList from '../components/back/book/BookList.vue'
-import BookInfo from '../components/back/book/BookInfo.vue'
-import BorrowingList from '../components/back/borrowing/BorrowingList.vue'
-import BorrowingStatistics from '../components/back/statistics/BorrowingStatistics.vue'
-import CategoryList from '../components/back/category/CategoryList.vue'
-import CategoryStatistics from '../components/back/statistics/CategoryStatistics.vue'
-import GrantPrivilege from '../components/back/GrantPrivilege.vue'
-import Dictionary from '../components/back/Dictionary.vue'
-import HandleBorrowing from '../components/back/borrowing/HandleBorrowing.vue'
-import HandleReturn from '../components/back/borrowing/HandleReturn.vue'
-import ReaderDetail from '../components/back/user/ReaderDetail.vue'
-import ReaderList from '../components/back/user/ReaderList.vue'
-import UserInfo from '../components/back/user/UserInfo.vue'
-import StorageStatisticsByTime from '../components/back/statistics/StorageStatisticsByTime.vue'
-import UserStatisticsByTime from '../components/back/statistics/UserStatisticsByTime.vue'
-import EbookRead from '../components/front/EbookRead.vue'
-import UpdateBook from '../components/back/book/UpdateBook.vue'
-import UpdateEbook from '../components/back/book/UpdateEbook.vue'
-import Login from '../components/Login.vue'
-import NoAuthority from '../components/403.vue'
-import MessageInfo from '../components/MessageInfo.vue'
-import UpdatePassword from '../components/front/UpdatePassword.vue'
-import Home from '../components/back/Home.vue'
-import Personal  from '../components/Personal.vue'
-import Index from '../components/front/Index.vue'
-import UserCollection from '../components/front/UserCollection.vue'
-import Ebook from '../components/front/Ebook.vue'
-import LendBook from '../components/front/LendBook.vue'
-import MyBorrowing from '../components/front/MyBorrowing.vue'
-import Test from '../components/Test.vue'
 
-Vue.use(Router)
-
+const BackIndex = resolve => require(['@/components/BackIndex.vue'], resolve)
+const Book = resolve => require(['@/components/back/book/Book.vue'], resolve)
+const Borrowing = resolve => require(['@/components/back/borrowing/Borrowing.vue'], resolve)
+const Category = resolve => require(['@/components/back/category/Category.vue'], resolve)
+const User = resolve => require(['@/components/back/user/User.vue'], resolve)
+const Statistics = resolve => require(['@/components/back/statistics/Statistics.vue'], resolve)
+const AddBook = resolve => require(['@/components/back/book/AddBook'], resolve)
+const AddCategory = resolve => require(['@/components/back/category/AddCategory'], resolve)
+const AddReader = resolve => require(['@/components/back/user/AddReader.vue'], resolve)
+const BookDetail = resolve => require(['@/components/back/book/BookDetail.vue'], resolve)
+const BookList = resolve => require(['@/components/back/book/BookList.vue'], resolve)
+const BookInfo = resolve => require(['@/components/back/book/BookInfo.vue'], resolve)
+const BorrowingList = resolve => require(['@/components/back/borrowing/BorrowingList.vue'], resolve)
+const BorrowingStatistics = resolve => require(['@/components/back/statistics/BorrowingStatistics.vue'], resolve)
+const CategoryList = resolve => require(['@/components/back/category/CategoryList.vue'], resolve)
+const CategoryStatistics = resolve => require(['@/components/back/statistics/CategoryStatistics.vue'], resolve)
+const GrantPrivilege = resolve => require(['@/components/back/GrantPrivilege.vue'], resolve)
+const Dictionary = resolve => require(['@/components/back/Dictionary.vue'], resolve)
+const HandleBorrowing = resolve => require(['@/components/back/borrowing/HandleBorrowing.vue'], resolve)
+const HandleReturn = resolve => require(['@/components/back/borrowing/HandleReturn.vue'], resolve)
+const ReaderDetail = resolve => require(['@/components/back/user/ReaderDetail.vue'], resolve)
+const ReaderList = resolve => require(['@/components/back/user/ReaderList.vue'], resolve)
+const UserInfo = resolve => require(['@/components/back/user/UserInfo.vue'], resolve)
+const StorageStatisticsByTime = resolve => require(['@/components/back/statistics/StorageStatisticsByTime.vue'], resolve)
+const UserStatisticsByTime = resolve => require(['@/components/back/statistics/UserStatisticsByTime.vue'], resolve)
+const EbookRead = resolve => require(['@/components/front/EbookRead.vue'], resolve)
+const UpdateBook = resolve => require(['@/components/back/book/UpdateBook.vue'], resolve)
+const UpdateEbook = resolve => require(['@/components/back/book/UpdateEbook.vue'], resolve)
+const Login = resolve => require(['@/components/Login.vue'], resolve)
+const NoAuthority = resolve => require(['@/components/403.vue'], resolve)
+const MessageInfo = resolve => require(['@/components/MessageInfo.vue'], resolve)
+const UpdatePassword = resolve => require(['@/components/front/UpdatePassword.vue'], resolve)
+const Home = resolve => require(['@/components/back/Home.vue'], resolve)
+const Personal = resolve => require(['@/components/Personal.vue'], resolve)
+const Index = resolve => require(['@/components/front/Index.vue'], resolve)
+const UserCollection = resolve => require(['@/components/front/UserCollection.vue'], resolve)
+const Ebook = resolve => require(['@/components/front/Ebook.vue'], resolve)
+const LendBook = resolve => require(['@/components/front/LendBook.vue'], resolve)
+const MyBorrowing = resolve => require(['@/components/front/MyBorrowing.vue'], resolve)
+const Test = resolve => require(['@/components/Test.vue'], resolve)
+const FrontIndex = resolve => require(['@/components/FrontIndex.vue'], resolve)
 export default new Router({
   routes: [
 
@@ -110,7 +108,7 @@ export default new Router({
           component: LendBook,
           name: '借出',
           meta: {}
-        },
+        }
       ]
     },
     {
@@ -167,7 +165,6 @@ export default new Router({
               component: UpdateEbook,
               name: '修改电子书',
               meta: { requireAuth: true, permissions: 'bookW' }},
-            
             {path: '/back/book/bookList',
               component: BookList,
               name: '书籍列表',
@@ -244,9 +241,6 @@ export default new Router({
           component: Statistics,
           name: '统计管理',
           meta: {requireAuth: true},
-          meta: {
-            requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
-          },
           children: [
             {path: '/back/statistics/borrowingStatistics',
               component: BorrowingStatistics,
