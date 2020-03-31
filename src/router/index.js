@@ -21,6 +21,7 @@ const CategoryList = resolve => require(['@/components/back/category/CategoryLis
 const CategoryStatistics = resolve => require(['@/components/back/statistics/CategoryStatistics.vue'], resolve)
 const GrantPrivilege = resolve => require(['@/components/back/GrantPrivilege.vue'], resolve)
 const DictionaryList = resolve => require(['@/components/back/DictionaryList.vue'], resolve)
+const DictionaryDataList = resolve => require(['@/components/back/DictionaryDataList.vue'], resolve)
 const HandleBorrowing = resolve => require(['@/components/back/borrowing/HandleBorrowing.vue'], resolve)
 const HandleReturn = resolve => require(['@/components/back/borrowing/HandleReturn.vue'], resolve)
 const ReaderDetail = resolve => require(['@/components/back/user/ReaderDetail.vue'], resolve)
@@ -271,6 +272,12 @@ export default new Router({
           path: '/back/dictionary',
           component: DictionaryList,
           name: '字典管理',
+          meta: {requireAuth: true}
+        },
+        {
+          path: '/back/dictionary/data/:type',
+          component: DictionaryDataList,
+          name: '字典数据',
           meta: {requireAuth: true}
         },
         {path: '/back/grantPrivilege',

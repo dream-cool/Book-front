@@ -61,7 +61,7 @@ export default {
           { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
         ],
         classId: [
-          { required: true, message: '请输入请输入用户班级', trigger: 'blur' },
+          { required: true, message: '请输入请输入用户班级', trigger: 'blur' }
         ]
       }
     }
@@ -89,33 +89,29 @@ export default {
     resetForm (formName) {
       this.$refs[formName].resetFields()
     },
-    handleClassChange(value){
-      this.user.classId = JSON.stringify(value) 
+    handleClassChange (value) {
+      this.user.classId = JSON.stringify(value)
     },
-    getClassInfo(){
-      axios.get('/dictionary/multiple?fields=grade&fields=depart&fields=major&fields=classNumber').then( res => {
-        if(res.data.code == 200){
+    getClassInfo () {
+      axios.get('/dictionaryData/class/getClassInfo').then(res => {
+        if (res.data.code == 200) {
           let dataList = res.data.data
-          var options = [[],[],[],[]]
-          for(let i = 0; i < dataList.length; i++){
-            for( var field in dataList[i]){
-              var obj = {}
-              obj.label = field
-              obj.value = dataList[i][field]
-              options[i].push(obj)
-            }
-            if(i > 0){
-              for(let j = 0; j < options[i - 1].length; j++){
-                if(i == 2){
-                  if(!(options[i][j].value.startsWith(options[i - 1][j].value))){
+          var options = []
+          for (let i = 0; i < dataList.length; i++) {
+            options.push(dataList[i])
+            if (i > 0) {
+              for (let j = 0; j < options[i - 1].length; j++) {
+                if (i == 2 ) {
+                  debugger
+                  if (!(options[i][j].value.startsWith(options[i - 1][j].value))) {
                     continue
                   }
                 }
-                options[i-1][j].children = options[i]
+                options[i - 1][j].children = options[i]
               }
             }
           }
-          
+
           this.options = options[0]
         }
       })
