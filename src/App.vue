@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-  
+
     <NotFound  v-if="invalidRoute"></NotFound>
     <router-view v-else></router-view>
   </div>
@@ -14,10 +14,10 @@ export default {
     NotFound: NotFound
   },
   computed: {
-      invalidRoute () {
-          return !this.$route.matched || this.$route.matched.length === 0;
-      },
-  }
+    invalidRoute () {
+      return !this.$route.matched || this.$route.matched.length === 0
+    }
+  }
 }
 </script>
 

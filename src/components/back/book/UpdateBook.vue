@@ -26,7 +26,7 @@
             </el-form-item>
             <el-form-item label="入馆时间">
                 <el-form-item prop="inputTime">
-                  <el-date-picker  
+                  <el-date-picker
                   value-format="yyyy-MM-dd" format="yyyy-MM-dd"
                   type="date" placeholder="选择日期" v-model="book.inputTime"></el-date-picker>
                 </el-form-item>
@@ -43,7 +43,7 @@
               ></el-cascader>
             </el-form-item>
             <el-form-item label="书籍封面" prop="img">
-                  <el-upload 
+                  <el-upload
                     :multiple="false"
                     :action="server_URL+'/file'"
                     accept="image/png,image/jpg,image/jpeg"
@@ -73,7 +73,6 @@
 </template>
 
 <script>
-import bookList from './BookList'
 import axios from 'axios'
 
 export default {
@@ -111,7 +110,7 @@ export default {
         inputTime: [
           { type: 'string', required: true, message: '请选择日期', trigger: 'change' }
         ],
-        category: [      
+        category: [
         ],
         bookDescribe: [
           { required: true, message: '请填写书籍描述', trigger: 'blur' }
@@ -125,11 +124,11 @@ export default {
     this.getBookInfo(this.id)
   },
   methods: {
-    submitForm(formName){
+    submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if (this.book.img === ''){
-            this.$message.error("书籍封面为空")
+          if (this.book.img === '') {
+            this.$message.error('书籍封面为空')
             return false
           } else {
             this.update(this.book)
@@ -151,7 +150,7 @@ export default {
       })
     },
     getBookInfo (id) {
-      axios.get('/book/detail/'+ id)
+      axios.get('/book/detail/' + id)
         .then(res => {
           if (res.data.code === 200) {
             this.book = res.data.data.book
@@ -185,22 +184,22 @@ export default {
       }
       return data
     },
-    handleBookChange (value){
-      this.book.categoryId = value[value.length-1]
+    handleBookChange (value) {
+      this.book.categoryId = value[value.length - 1]
     },
     handleBookImgUploadSuccess (response, file, fileList) {
       this.book.img = response.data
       axios.put('/book', this.book).then(res => {
         if (res.data.code === 200) {
-            this.book = res.data.data
-            location.reload()
-          } else {
-            this.$message.error(res.data.message)
-          }
-        })
-      }
+          this.book = res.data.data
+          location.reload()
+        } else {
+          this.$message.error(res.data.message)
+        }
+      })
     }
   }
+}
 </script>
 
 <style scoped>

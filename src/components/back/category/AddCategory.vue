@@ -19,11 +19,11 @@
           <el-input v-if="active == 1"  v-model="category.title" placeholder="请输入类别名称"></el-input>
           <el-button v-if="active == 2" type="primary" @click="submit">提交</el-button>
       </div>
-      <div class="button">      
-        <el-button style="position:fixed;right:0; margin-right:55%;" v-if="active > 0"  @click="last">上一步</el-button>            
-        <el-button style="position:fixed;left:0; margin-left:55%;" v-if="active < 2"  @click="next">下一步</el-button>    
-      </div>            
-    </el-main>     
+      <div class="button">
+        <el-button style="position:fixed;right:0; margin-right:55%;" v-if="active > 0"  @click="last">上一步</el-button>
+        <el-button style="position:fixed;left:0; margin-left:55%;" v-if="active < 2"  @click="next">下一步</el-button>
+      </div>
+    </el-main>
   </div>
 </template>
 
@@ -31,36 +31,36 @@
 import axios from 'axios'
 export default {
   data () {
-      return {
-        active: 0,
-        categoryList:[
-        ],
-        optionProps: {
-          value: 'id',
-          label: 'title',
-          children: 'child'
-        },
-        none: {
-            id : '',
-            title : '无',
-            child: []
-        },
-        category: {
-          pid: '',
-          id: '',
-          title: ''
-        }
-
+    return {
+      active: 0,
+      categoryList: [
+      ],
+      optionProps: {
+        value: 'id',
+        label: 'title',
+        children: 'child'
+      },
+      none: {
+        id: '',
+        title: '无',
+        child: []
+      },
+      category: {
+        pid: '',
+        id: '',
+        title: ''
       }
+
+    }
   },
 
-  created(){
+  created () {
     this.getAllCategory()
   },
 
   methods: {
-    getAllCategory (){
-       axios.get('/type/cascade').then(res => {
+    getAllCategory () {
+      axios.get('/type/cascade').then(res => {
         if (res.data.code === 200) {
           this.categoryList = res.data.data
           this.categoryList.push(this.none)
@@ -83,21 +83,21 @@ export default {
       }
       return data
     },
-    handleChange (value){
-      this.category.pid = value[value.length-1]
+    handleChange (value) {
+      this.category.pid = value[value.length - 1]
     },
     next () {
-      this.active++ 
+      this.active++
     },
 
     last () {
       this.active--
     },
 
-    submit (){
-      if (this.category.title == null || this.category.title == ''){
-        this.$message.error("请输入类别名称")
-        return false;
+    submit () {
+      if (this.category.title == null || this.category.title == '') {
+        this.$message.error('请输入类别名称')
+        return false
       }
       axios.post('/type', this.category).then(res => {
         if (res.data.code === 200) {
@@ -128,6 +128,5 @@ export default {
   position: absolute;
   margin-left: 20%;
 }
-
 
 </style>

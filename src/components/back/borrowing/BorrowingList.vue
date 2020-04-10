@@ -6,7 +6,7 @@
               <el-timeline-item v-if="borrowingDetail.returnOperator != null" :timestamp="borrowingDetail.returnTime" placement="top">
                 <el-card>
                   <h4>归还书籍</h4>
-                  <p>管理员{{borrowingDetail.returnOperator}} 于 {{borrowingDetail.returnTime}} 
+                  <p>管理员{{borrowingDetail.returnOperator}} 于 {{borrowingDetail.returnTime}}
                     处理了用户 {{borrowingDetail.userName}} 归还 {{borrowingDetail.bookName}}书籍，
                     书籍编号为 {{borrowingDetail.bookId}}</p>
                   <p v-if="borrowingDetail.borrowingStatus == '5'">逾期归还, 逾期 {{borrowingDetail.overdueDays}} 天</p>
@@ -36,7 +36,6 @@
           </div>
         </el-dialog>
     </div>
-
 
   <el-container>
           <el-form :model="borrowing" :inline="true"  label-width="100px" class="demo-form-inline">
@@ -101,7 +100,7 @@
               </el-popover>
             </template>
           </el-table-column>
-          
+
           <el-table-column
             label="借阅人"
             width="150">
@@ -168,7 +167,7 @@ export default {
         list: [],
         obj: {}
       },
-      borrowingDetail:{},
+      borrowingDetail: {},
       dialogFormVisible: false
     }
   },
@@ -183,14 +182,14 @@ export default {
     handleCurrentChange () {
 
     },
-    handleQuery(row){
+    handleQuery (row) {
       axios.get(
-        '/borrowing/'+row.borrowingId 
+        '/borrowing/' + row.borrowingId
       ).then(res => {
         if (res.data.code === 200) {
           this.borrowingDetail = res.data.data
-          console.log(this.borrowingDetail.returnTime )
-          // this.borrowingDetail.overdueDays = 
+          console.log(this.borrowingDetail.returnTime)
+          // this.borrowingDetail.overdueDays =
         } else {
           this.$message.error(res.data.message)
         }

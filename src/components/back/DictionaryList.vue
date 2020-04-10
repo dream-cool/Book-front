@@ -47,7 +47,7 @@ export default {
       this.getDictionary(val, this.pageSize, this.dictionaryCondition)
     },
     goToDetail (index, row) {
-      this.$router.push({ path: '/back/dictionary/data/' + row.type})
+      this.$router.push({path: '/back/dictionary/data/' + row.type})
     },
     addDictionary () {
       this.dialogFormVisible = true

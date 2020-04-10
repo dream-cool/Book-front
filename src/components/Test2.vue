@@ -37,73 +37,72 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
-        aa:axios.defaults.baseURL,
-        showEdit: [], //显示编辑框
-        showBtn: [],
-        showBtnOrdinary: true,
-         tableData: [{
-                date: '2016-05-02',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄',
-                sex: false,
-                role: '2',
-            }, {
-                date: '2016-05-04',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1517 弄',
-                sex: true,
-                role: '3',
-            }, {
-                date: '2016-05-01',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1519 弄',
-                sex: false,
-                role: '1',
-            }, {
-                date: '2016-05-03',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1516 弄',
-                sex: true,
-                role: '1',
-            }],
-             options: [{
-                      value: '1',
-                      label: '用户'
-                    }, {
-                      value: '2',
-                      label: '管理员'
-                    }, {
-                      value: '3',
-                      label: '超级管理员'
-                    }]
+      aa: axios.defaults.baseURL,
+      showEdit: [], // 显示编辑框
+      showBtn: [],
+      showBtnOrdinary: true,
+      tableData: [{
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄',
+        sex: false,
+        role: '2'
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1517 弄',
+        sex: true,
+        role: '3'
+      }, {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1519 弄',
+        sex: false,
+        role: '1'
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1516 弄',
+        sex: true,
+        role: '1'
+      }],
+      options: [{
+        value: '1',
+        label: '用户'
+      }, {
+        value: '2',
+        label: '管理员'
+      }, {
+        value: '3',
+        label: '超级管理员'
+      }]
     }
   },
-  created(){
-       this.$message({
-          dangerouslyUseHTMLString: true,
-          message: '<button @click="click">点我</button>'
-        });
-    
+  created () {
+    this.$message({
+      dangerouslyUseHTMLString: true,
+      message: '<button @click="click">点我</button>'
+    })
   },
   components: {
     NotFound: NotFound
   },
   methods: {
-     click(){
-         this.$message('我被点了')
-     },
-     handleCurrentChange(row, event, column) {
-                console.log(row, event, column, event.currentTarget)
-            },
-            handleEdit(index, row) {
-                console.log(index, row);
-            },
-            handleDelete(index, row) {
-                console.log(index, row);
-            }
+    click () {
+      this.$message('我被点了')
+    },
+    handleCurrentChange (row, event, column) {
+      console.log(row, event, column, event.currentTarget)
+    },
+    handleEdit (index, row) {
+      console.log(index, row)
+    },
+    handleDelete (index, row) {
+      console.log(index, row)
+    }
 
   }
-  
+
 }
 </script>
 

@@ -2,7 +2,7 @@
   <div class="content">
       <el-dialog title="修改权限" style="margin-left: 20%;width: 60%" :visible.sync="dialogFormVisible">
         <el-form :model="user" label-width="120px" :inline="true"  class="demo-form-inline" >
-          
+
           <el-form-item label="浏览书籍">
               <el-switch
                 v-model="user.bookR"
@@ -57,16 +57,12 @@
           <el-button type="primary" @click="handleCommit">确 定</el-button>
         </div>
       </el-dialog>
-
-
        <el-table
           border
-          
           :highlight-current-row="true"
           :data="privilegePage.list"
           style="width: 100%">
           <el-table-column
-        
             label="管理员姓名"
             width="150">
             <template slot-scope="scope">
@@ -95,7 +91,6 @@
             width="100">
             <template slot-scope="scope">
              <i v-if="scope.row.userR == 1" class="el-icon-check"></i>
-             
             </template>
           </el-table-column>
           <el-table-column
@@ -156,64 +151,62 @@
               :total="total">
             </el-pagination>
           </div>
-          
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 export default {
-  data() {
-      return {
-        privilegePage: {
-          
-        },
-        value1: true,
-        value2: true,
-        pageNum: 1,
-        pageSize: 10,
-        total: 0,
-        value: true,
-        dialogFormVisible: false,
-        user:{}
-      }
+  data () {
+    return {
+      privilegePage: {
+      },
+      value1: true,
+      value2: true,
+      pageNum: 1,
+      pageSize: 10,
+      total: 0,
+      value: true,
+      dialogFormVisible: false,
+      user: {}
+    }
+  },
+  created () {
+    this.getAllUserPrivilegeInfo(this.pageNum, this.pageSize)
+  },
+  methods: {
+    handleCommit () {
+      this.dialogFormVisible = false
+      axios.put('/permission', this.user).then(res => {
+        if (res.data.code === 200) {
+          this.user = res.data.data
+          this.$message(res.data.message)
+          this.getAllUserPrivilegeInfo(this.pageNum, this.pageSize)
+        } else {
+          this.$message.error(res.data.message)
+        }
+      })
     },
-    created (){
-      this.getAllUserPrivilegeInfo(this.pageNum,this.pageSize)
+    handleEdit (index, row) {
+      this.dialogFormVisible = true
+      axios.get('/permission/' + row.userId).then(res => {
+        if (res.data.code === 200) {
+          this.user = res.data.data
+          console.log(this.user)
+        } else {
+          this.$message.error(res.data.message)
+        }
+      })
     },
-    methods: {
-      handleCommit(){
-          this.dialogFormVisible = false
-          axios.put('/permission', this.user).then(res => {
-            if (res.data.code === 200) {
-              this.user = res.data.data
-              this.$message(res.data.message)
-              this.getAllUserPrivilegeInfo(this.pageNum,this.pageSize)
-            } else {
-              this.$message.error(res.data.message)
-            }
-          })
-      },
-      handleEdit(index, row) {
-          this.dialogFormVisible = true
-          axios.get('/permission/'+row.userId).then(res => {
-            if (res.data.code === 200) {
-              this.user = res.data.data
-              console.log(this.user)
-            } else {
-              this.$message.error(res.data.message)
-            }
-          })
-      },
-      
-      handleSizeChange(val) {
-        
-      },
-      handleCurrentChange(pageNum) {
-        this.getAllUserPrivilegeInfo(pageNum,this.privilegePage.pageSize)
-      },
-      getAllUserPrivilegeInfo (pageNum, pageSize){
-        axios.get('/permission?pageNum='+pageNum+'&pageSize='+pageSize)
+
+    handleSizeChange (val) {
+
+    },
+    handleCurrentChange (pageNum) {
+      this.getAllUserPrivilegeInfo(pageNum, this.privilegePage.pageSize)
+    },
+    getAllUserPrivilegeInfo (pageNum, pageSize) {
+      axios.get('/permission?pageNum=' + pageNum + '&pageSize=' + pageSize)
         .then(res => {
           if (res.data.code === 200) {
             this.privilegePage = res.data.data
@@ -224,8 +217,8 @@ export default {
             this.$message.error(res.data.message)
           }
         })
-      },
     }
+  }
 }
 </script>
 

@@ -29,7 +29,7 @@ export default {
       message: {
         sendingTime: null
       },
-      messageList:[],
+      messageList: [],
       pageNum: 1,
       pageSize: 5,
       total: 0,
@@ -37,63 +37,63 @@ export default {
       loading: false
     }
   },
-   computed: {
-      noMore () {
-        return this.count >= 20
-      },
-      disabled () {
-        return this.loading || this.noMore
-      }
+  computed: {
+    noMore () {
+      return this.count >= 20
     },
-  created() {
+    disabled () {
+      return this.loading || this.noMore
+    }
+  },
+  created () {
     this.user = JSON.parse(window.localStorage.getItem('userDetail'))
     this.getMessage(this.pageNum, this.pageSize, this.message)
   },
   methods: {
-        loadMore(){
-          this.pageNum++
-          this.message.userId = this.user.userId
-            axios({
-            url: '/message?pageNum=' + this.pageNum + '&pageSize=' + this.pageSize, 
-            params: this.message
-            }).then(res => {
-                if (res.data.code === 200) {
-                this.messageList = this.messageList.concat(res.data.data.list)
-                this.pageNum = res.data.data.pageNum
-                this.pageSize = res.data.data.pageSize
-                this.total = res.data.data.total
-                } else {
-                this.$message.error(res.data.message)
-                }
-            })
-        },
-        getMessage(pageNum, pageSize, message){
-            this.message.userId = this.user.userId
-            axios({
-            url: '/message?pageNum=' + pageNum + '&pageSize=' + pageSize, 
-            params: message
-            }).then(res => {
-                if (res.data.code === 200) {
-                this.messageList = res.data.data.list
-                this.pageNum = res.data.data.pageNum
-                this.pageSize = res.data.data.pageSize
-                this.total = res.data.data.total
-                } else {
-                this.$message.error(res.data.message)
-                }
-            })
-        },
-        readMessage(){
-            axios.put( '/message/readMessage/'+ this.user.userId
-            ).then(res => {
-                if (res.data.code === 200) {
-                    this.$message(res.data.message)
-                    this.getMessage(this.pageNum, this.pageSize, this.message)
-                } else {
-                    this.$message.error(res.data.message)
-                }
-            })
+    loadMore () {
+      this.pageNum++
+      this.message.userId = this.user.userId
+      axios({
+        url: '/message?pageNum=' + this.pageNum + '&pageSize=' + this.pageSize,
+        params: this.message
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.messageList = this.messageList.concat(res.data.data.list)
+          this.pageNum = res.data.data.pageNum
+          this.pageSize = res.data.data.pageSize
+          this.total = res.data.data.total
+        } else {
+          this.$message.error(res.data.message)
         }
+      })
+    },
+    getMessage (pageNum, pageSize, message) {
+      this.message.userId = this.user.userId
+      axios({
+        url: '/message?pageNum=' + pageNum + '&pageSize=' + pageSize,
+        params: message
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.messageList = res.data.data.list
+          this.pageNum = res.data.data.pageNum
+          this.pageSize = res.data.data.pageSize
+          this.total = res.data.data.total
+        } else {
+          this.$message.error(res.data.message)
+        }
+      })
+    },
+    readMessage () {
+      axios.put('/message/readMessage/' + this.user.userId
+      ).then(res => {
+        if (res.data.code === 200) {
+          this.$message(res.data.message)
+          this.getMessage(this.pageNum, this.pageSize, this.message)
+        } else {
+          this.$message.error(res.data.message)
+        }
+      })
+    }
   }
 }
 </script>

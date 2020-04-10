@@ -116,7 +116,6 @@
             :total="total">
           </el-pagination>
         </div>
-        
   </div>
 </template>
 
@@ -164,11 +163,9 @@ export default {
     dateFiltter (date) {
       return moment(date).format('YYYY-MM-DD HH:mm:ss')
     },
-    
     handleSelectionChange (val) {
       this.multipleSelection = val
     },
-    
     handleSizeChange (val) {
 
     },

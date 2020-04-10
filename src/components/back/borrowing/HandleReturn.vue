@@ -1,5 +1,5 @@
 <template>
-<div class="content">
+  <div class="content">
   <el-container>
           <el-form :model="borrowing" :inline="true"  label-width="100px" class="demo-form-inline">
           <el-form-item label="书籍名称">

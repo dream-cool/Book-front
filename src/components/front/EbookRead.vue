@@ -1,7 +1,6 @@
 <template>
   <div class="content" :style="backgroundStyle" >
      <el-button icon="el-icon-back" @click="backBookDeatil" style="margin-left: 15%; margin-top: 2%;">返回书籍详情</el-button>
-
     <el-main>
       <div class="header">
         <span class="demonstration" style="float:left;margin-left: 15%;">背景颜色</span>
@@ -67,7 +66,7 @@ export default {
           inputTime: null
         }
       },
-      URL: axios.defaults.baseURL+'/download/',
+      URL: axios.defaults.baseURL + '/download/',
       pageNum: 1,
       pageSize: 100,
       total: 0,
@@ -82,34 +81,34 @@ export default {
         'background': '#C8B9B9'
       },
       percentage: 0,
-      user:{}
+      user: {}
     }
   },
   created () {
     this.user = JSON.parse(window.localStorage.getItem('userDetail'))
-    if(this.user == null){
+    if (this.user == null) {
       this.goToLogin()
     }
     this.getEbookContent(this.pageNum, this.pageSize)
     this.checkReadEBookRecord()
   },
   methods: {
-    checkReadEBookRecord(){
-        axios.post('/record/all?pageNum=1&pageSize=10000', 
-          {
-            userId: this.user.userId, 
-            bookId: this.id
-          }
-        )
+    checkReadEBookRecord () {
+      axios.post('/record/all?pageNum=1&pageSize=10000',
+        {
+          userId: this.user.userId,
+          bookId: this.id
+        }
+      )
         .then(res => {
-          if(res.data.code == 200){
+          if (res.data.code == 200) {
             debugger
-            if(res.data.data.list != null && res.data.data.list.length > 0){
+            if (res.data.data.list != null && res.data.data.list.length > 0) {
               let recordNum = res.data.data.list[0].bookPage
-              if(recordNum <= 1){
+              if (recordNum <= 1) {
                 return
               }
-              this.$confirm('记忆您上次阅读到第'+recordNum+'页,是否跳转?', '提示', {
+              this.$confirm('记忆您上次阅读到第' + recordNum + '页,是否跳转?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'info'
@@ -117,16 +116,15 @@ export default {
                 this.handleCurrentChange(recordNum)
               }).catch(() => {
                 this.addReadEBookRecord(this.pageNum)
-              });
+              })
             }
           } else {
             this.addReadEBookRecord(this.pageNum)
           }
-          
         })
     },
-    addReadEBookRecord(pageNum){
-        axios.post('/record', {userId: this.user.userId, bookId: this.id, bookPage: pageNum}).then(res => {})
+    addReadEBookRecord (pageNum) {
+      axios.post('/record', {userId: this.user.userId, bookId: this.id, bookPage: pageNum}).then(res => {})
     },
     handleBackgroundColorChange () {
       this.backgroundStyle.background = this.backgroundColor
@@ -190,11 +188,10 @@ export default {
           }
         })
     },
-    goToLogin(){
+    goToLogin () {
       this.$router.push({path: '/login'})
     }
-    
-    
+
   }
 }
 </script>

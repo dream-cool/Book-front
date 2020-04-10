@@ -150,7 +150,7 @@ export default {
 
     },
     handleCommand (com) {
-      if (com == 'userDetail'){
+      if (com == 'userDetail') {
         this.$router.push({path: '/back/personal'})
       }
       if (com == 'logout') {
@@ -161,9 +161,8 @@ export default {
       }
       if (com == 'updatePassword') {
         this.$router.push({path: '/back/updatePassword'})
-        
       }
-    },    
+    },
     logout () {
       window.localStorage.removeItem('userDetail')
       window.localStorage.removeItem('token')
@@ -187,8 +186,8 @@ export default {
           this.getMessage(this.pageNum, this.pageSize, this.message)
         }, 1000000)
       })
-    },
-    
+    }
+
   },
   created () {
     this.user = JSON.parse(window.localStorage.getItem('userDetail'))
@@ -212,7 +211,5 @@ export default {
 a {
   text-decoration: none;
 }
-
-
 
 </style>

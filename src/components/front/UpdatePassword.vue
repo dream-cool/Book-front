@@ -19,8 +19,8 @@
             </el-form>
         </el-tab-pane>
         <el-tab-pane label="邮箱验证码修改"  name="updateByEmail">
-          <el-link v-if="userInfo.email == null || userInfo.email.trim().length <= 0" 
-          type="primary" style="font-size: 30px;margin-top: 50px" @click="goToPersonal" >你还没有绑定邮箱哦，点我前去绑定</el-link>    
+          <el-link v-if="userInfo.email == null || userInfo.email.trim().length <= 0"
+          type="primary" style="font-size: 30px;margin-top: 50px" @click="goToPersonal" >你还没有绑定邮箱哦，点我前去绑定</el-link>
           <div v-else>
             <el-steps  :active="active"  finish-status="success">
               <el-step title="校验邮箱验证码">
@@ -39,7 +39,7 @@
               <el-input type="password" placeholder="请输入新密码" v-model="newPassword" style="margin-left: 10%;margin-top: 10%;"></el-input>
               <el-input type="password" placeholder="请确认新密码" v-model="confirmNewPassword" style="margin-left: 10%;margin-top: 10%;"></el-input>
               <el-button @click="commitNewPW"> 提交 </el-button>
-            </div>  
+            </div>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -82,7 +82,7 @@ export default {
       active: 0,
       code: '',
       newPassword: '',
-      confirmNewPassword: '',
+      confirmNewPassword: ''
     }
   },
   created () {
@@ -93,23 +93,23 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if(this.newPassword != this.confirmNewPassword){
+          if (this.newPassword != this.confirmNewPassword) {
             this.$message.error('两次密码不一致')
             return
           }
           axios({
-              url: '/user/updatePWByOldPW',
-              params: {
-                'userId': this.user.userId,
-                'oldPassword': this.pw.oldPassword,
-                'newPassword': this.pw.newPassword
-              }
-             }).then(res => {
-              if (res.data.code === 200) {
-                this.$message(res.data.message)
-              } else {
-                this.$message.error(res.data.message)
-              }
+            url: '/user/updatePWByOldPW',
+            params: {
+              'userId': this.user.userId,
+              'oldPassword': this.pw.oldPassword,
+              'newPassword': this.pw.newPassword
+            }
+          }).then(res => {
+            if (res.data.code === 200) {
+              this.$message(res.data.message)
+            } else {
+              this.$message.error(res.data.message)
+            }
           })
         }
       })
@@ -119,10 +119,10 @@ export default {
       this.pw.newPassword = ''
       this.pw.confirmNewPassword = ''
     },
-    startCountdown(){
-      this.sendButtonMessage = this.second+'秒后重新发送'
+    startCountdown () {
+      this.sendButtonMessage = this.second + '秒后重新发送'
       this.sendButtonMessageDisabled = true
-      if(this.second > 0){
+      if (this.second > 0) {
         setTimeout(() => {
           this.second--
           this.startCountdown()
@@ -132,68 +132,68 @@ export default {
         this.sendButtonMessageDisabled = false
       }
     },
-    
-    sendMessage(){
+
+    sendMessage () {
       this.startCountdown()
       axios({
-              url: '/user/sendVerificationLogin',
-              params: {
-                'email': this.user.email,
-              }
-             }).then(res => {
-              if (res.data.code === 200) {
-                this.$message(res.data.message)
-                this.showVerificaeButton = true
-              } else {
-                this.$message.error(res.data.message)
-              }
-          })
-    },
-    checkCode(){
-        if(this.code == null || this.code.trim().length == 0){
-          this.$message.error('请输入验证码')
-          return
+        url: '/user/sendVerificationLogin',
+        params: {
+          'email': this.user.email
         }
-        axios({
-              url: '/user/verificationCheck',
-              params: {
-                'email': this.user.email,
-                'password': this.code,
-              }
-             }).then(res => {
-              if (res.data.code === 200) {
-                this.$message(res.data.message)
-                this.active = 1
-              } else {
-                this.$message.error(res.data.message)
-              }
-          })
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.$message(res.data.message)
+          this.showVerificaeButton = true
+        } else {
+          this.$message.error(res.data.message)
+        }
+      })
     },
-    commitNewPW(){
-      if(this.newPassword == null || this.confirmNewPassword == null){
+    checkCode () {
+      if (this.code == null || this.code.trim().length == 0) {
+        this.$message.error('请输入验证码')
+        return
+      }
+      axios({
+        url: '/user/verificationCheck',
+        params: {
+          'email': this.user.email,
+          'password': this.code
+        }
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.$message(res.data.message)
+          this.active = 1
+        } else {
+          this.$message.error(res.data.message)
+        }
+      })
+    },
+    commitNewPW () {
+      if (this.newPassword == null || this.confirmNewPassword == null) {
         this.$message.error('请输入密码')
       }
-      if(this.newPassword.length < 6 || this.confirmNewPassword.length < 6){
+      if (this.newPassword.length < 6 || this.confirmNewPassword.length < 6) {
         this.$message.error('密码长度不能小于6位')
       }
       axios({
-              url: '/user/updatePWByVerificationCode',
-              params: {
-                'userId': this.user.userId,
-                'newPassword': this.newPassword,
-              }
-             }).then(res => {
-              if (res.data.code === 200) {
-                this.$message(res.data.message)
-                this.active = 0
-                this.logout()
-              } else {
-                this.$message.error(res.data.message)
-              }
-          })
+        url: '/user/updatePWByVerificationCode',
+        params: {
+          'userId': this.user.userId,
+          'newPassword': this.newPassword
+        }
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.$message(res.data.message)
+          this.active = 0
+          this.logout()
+        } else {
+          this.$message.error(res.data.message)
+        }
+      })
     },
-    getUserInfo() {
-      axios.get('/user/'+this.user.userId).then(res => {
+    getUserInfo () {
+      axios.get('/user/' + this.user.userId).then(res => {
         if (res.data.code === 200) {
           this.userInfo = res.data.data
         } else {
@@ -206,12 +206,12 @@ export default {
       window.localStorage.removeItem('token')
       this.$router.push({path: '/login'})
     },
-    goToPersonal(){
+    goToPersonal () {
       var currentPath = this._routerRoot._route.fullPath
-      if(currentPath.startsWith('/front')){
+      if (currentPath.startsWith('/front')) {
         this.$router.push({path: '/front/personal'})
       }
-      if(currentPath.startsWith('/back')){
+      if (currentPath.startsWith('/back')) {
         this.$router.push({path: '/back/personal'})
       }
     }

@@ -6,7 +6,6 @@
                   <i class="el-icon-picture-outline"></i>
                 </div>
               </el-image>
-        
   </div>
 </template>
 
@@ -22,18 +21,16 @@ export default {
         label: 'title',
         children: 'child'
       },
-      categoryList: [{  "id": 1,
-                    "pid": 1,
-                    "name": null,
-                    "level": 2,
-                    "sort": null,
-                    "title": "中国说"}],
-     
+      categoryList: [{ 'id': 1,
+        'pid': 1,
+        'name': null,
+        'level': 2,
+        'sort': null,
+        'title': '中国说'}]
+
     }
   }
- 
-    
-    
+
 }
 </script>
 

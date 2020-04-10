@@ -1,9 +1,8 @@
 <template>
   <div class="hello" >
-      <el-tabs type="border-card"  v-model="active" 
-        
+      <el-tabs type="border-card"  v-model="active"
         @tab-click="handleTabChange">
-        <el-tab-pane v-for="(item,index) in collectGroupList" :key="index" 
+        <el-tab-pane v-for="(item,index) in collectGroupList" :key="index"
             :label="item.name" :name="item.name">
           <el-timeline >
                 <el-timeline-item placement="top"
@@ -13,10 +12,10 @@
                     >
                     <el-card>
                       <el-row :gutter="20" bodar style="margin-top: -30px">
-                        <el-col :span="4" v-for="(useCollection,index) in item" :key="index"  >  
+                        <el-col :span="4" v-for="(useCollection,index) in item" :key="index"  >
                             <el-card :body-style="{ padding: '0px' }" style="width: 220px">
                               <el-image v-if="useCollection.bookImg != null"  style="margin-left: 20px"
-                                :src='Sever_URL+"/download/"+useCollection.bookImg' 
+                                :src='Sever_URL+"/download/"+useCollection.bookImg'
                                 @click="goToBookDetail(useCollection.bookId)"
                                 ></el-image>
                               <div style="padding-left: 20px;padding-right: 20px;">
@@ -32,8 +31,6 @@
                 <!-- <el-link @click="loadMore" v-if="messageList.length < total" type="primary">加载更多</el-link>
                 <p v-if="messageList.length == total">我也是有底线的</p> -->
             </el-timeline>
-
-            
         </el-tab-pane>
       </el-tabs>
   </div>
@@ -41,7 +38,6 @@
 
 <script>
 import axios from 'axios'
-import moment from 'moment'
 export default {
   name: 'Hello',
   data () {
@@ -54,8 +50,8 @@ export default {
       url: '',
       useCollectionList: [],
       useCollectionListGroupTime: [],
-      collectGroupList:[],
-      user:{},
+      collectGroupList: [],
+      user: {},
       active: '默认收藏夹',
       useCollection: {
         userId: null,
@@ -64,27 +60,27 @@ export default {
       }
     }
   },
-  created() {
+  created () {
     this.user = JSON.parse(window.localStorage.getItem('userDetail'))
     this.useCollection.userId = this.user.userId
     this.getCollectGroupInfo()
-    this.getUseCollectionInfoGroupTime (this.useCollection)
+    this.getUseCollectionInfoGroupTime(this.useCollection)
   },
   methods: {
-    handleTabsEdit() {
+    handleTabsEdit () {
 
     },
-    handleTabChange(){
+    handleTabChange () {
       this.useCollection.groupName = this.active
-      this.getUseCollectionInfoGroupTime (this.useCollection)
+      this.getUseCollectionInfoGroupTime(this.useCollection)
     },
-    getCollectGroupInfo(){
-        axios.get('/collectionGroup/user/' + this.user.userId)
+    getCollectGroupInfo () {
+      axios.get('/collectionGroup/user/' + this.user.userId)
         .then(res => {
           if (res.data.code === 200) {
             this.collectGroupList = res.data.data
           } else {
-            this.$message.error("获取收藏夹分组信息失败")
+            this.$message.error('获取收藏夹分组信息失败')
           }
         })
     },
@@ -114,11 +110,11 @@ export default {
         }
       })
     },
-    goToBookDetail(bookId){
+    goToBookDetail (bookId) {
       document.body.style.overflow = null
-      this.$router.push({path: '/front/bookDetail/'+bookId})
-    },
-    
+      this.$router.push({path: '/front/bookDetail/' + bookId})
+    }
+
   }
 }
 </script>
@@ -145,7 +141,5 @@ export default {
 .el-tabs__item  is-left{
   height: 200px;
 }
-
-
 
 </style>

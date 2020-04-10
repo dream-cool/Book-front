@@ -98,7 +98,7 @@
                 <p>身份证: {{ scope.row.idcard }}</p>
                 <p>电话: {{ scope.row.tel }}</p>
                 <p>邮箱: {{ scope.row.email }}</p>
-                <p>地址: {{ scope.row.address }}</p>                                              
+                <p>地址: {{ scope.row.address }}</p>
                 <div slot="reference" class="name-wrapper">
                   <el-tag size="medium">{{ scope.row.userName }}</el-tag>
                 </div>
@@ -151,7 +151,7 @@
             label="操作"
             width="250"
             >
-            <template slot-scope="scope">            
+            <template slot-scope="scope">
               <el-button @click="handleEdit(scope.row)"   size="small">编辑</el-button>
               <el-button @click="handleResetPassword(scope.row)" size="mini">重置密码</el-button>
               <el-button @click="handleDelete(scope.row)" type="danger"  size="small">删除</el-button>
@@ -206,18 +206,18 @@ export default {
     dateFiltter (date) {
       return moment(date).format('YYYY-MM-DD HH:mm:ss')
     },
-    editCommit (){
+    editCommit () {
       axios.put('/user', this.editUser
-            ).then(res => {
-            if (res.data.code === 200) {
-              this.editUser = res.data.data
-              this.$message(res.data.message)
-              this.dialogFormVisible = false
-              this.getUserInfo(this.pageNum, this.pageSize, this.user)
-            } else {
-              this.$message.error(res.data.message)
-            }
-          })
+      ).then(res => {
+        if (res.data.code === 200) {
+          this.editUser = res.data.data
+          this.$message(res.data.message)
+          this.dialogFormVisible = false
+          this.getUserInfo(this.pageNum, this.pageSize, this.user)
+        } else {
+          this.$message.error(res.data.message)
+        }
+      })
     },
     deleteBatch () {
       if (this.multipleSelection == null || this.multipleSelection.length == 0) {
@@ -264,13 +264,13 @@ export default {
     },
     handleEdit (row) {
       this.dialogFormVisible = true
-      axios.get('/user/'+row.userId).then(res => {
-            if (res.data.code === 200) {
-              this.editUser = res.data.data
-            } else {
-              this.$message.error(res.data.message)
-            }
-          })
+      axios.get('/user/' + row.userId).then(res => {
+        if (res.data.code === 200) {
+          this.editUser = res.data.data
+        } else {
+          this.$message.error(res.data.message)
+        }
+      })
     },
     handleDelete (row) {
       this.$confirm('确认删除？')
@@ -294,16 +294,16 @@ export default {
       this.getUserInfo(pageNum, this.pageSize, this.user)
     },
     getUserInfo (pageNum, pageSize, user) {
-      axios.post('/user/all?pageNum=' + pageNum + '&pageSize=' + pageSize,user)
-      .then(res => {
-        if (res.data.code === 200) {
-          this.userList = res.data.data.list
-          this.pageNum = res.data.data.pageNum
-          this.total = res.data.data.total
-        } else {
-          this.$message.error(res.data.message)
-        }
-      })
+      axios.post('/user/all?pageNum=' + pageNum + '&pageSize=' + pageSize, user)
+        .then(res => {
+          if (res.data.code === 200) {
+            this.userList = res.data.data.list
+            this.pageNum = res.data.data.pageNum
+            this.total = res.data.data.total
+          } else {
+            this.$message.error(res.data.message)
+          }
+        })
     },
     userSexFormatter (row, column, cellValue, index) {
       if (row.sex == 1) {
@@ -312,14 +312,14 @@ export default {
         return '女'
       }
     },
-    userStatusFormatter(row, column, cellValue, index){
+    userStatusFormatter (row, column, cellValue, index) {
       if (row.status == 1) {
         return '正常'
       } else {
         return '锁定'
       }
     },
-    userRoleFormatter(row, column, cellValue, index){
+    userRoleFormatter (row, column, cellValue, index) {
       if (row.role == 0) {
         return '学生'
       } else if (row.role == 1) {
@@ -329,7 +329,6 @@ export default {
       } else if (row.role == 3) {
         return '超级管理员'
       }
-
     },
     search () {
       this.getUserInfo(this.pageNum, this.pageSize, this.user)

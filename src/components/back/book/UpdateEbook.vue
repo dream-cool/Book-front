@@ -24,7 +24,7 @@
                 ></el-cascader>
               </el-form-item>
                <el-form-item label="书籍封面" prop="img">
-                    <el-upload 
+                    <el-upload
                       :multiple="false"
                       :action="server_URL+'/file'"
                       accept="image/png,image/jpg,image/jpeg"
@@ -39,7 +39,7 @@
                 <el-input :rows="4" maxlength="100"
                     show-word-limit type="textarea" v-model="ebook.bookDescribe"
                     style="width: 500px"></el-input>
-              </el-form-item> 
+              </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="submitForm('ebookRuleForm')">修改</el-button>
               </el-form-item>
@@ -51,7 +51,6 @@
 </template>
 
 <script>
-import bookList from './BookList'
 import axios from 'axios'
 
 export default {
@@ -98,11 +97,11 @@ export default {
     this.getBookInfo(this.id)
   },
   methods: {
-    submitForm(formName){
+    submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if (this.ebook.img === ''){
-            this.$message.error("书籍封面为空")
+          if (this.ebook.img === '') {
+            this.$message.error('书籍封面为空')
             return false
           } else {
             this.update(this.ebook)
@@ -124,7 +123,7 @@ export default {
       })
     },
     getBookInfo (id) {
-      axios.get('/book/detail/'+ id)
+      axios.get('/book/detail/' + id)
         .then(res => {
           if (res.data.code === 200) {
             this.ebook = res.data.data.book
@@ -158,21 +157,21 @@ export default {
       }
       return data
     },
-    handleEbookChange (value){
-      this.ebook.categoryId = value[value.length-1]
+    handleEbookChange (value) {
+      this.ebook.categoryId = value[value.length - 1]
     },
     handleEbookImgUploadSuccess (response, file, fileList) {
       this.ebook.img = response.data
       axios.put('/book', this.ebook).then(res => {
         if (res.data.code === 200) {
-            this.book = res.data.data
-            location.reload()
-          } else {
-            this.$message.error(res.data.message)
-          }
-        })
-      }
+          this.book = res.data.data
+          location.reload()
+        } else {
+          this.$message.error(res.data.message)
+        }
+      })
     }
+  }
 }
 </script>
 

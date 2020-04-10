@@ -25,42 +25,42 @@ export default {
       user: {},
       userRules: {
         userName: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { required: true, message: '请输入用户名', trigger: 'blur' }
         ],
         password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
+          { required: true, message: '请输入密码', trigger: 'blur' }
         ]
       }
     }
   },
   methods: {
     submitForm (formName) {
-        this.$refs[formName].validate((valid) => {
-            if (valid) {
-                axios.get('/login?userName='+this.user.userName+'&password='+this.user.password).then(
-                    res =>{
-                        if(res.data.code == 200){
-                            window.localStorage.setItem("userDetail", JSON.stringify(res.data.data.userDetail))
-                            window.localStorage.setItem("token", res.data.data.token)
-                            this.$message(res.data.message)
-                            if(res.data.data.userDetail.role == '2' ||res.data.data.userDetail.role == '3'){
-                                this.$router.push({ path: '/back'})  
-                            } else {
-                                this.$router.push({ path: '/front'})  
-                            }
-                        } else {
-                          this.$message.error(res.data.message)
-                        }
-                    }
-                )
-            } else {
-                return false
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          axios.get('/login?userName=' + this.user.userName + '&password=' + this.user.password).then(
+            res => {
+              if (res.data.code == 200) {
+                window.localStorage.setItem('userDetail', JSON.stringify(res.data.data.userDetail))
+                window.localStorage.setItem('token', res.data.data.token)
+                this.$message(res.data.message)
+                if (res.data.data.userDetail.role == '2' || res.data.data.userDetail.role == '3') {
+                  this.$router.push({path: '/back'})
+                } else {
+                  this.$router.push({path: '/front'})
+                }
+              } else {
+                this.$message.error(res.data.message)
+              }
             }
-        })
+          )
+        } else {
+          return false
+        }
+      })
     },
-    
-    resetForm(){
-        this.user = {}
+
+    resetForm () {
+      this.user = {}
     }
   }
 }

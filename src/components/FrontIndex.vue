@@ -27,7 +27,7 @@
 
           <el-menu-item v-if="user == null" index="/login" style="float: right;width: 100px"> <p>登录</p> </el-menu-item>
             <el-submenu index="" v-if="user != null"  style="float: right;width: 100px;">
-              <template slot="title">        
+              <template slot="title">
                 <el-avatar :size="50"  :src='Server_URL + "/download/"+user.avatar' style="margin-right: 15px;">{{user.userName}}</el-avatar>
               </template>
               <el-menu-item index="/front/personal">个人中心</el-menu-item>
@@ -51,24 +51,23 @@
           </el-carousel> -->
               <router-view></router-view>
         </el-main>
-     
 
       <el-drawer  :visible.sync="drawer" direction="ltr" :with-header="false">
           <div v-for="(item,i) in records" :key="i" class="record-list" >
             <el-card style="margin-top: 20px" >
-              
-                  <el-image class="header-img"  :src='Server_URL +"/download/"+ item.bookImg' 
+
+                  <el-image class="header-img"  :src='Server_URL +"/download/"+ item.bookImg'
                         style="float: left;height: 100px; width: 100px" @click="goToBookDetail(item.bookId)"></el-image>
                   <div class="author-info" style="margint-left:5%;height: 100px;">
                       <span class="author-name" style="color: #000;font-size: 18px;font-weight: bold">
                           {{item.bookName}}</span>
-                      <el-link @click="deleteRecord(item.recordId)" icon="el-icon-delete" :underline="false" 
+                      <el-link @click="deleteRecord(item.recordId)" icon="el-icon-delete" :underline="false"
                         style="margin-left: 20px;float:right; font-size:20px" ></el-link>
                           <br>
-                      <span class="author-time" 
+                      <span class="author-time"
                         style="font-size: 13px; font-color: #655E5E;">{{item.descr}}</span>
                       <br>
-                      <span class="author-time" 
+                      <span class="author-time"
                         style="font-size: 14px;color: #AEA7A7;float:bottom">{{item.browsingTime}}</span>
                   </div>
             </el-card >
@@ -96,7 +95,7 @@ export default {
       Server_URL: axios.defaults.baseURL,
       user: {},
       drawer: false,
-      records:[],
+      records: [],
       total: 0,
       pageSize: 5,
       pageNum: 1,
@@ -119,38 +118,38 @@ export default {
       window.localStorage.removeItem('token')
       this.$router.push({path: '/login'})
     },
-    goToBookDetail(bookId){
+    goToBookDetail (bookId) {
       document.body.style.overflow = null
-      this.$router.push({path: '/front/bookDetail/'+bookId})
+      this.$router.push({path: '/front/bookDetail/' + bookId})
       this.drawer = false
     },
-    handleCurrentChange(){
+    handleCurrentChange () {
       this.openReadRecord()
     },
-    openReadRecord(){
-      axios.post("/record/all?pageSize="+this.pageSize+"&pageNum="+this.pageNum, 
-          {userId: this.user.userId })
-      .then(res =>{
-        if(res.data.code === 200){
-          this.records = res.data.data.list
-          this.pageSize = res.data.data.pageSize
-          this.pageNum = res.data.data.pageNum
-          this.total = res.data.data.total
-        }
-      })
+    openReadRecord () {
+      axios.post('/record/all?pageSize=' + this.pageSize + '&pageNum=' + this.pageNum,
+        {userId: this.user.userId })
+        .then(res => {
+          if (res.data.code === 200) {
+            this.records = res.data.data.list
+            this.pageSize = res.data.data.pageSize
+            this.pageNum = res.data.data.pageNum
+            this.total = res.data.data.total
+          }
+        })
       this.drawer = true
     },
-    deleteRecord(recordId){
-      if(this.user != null){
-        axios.delete("/record/"+recordId)
-        .then(res => {
-            if(res.data.code === 200){
+    deleteRecord (recordId) {
+      if (this.user != null) {
+        axios.delete('/record/' + recordId)
+          .then(res => {
+            if (res.data.code === 200) {
               this.$message(res.data.message)
             } else {
               this.$message.error(res.data.message)
             }
             this.openReadRecord()
-        })
+          })
       }
     },
     getMessage (pageNum, pageSize, message) {
@@ -210,6 +209,5 @@ export default {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
     "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
 }
-
 
 </style>

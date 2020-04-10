@@ -1,10 +1,10 @@
 <template>
   <div class="hello" >
       <el-row :gutter="20" bodar>
-        <el-col :span="3" v-for="(book,index) in bookList" :key="index" >  
+        <el-col :span="3" v-for="(book,index) in bookList" :key="index" >
             <el-card :body-style="{ padding: '0px' }" style="width: 220px">
               <el-image v-if="book.img != null"  style="margin-left: 20px"
-                :src='Sever_URL + "/download/"+book.img' 
+                :src='Sever_URL + "/download/"+book.img'
                 @click="goToBookDetail(book.bookId)"
                 ></el-image>
               <div style="padding-left: 20px;padding-right: 20px;">
@@ -49,19 +49,19 @@ export default {
       url: ''
     }
   },
-  created() {
-    if(this.bookCondition != null && this.bookCondition != 'undenfied' ){
-      this.book = this.bookCondition 
+  created () {
+    if (this.bookCondition != null && this.bookCondition != 'undenfied') {
+      this.book = this.bookCondition
     }
     console.log(this.bookCondition)
     this.getBookInfo(this.pageNum, this.pageSize, this.book)
   },
   methods: {
-    goToBookDetail(bookId){
+    goToBookDetail (bookId) {
       document.body.style.overflow = null
-      this.$router.push({path: '/front/bookDetail/'+bookId})
+      this.$router.push({path: '/front/bookDetail/' + bookId})
     },
-    handleCurrentChange(val){
+    handleCurrentChange (val) {
       this.getBookInfo(val, this.pageSize, this.book)
     },
     getBookInfo (pageNum, pageSize, book) {
@@ -80,7 +80,7 @@ export default {
           this.$message.error(res.data.message)
         }
       })
-    },
+    }
   }
 }
 </script>

@@ -5,7 +5,7 @@
         <div class="bookImg" >
              <el-form :model="beforeUser" :rules="userRules" ref="userRules" label-width="100px" class="demo-ruleForm">
               <el-form-item label="头像">
-                    <el-upload 
+                    <el-upload
                       :multiple="false"
                       :action="server_URL+'/file'"
                       accept="image/png,image/jpg,image/jpeg"
@@ -20,7 +20,7 @@
                 <el-input v-model="beforeUser.userName" disabled></el-input>
               </el-form-item>
               <el-form-item label="班级">
-                <el-cascader style="width: 400px" 
+                <el-cascader style="width: 400px"
                 disabled
                 v-model="beforeUser.classId"
                 :options="classOptions"
@@ -55,7 +55,7 @@
                 </el-tooltip>
               </el-form-item>
               <el-form-item label="地址" prop="address">
-                <el-cascader 
+                <el-cascader
                       style="width: 400px"
                       v-model="beforeUser.address"
                       size="large"
@@ -93,7 +93,7 @@
 
 <script>
 import axios from 'axios'
-import { regionData ,CodeToText } from 'element-china-area-data'
+import { regionData, CodeToText } from 'element-china-area-data'
 
 export default {
   data () {
@@ -116,36 +116,36 @@ export default {
         code: [
           { min: 6, max: 6, message: '请输入正确的验证码', trigger: 'blur' }
         ]
-        
+
       },
       classOptions: null,
-      addressOptions: regionData ,
+      addressOptions: regionData,
       dialogTableVisible: false,
       sendButtonMessage: '立即发送',
       sendButtonMessageDisabled: false,
       second: 60,
       bindSuccess: false,
-      tempEmail: null,
+      tempEmail: null
     }
   },
   created () {
-     this.loginUser = JSON.parse(window.localStorage.getItem('userDetail'))
-     this.getClassInfo()
-     this.getUserInfo()
+    this.loginUser = JSON.parse(window.localStorage.getItem('userDetail'))
+    this.getClassInfo()
+    this.getUserInfo()
   },
   methods: {
     handleAvatarUploadSuccess (response, file, fileList) {
       this.beforeUser.avatar = response.data
-      if(this.beforeUser.address != null && this.beforeUser.address.length != 0){
-          this.beforeUser.address = JSON.stringify(this.beforeUser.address)
+      if (this.beforeUser.address != null && this.beforeUser.address.length != 0) {
+        this.beforeUser.address = JSON.stringify(this.beforeUser.address)
       }
       axios.put('/user', this.beforeUser).then(res => {
         if (res.data.code === 200) {
           this.beforeUser = res.data.data
           let userDetail = JSON.parse(window.localStorage.getItem('userDetail'))
-          if(userDetail.avatar != this.beforeUser.avatar){
+          if (userDetail.avatar != this.beforeUser.avatar) {
             userDetail.avatar = this.beforeUser.avatar
-            window.localStorage.setItem("userDetail", JSON.stringify(userDetail))
+            window.localStorage.setItem('userDetail', JSON.stringify(userDetail))
             location.reload()
           }
         } else {
@@ -153,29 +153,29 @@ export default {
         }
       })
     },
-    submitForm(formName){
+    submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-            this.update(this.beforeUser)
+          this.update(this.beforeUser)
         } else {
           return false
         }
       })
     },
     update (user) {
-      if(user.address != null && user.address.length != 0){
-          user.address = JSON.stringify(user.address)
+      if (user.address != null && user.address.length != 0) {
+        user.address = JSON.stringify(user.address)
       }
       axios.put('/user', user).then(res => {
         if (res.data.code === 200) {
-          if(res.data.data.address != null && res.data.data.address.length != 0){
-              res.data.data.address = JSON.parse(res.data.data.address)
+          if (res.data.data.address != null && res.data.data.address.length != 0) {
+            res.data.data.address = JSON.parse(res.data.data.address)
           }
           this.beforeUser = res.data.data
           let userDetail = JSON.parse(window.localStorage.getItem('userDetail'))
-          if(userDetail.avatar != this.beforeUser.avatar){
+          if (userDetail.avatar != this.beforeUser.avatar) {
             userDetail.avatar = this.beforeUser.avatar
-            window.localStorage.setItem("userDetail", JSON.stringify(userDetail))
+            window.localStorage.setItem('userDetail', JSON.stringify(userDetail))
             location.reload()
           }
           this.$message(res.data.message)
@@ -184,15 +184,15 @@ export default {
         }
       })
     },
-    getUserInfo() {
-      axios.get('/user/'+this.loginUser.userId).then(res => {
+    getUserInfo () {
+      axios.get('/user/' + this.loginUser.userId).then(res => {
         if (res.data.code === 200) {
           this.beforeUser = res.data.data
-          if(this.beforeUser.address != null && this.beforeUser.address.trim().length != 0){
+          if (this.beforeUser.address != null && this.beforeUser.address.trim().length != 0) {
             this.beforeUser.address = JSON.parse(this.beforeUser.address)
           }
-          if(this.beforeUser.classId != null && this.beforeUser.classId.trim().length != 0){
-            this.beforeUser.classId = JSON.parse( this.loginUser.classId)
+          if (this.beforeUser.classId != null && this.beforeUser.classId.trim().length != 0) {
+            this.beforeUser.classId = JSON.parse(this.loginUser.classId)
           }
         } else {
           this.$message.error(res.data.message)
@@ -202,21 +202,21 @@ export default {
     handleAddressChange (value) {
       this.beforeUser.address = value
     },
-    bindEmail(){
+    bindEmail () {
       this.bindSuccess = false
       this.tempEmail = this.beforeUser.email
       this.dialogTableVisible = true
     },
-    checkEmailUpdate(){
-      if(!this.bindSuccess){
+    checkEmailUpdate () {
+      if (!this.bindSuccess) {
         this.beforeUser.email = this.tempEmail
         this.dialogTableVisible = false
       }
     },
-    startCountdown(){
-      this.sendButtonMessage = this.second+'秒后重新发送'
+    startCountdown () {
+      this.sendButtonMessage = this.second + '秒后重新发送'
       this.sendButtonMessageDisabled = true
-      if(this.second > 0){
+      if (this.second > 0) {
         setTimeout(() => {
           this.second--
           this.startCountdown()
@@ -226,83 +226,83 @@ export default {
         this.sendButtonMessageDisabled = false
       }
     },
-    
-    sendMessage(formName){
+
+    sendMessage (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.startCountdown()
           axios({
-                  url: '/user/sendVerificationLogin',
-                  params: {
-                    'email': this.beforeUser.email,
-                    'operation': 'bindEmail'
-                  }
-                }).then(res => {
-                  if (res.data.code === 200) {
-                    this.$message(res.data.message)
-                    this.showVerificaeButton = true
-                  } else {
-                    this.$message.error(res.data.message)
-                  }
-              })
+            url: '/user/sendVerificationLogin',
+            params: {
+              'email': this.beforeUser.email,
+              'operation': 'bindEmail'
+            }
+          }).then(res => {
+            if (res.data.code === 200) {
+              this.$message(res.data.message)
+              this.showVerificaeButton = true
+            } else {
+              this.$message.error(res.data.message)
+            }
+          })
         } else {
           return false
         }
       })
     },
-    checkCode(formName){
-      if(this.beforeUser.code == null || this.beforeUser.code.trim().length == 0){
+    checkCode (formName) {
+      if (this.beforeUser.code == null || this.beforeUser.code.trim().length == 0) {
         this.$message.error('请输入验证码')
         return
       }
       this.$refs[formName].validate((valid) => {
         if (valid) {
-            axios({
-                url: '/user/verificationCheck',
-                params: {
-                  'email': this.beforeUser.email,
-                  'password': this.beforeUser.code,
-                  'operation': 'bindEmail'
-                }
-              }).then(res => {
-                if (res.data.code === 200) {
-                  this.$message(res.data.message)
-                  this.dialogTableVisible = false
-                  this.bindSuccess = true
-                  this.update(this.beforeUser)
-                } else {
-                  this.$message.error(res.data.message)
-                }
-            })
+          axios({
+            url: '/user/verificationCheck',
+            params: {
+              'email': this.beforeUser.email,
+              'password': this.beforeUser.code,
+              'operation': 'bindEmail'
+            }
+          }).then(res => {
+            if (res.data.code === 200) {
+              this.$message(res.data.message)
+              this.dialogTableVisible = false
+              this.bindSuccess = true
+              this.update(this.beforeUser)
+            } else {
+              this.$message.error(res.data.message)
+            }
+          })
         } else {
           return false
         }
-      })   
+      })
     },
-    getClassInfo(){
-      axios.get('/dictionary/multiple?fields=grade&fields=depart&fields=major&fields=classNumber').then( res => {
-        if(res.data.code == 200){
+    getClassInfo () {
+      axios.get('/dictionaryData/class/getClassInfo').then(res => {
+        if (res.data.code == 200) {
           let dataList = res.data.data
-          var options = [[],[],[],[]]
-          for(let i = 0; i < dataList.length; i++){
-            for( var field in dataList[i]){
+          var options = [[], [], [], []]
+          for (let i = 0; i < dataList.length; i++) {
+            for (var field in dataList[i]) {
               var obj = {}
               obj.label = field
               obj.value = dataList[i][field]
               options[i].push(obj)
             }
-            if(i > 0){
-              for(let j = 0; j < options[i - 1].length; j++){
-                if(i == 2){
-                  if(!(options[i][j].value.startsWith(options[i - 1][j].value))){
+            if (i > 0) {
+              for (let j = 0; j < options[i - 1].length; j++) {
+                if (i == 2) {
+                  if (!(options[i][j].value.startsWith(options[i - 1][j].value))) {
                     continue
                   }
                 }
-                options[i-1][j].children = options[i]
+                options[i - 1][j].children = options[i]
               }
             }
           }
-          
+
           this.classOptions = options[0]
         }
       })
@@ -318,6 +318,5 @@ export default {
 .el-input{
     width: 300px;
 }
-
 
 </style>

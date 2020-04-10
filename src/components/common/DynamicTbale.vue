@@ -40,8 +40,7 @@ export default {
     return {
       showEdit: [],
       showSaveBtn: [],
-      tempObj: {},
-      
+      tempObj: {}
     }
   },
   created () {

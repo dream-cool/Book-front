@@ -17,23 +17,23 @@
 </template>
 
 <script>
-  import img_404 from '../assets/imgages/gif_404.gif';
-  export default {
-    name: 'wrongPage',
-    data() {
-      return {
-        img_404
-      }
+import img_404 from '../assets/imgages/gif_404.gif'
+export default {
+  name: 'wrongPage',
+  data () {
+    return {
+      img_404
+    }
+  },
+  methods: {
+    goBack () {
+      history.go(-1)
     },
-    methods: {
-      goBack(){
-        history.go(-1);
-      },
-      handleGoMain() {
-        this.$router.push({path: '/front'})
-      }
-    },
+    handleGoMain () {
+      this.$router.push({path: '/front'})
+    }
   }
+}
 </script>
 
 <style scoped>
