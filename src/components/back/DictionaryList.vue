@@ -28,19 +28,17 @@
         layout="total, prev, pager, next, jumper"
         :total="total">
       </el-pagination>
+      <div v-html="'<Com></Com>'"></div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 import DynamicTbale from '../common/DynamicTbale.vue'
+
 export default {
   created () {
     this.getDictionary(this.pageNum, this.pageSize, this.dictionaryCondition)
-    this.operations[0].click = this.addDictionary
-    this.operations[1].click = this.goToDetail
-    this.operations[3].click = this.updateData
-    this.operations[5].click = this.deleteData
   },
   methods: {
     handleCurrentChange (val) {
@@ -83,7 +81,7 @@ export default {
         axios.delete('/dictionary/' + dictionary.id).then(res => {
           if (res.data.code == 200) {
             this.$message(res.data.message)
-            this.getDictionaryData(this.pageNum, this.pageSize, this.dictionaryCondition)
+            this.getDictionary(this.pageNum, this.pageSize, this.dictionaryCondition)
           } else {
             this.$message.error(res.data.message)
           }
@@ -102,9 +100,9 @@ export default {
             if (res.data.code == 200) {
               dictionary = res.data.data
               this.$message(res.data.message)
-              this.getDictionaryData(this.pageNum, this.pageSize, this.dictionaryCondition)
               this.dialogFormVisible = false
               this.dictionary = {}
+              this.getDictionary(this.pageNum, this.pageSize, this.dictionaryCondition)
             } else {
               this.$message.error(res.data.message)
             }
@@ -126,11 +124,11 @@ export default {
       rules: {
         name: [
           { required: true, message: '请输入类型名称', trigger: 'blur' },
-          { min: 2, max: 10, message: '长度在 2 到 10个字符', trigger: 'blur' }
+          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
         ],
         type: [
           { required: true, message: '请输入字典类型', trigger: 'blur' },
-          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
         ],
         note: [
           { required: false, message: '请输入备注内容', trigger: 'blur' },
@@ -150,34 +148,23 @@ export default {
           initialValue: '',
           attribute: {}
         },
-        { label: '字典类型',
+        { 
+          label: '字典类型',
           prop: 'type',
-          editAble: true,
-          editType: 'el-input',
+          editAble: false,
+          editType: 'el-link',
           required: true,
-          initialValue: null
+          initialValue: null,
+          click: this.goToDetail,
+          attribute: { type: 'primary', underline: false}
         },
         {
-          label: '状态',
-          prop: 'status',
+          label: '排序号',
+          prop: 'sort',
           editAble: true,
-          editType: 'el-select',
-          required: true,
-          formatter: function (val) {
-            if (val == '1') {
-              return '正常'
-            } else if (val == '0') {
-              return '禁用'
-            }
-          },
-          attribute: {
-            options: [{
-              value: 1,
-              label: '正常'
-            }, {
-              value: 0,
-              label: '禁用'
-            }]}
+          editType: 'el-input-number',
+          required: false,
+          attribute: {}
         },
         { label: '备注',
           prop: 'note',
@@ -195,18 +182,18 @@ export default {
         }
       ],
       operations: [
-        { text: '新增', intention: 'add' },
-        { text: '查看', intention: 'add' },
-        { text: '编辑', intention: 'edit' },
-        { text: '保存', intention: 'save' },
-        { text: '取消', intention: 'cancel' },
-        { text: '删除', intention: 'delete' }
+        { text: '新增', intention: 'add', click: this.addDictionary },
+        { text: '查看', intention: 'add', click: this.goToDetail },
+        { text: '编辑', intention: 'edit', click: undefined},
+        { text: '保存', intention: 'save',  click: this.updateData},
+        { text: '取消', intention: 'cancel', click: undefined },
+        { text: '删除', intention: 'delete', click: this.deleteData}
       ]
     }
   },
 
   components: {
-    DynamicTbale: DynamicTbale
+    DynamicTbale: DynamicTbale,
   }
 
 }

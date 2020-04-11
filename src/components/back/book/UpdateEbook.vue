@@ -63,7 +63,6 @@ export default {
       optionProps: {
         value: 'id',
         label: 'title',
-        children: 'child'
       },
       categoryList: [],
       id: '',
@@ -147,12 +146,12 @@ export default {
     getTreeData (data) {
       // 循环遍历json数据
       for (var i = 0; i < data.length; i++) {
-        if (data[i].child.length < 1) {
+        if (data[i].children.length < 1) {
           // children若为空数组，则将children设为undefined
-          data[i].child = undefined
+          data[i].children = undefined
         } else {
           // children若不为空数组，则继续 递归调用 本方法
-          this.getTreeData(data[i].child)
+          this.getTreeData(data[i].children)
         }
       }
       return data

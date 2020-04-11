@@ -34,7 +34,6 @@
                         text-color="#ff9900"
                         >
                     </el-rate>{{ beforeUser.credit }}
-
               </el-form-item>
               <el-form-item label="性别" prop="sex">
                 <el-radio-group v-model="beforeUser.sex">
@@ -166,10 +165,16 @@ export default {
       if (user.address != null && user.address.length != 0) {
         user.address = JSON.stringify(user.address)
       }
+      if (user.classId != null && user.classId.length != 0) {
+        user.classId = JSON.stringify(user.classId)
+      }
       axios.put('/user', user).then(res => {
         if (res.data.code === 200) {
           if (res.data.data.address != null && res.data.data.address.length != 0) {
             res.data.data.address = JSON.parse(res.data.data.address)
+          }
+          if (res.data.data.address != null && res.data.data.address.length != 0) {
+            res.data.data.classId = JSON.parse(res.data.data.classId)
           }
           this.beforeUser = res.data.data
           let userDetail = JSON.parse(window.localStorage.getItem('userDetail'))
@@ -192,7 +197,7 @@ export default {
             this.beforeUser.address = JSON.parse(this.beforeUser.address)
           }
           if (this.beforeUser.classId != null && this.beforeUser.classId.trim().length != 0) {
-            this.beforeUser.classId = JSON.parse(this.loginUser.classId)
+            this.beforeUser.classId = JSON.parse(this.beforeUser.classId)
           }
         } else {
           this.$message.error(res.data.message)
@@ -282,30 +287,25 @@ export default {
     getClassInfo () {
       axios.get('/dictionaryData/class/getClassInfo').then(res => {
         if (res.data.code == 200) {
-          let dataList = res.data.data
-          var options = [[], [], [], []]
-          for (let i = 0; i < dataList.length; i++) {
-            for (var field in dataList[i]) {
-              var obj = {}
-              obj.label = field
-              obj.value = dataList[i][field]
-              options[i].push(obj)
-            }
-            if (i > 0) {
-              for (let j = 0; j < options[i - 1].length; j++) {
-                if (i == 2) {
-                  if (!(options[i][j].value.startsWith(options[i - 1][j].value))) {
-                    continue
-                  }
-                }
-                options[i - 1][j].children = options[i]
-              }
-            }
+          this.classOptions = res.data.data
+          if(this.classOptions != null && this.classOptions != undefined){
+            this.classOptions = this.getTreeData(this.classOptions)
           }
-
-          this.classOptions = options[0]
         }
       })
+    },
+    getTreeData (data) {
+      // 循环遍历json数据
+      for (var i = 0; i < data.length; i++) {
+        if (data[i].children.length < 1) {
+          // children若为空数组，则将children设为undefined
+          data[i].children = undefined
+        } else {
+          // children若不为空数组，则继续 递归调用 本方法
+          this.getTreeData(data[i].children)
+        }
+      }
+      return data
     }
   }
 }

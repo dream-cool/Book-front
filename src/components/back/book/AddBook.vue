@@ -33,10 +33,9 @@
                 </el-form-item>
             </el-form-item>
             <el-form-item label="书籍分类" prop="category">
-              <el-cascader
+              <el-cascader style="width: 400px"
                     :options="categoryList"
                     :props="optionProps"
-                    :show-all-levels="false"
                     change-on-select
                     @change="handleBookChange">
               </el-cascader>
@@ -54,7 +53,11 @@
               </el-upload>
             </el-form-item>
             <el-form-item label="书籍位置" prop="location">
-              <el-input v-model="book.location"></el-input>
+              <el-cascader style="width: 300px"
+                    :options="locationOptions"
+                    v-model="book.location"
+                   >
+              </el-cascader>
             </el-form-item>
             <el-form-item label="书籍描述" prop="bookDescribe">
               <el-input :rows="4" maxlength="100"
@@ -79,10 +82,9 @@
                 <el-input v-model="ebook.published"></el-input>
               </el-form-item>
               <el-form-item label="书籍分类" prop="category">
-                <el-cascader
+                <el-cascader style="width: 400px"
                       :options="categoryList"
                       :props="optionProps"
-                      :show-all-levels="false"
                       change-on-select
                       @change="handleEbookChange">
                 </el-cascader>
@@ -152,10 +154,10 @@ export default {
       categoryList: [
 
       ],
+      locationOptions:{},
       optionProps: {
         value: 'id',
         label: 'title',
-        children: 'child'
       },
       none: {
         id: '',
@@ -224,6 +226,7 @@ export default {
   },
   created () {
     this.getAllCategory()
+    this.getLocationInfo()
   },
   methods: {
     submitForm (formName) {
@@ -264,6 +267,7 @@ export default {
       axios.get('/type/cascade').then(res => {
         if (res.data.code === 200) {
           this.categoryList = res.data.data
+          this.categoryList = this.getTreeData(this.categoryList)
           this.categoryList.push(this.none)
         } else {
           this.$message.error(res.data.message)
@@ -271,12 +275,17 @@ export default {
       })
     },
     addBook (book) {
-      console.log(book)
+      if(book.location != null && book.ebook == '0'){
+        debugger
+        book.location = JSON.stringify(book.location)
+      }
       axios.post('/book', book).then(res => {
         if (res.data.code === 200) {
           this.$message(res.data.message)
+          this.book = {}
         } else {
           this.$message.error(res.data.message)
+          book.location  = JSON.parse(book.location)
         }
       })
     },
@@ -332,6 +341,29 @@ export default {
       this.ebook.location = response.data
       this.uploadEbookFileSuccess = true
       this.$message('书籍文件上传成功')
+    },
+    getLocationInfo () {
+      axios.get('/dictionaryData/book/getLocationInfo').then(res => {
+        if (res.data.code == 200) {
+          this.locationOptions = res.data.data
+          if(this.locationOptions != null && this.locationOptions != undefined){
+            this.locationOptions = this.getTreeData(this.locationOptions)
+          }
+        }
+      })
+    },
+    getTreeData (data) {
+      // 循环遍历json数据
+      for (var i = 0; i < data.length; i++) {
+        if (data[i].children.length < 1) {
+          // children若为空数组，则将children设为undefined
+          data[i].children = undefined
+        } else {
+          // children若不为空数组，则继续 递归调用 本方法
+          this.getTreeData(data[i].children)
+        }
+      }
+      return data
     }
   }
 }

@@ -46,10 +46,12 @@ const MyBorrowing = resolve => require(['@/components/front/MyBorrowing.vue'], r
 const Test = resolve => require(['@/components/Test.vue'], resolve)
 const Test1 = resolve => require(['@/components/Test1.vue'], resolve)
 const FrontIndex = resolve => require(['@/components/FrontIndex.vue'], resolve)
+const RecoverPassword = resolve => require(['@/components/RecoverPassword.vue'], resolve)
 export default new Router({
   routes: [
 
     {path: '/login', component: Login},
+    {path: '/recoverPasswor', component: RecoverPassword},
     {path: '/front/ebookRead/:id', component: EbookRead},
     {
       path: '/front',

@@ -46,9 +46,6 @@ export default {
     this.dictionaryDataCondition.type = this.$route.params.type
     this.dictionaryData.type = this.$route.params.type
     this.getDictionaryData(this.pageNum, this.pageSize, this.dictionaryDataCondition)
-    this.operations[0].click = this.addDictionaryData
-    this.operations[2].click = this.updateData
-    this.operations[5].click = this.deleteData
   },
   methods: {
     addDictionaryData () {
@@ -213,11 +210,11 @@ export default {
 
       ],
       operations: [
-        { text: '新增', intention: 'add' },
+        { text: '新增', intention: 'add', click: this.addDictionaryData},
         { text: '编辑', intention: 'edit' },
-        { text: '保存', intention: 'save' },
+        { text: '保存', intention: 'save', click: this.updateData },
         { text: '取消', intention: 'cancel' },
-        { text: '删除', intention: 'delete' }
+        { text: '删除', intention: 'delete', click: this.deleteData }
       ]
     }
   },

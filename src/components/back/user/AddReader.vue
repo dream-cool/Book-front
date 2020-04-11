@@ -11,8 +11,8 @@
             <el-form-item label="班级" prop="classId">
               <el-cascader style="width: 400px"
                 v-model="user.classId"
-                :options="options"
-                @change="handleClassChange"></el-cascader>
+                :options="options">
+              </el-cascader>
             </el-form-item>
             <el-form-item label="初始信用分" prop="credit">
                <el-slider :min="60" v-model="user.credit" style="float:left;width:300px;"></el-slider>
@@ -73,12 +73,17 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          if(this.user.classId != null && this.user.classId != undefined){
+            this.user.classId = JSON.stringify(this.user.classId)
+          }
           console.log(this.user)
           axios.post('/user', this.user).then(res => {
             if (res.data.code === 200) {
               this.$message(res.data.message)
+              this.user = {credit: 80,sex: '1',role: '0'}
             } else {
               this.$message.error(res.data.message)
+              this.user.classId = JSON.parse(this.user.classId)
             }
           })
         } else {
@@ -89,32 +94,29 @@ export default {
     resetForm (formName) {
       this.$refs[formName].resetFields()
     },
-    handleClassChange (value) {
-      this.user.classId = JSON.stringify(value)
-    },
+
     getClassInfo () {
       axios.get('/dictionaryData/class/getClassInfo').then(res => {
         if (res.data.code == 200) {
-          let dataList = res.data.data
-          var options = []
-          for (let i = 0; i < dataList.length; i++) {
-            options.push(dataList[i])
-            if (i > 0) {
-              for (let j = 0; j < options[i - 1].length; j++) {
-                if (i == 2 ) {
-                  debugger
-                  if (!(options[i][j].value.startsWith(options[i - 1][j].value))) {
-                    continue
-                  }
-                }
-                options[i - 1][j].children = options[i]
-              }
-            }
+          this.options = res.data.data
+          if(this.options != null && this.options != undefined){
+            this.options = this.getTreeData(this.options)
           }
-
-          this.options = options[0]
         }
       })
+    },
+    getTreeData (data) {
+      // 循环遍历json数据
+      for (var i = 0; i < data.length; i++) {
+        if (data[i].children.length < 1) {
+          // children若为空数组，则将children设为undefined
+          data[i].children = undefined
+        } else {
+          // children若不为空数组，则继续 递归调用 本方法
+          this.getTreeData(data[i].children)
+        }
+      }
+      return data
     }
   }
 }

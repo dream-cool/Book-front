@@ -16,7 +16,14 @@
             <el-option id="el-option1" v-for="item in column.attribute.options" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
-        <span id="el-free-tag14" v-if="!showEditState(column, $index) "> {{ column.formatter == null ? row[column.prop] : column.formatter(row[column.prop]) }} </span>
+        
+        <el-link v-if="column.editType == 'el-link'" @click="column.click($index,row)"
+          :type="column.attribute.type" :underline="column.attribute.underline" :disabled="column.attribute.disabled" 
+          :icon="column.attribute.icon"   >  
+          {{row[column.prop]}} 
+        </el-link>
+
+        <span  id="el-free-tag14" v-else-if="!showEditState(column, $index) "> {{ column.formatter == null ? row[column.prop] : column.formatter(row[column.prop]) }} </span>
     </template>
     </el-table-column>
     <el-table-column id="el-table-column2" align="left" header-align="left" label="操作" width="200px">
@@ -30,6 +37,7 @@
     </template>
     </el-table-column>
     </el-table>
+      <aa></aa>
     </div>
 </template>
 
@@ -42,6 +50,9 @@ export default {
       showSaveBtn: [],
       tempObj: {}
     }
+  },
+  components: {
+    
   },
   created () {
     if (this.table == null || this.table.data == null) {
@@ -63,6 +74,7 @@ export default {
         operation.click(index, row, this)
       }
       if (operation.intention == 'delete') {
+        debugger
         operation.click(index, row)
       }
       if (operation.intention == 'add') {
@@ -126,7 +138,6 @@ export default {
           obj[column.prop] = column.initialValue
         }
       })
-      debugger
       this.table.data.push(obj)
       this.handleEdit(this.table.data.length - 1, obj)
     },

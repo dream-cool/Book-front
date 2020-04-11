@@ -55,7 +55,11 @@
                   </el-upload>
             </el-form-item>
             <el-form-item label="书籍位置" prop="location">
-              <el-input v-model="book.location"></el-input>
+              <el-cascader style="width: 300px"
+                    :options="locationOptions"
+                    v-model="book.location"
+                   >
+              </el-cascader>
             </el-form-item>
             <el-form-item label="书籍描述" prop="bookDescribe">
               <el-input :rows="4" maxlength="100"
@@ -82,10 +86,10 @@ export default {
       activeName: 'first',
       fileList: [],
       category: [],
+      locationOptions:{},
       optionProps: {
         value: 'id',
         label: 'title',
-        children: 'child'
       },
       categoryList: [],
       id: '',
@@ -121,6 +125,7 @@ export default {
   created () {
     this.id = this.$route.params.id
     this.getAllCategory()
+    this.getLocationInfo()
     this.getBookInfo(this.id)
   },
   methods: {
@@ -139,12 +144,19 @@ export default {
       })
     },
     update (book) {
+      if(book.location != null){
+          book.location = JSON.stringify(book.location)
+      }
       axios.put('/book', book).then(res => {
         if (res.data.code === 200) {
           this.book = res.data.data.book
           this.category = res.data.data.typeList
           this.$message(res.data.message)
+          if(this.book != null && this.book.location != null){
+             this.book.location = JSON.parse(this.book.location)
+          }
         } else {
+          book.location = JSON.parse(book.location)
           this.$message.error(res.data.message)
         }
       })
@@ -155,6 +167,9 @@ export default {
           if (res.data.code === 200) {
             this.book = res.data.data.book
             this.category = res.data.data.typeList
+            if(this.book.location != null){
+              this.book.location = JSON.parse(this.book.location)
+            }
             console.log(this.book)
           } else {
             this.$message.error(res.data.message)
@@ -171,15 +186,25 @@ export default {
         }
       })
     },
+    getLocationInfo () {
+      axios.get('/dictionaryData/book/getLocationInfo').then(res => {
+        if (res.data.code == 200) {
+          this.locationOptions = res.data.data
+          if(this.locationOptions != null && this.locationOptions != undefined){
+            this.locationOptions = this.getTreeData(this.locationOptions)
+          }
+        }
+      })
+    },
     getTreeData (data) {
       // 循环遍历json数据
       for (var i = 0; i < data.length; i++) {
-        if (data[i].child.length < 1) {
+        if (data[i].children.length < 1) {
           // children若为空数组，则将children设为undefined
-          data[i].child = undefined
+          data[i].children = undefined
         } else {
           // children若不为空数组，则继续 递归调用 本方法
-          this.getTreeData(data[i].child)
+          this.getTreeData(data[i].children)
         }
       }
       return data
