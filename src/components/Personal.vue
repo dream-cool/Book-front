@@ -75,7 +75,7 @@
           <el-dialog title="绑定邮箱" :visible.sync="dialogTableVisible" :before-close = "checkEmailUpdate">
             <el-form :model="beforeUser" :rules="userRules" ref="userRules" label-width="100px" class="demo-ruleForm">
               <el-form-item prop="email" label="邮箱" style="margin-left: 10%" >
-                <el-input label="邮箱"  placeholder="请输入邮箱" v-model="beforeUser.email" ></el-input>
+                <el-input label="邮箱"  placeholder="请输入邮箱" v-model="beforeUser.email" @blur="checkEmail('userRules')" ></el-input>
               </el-form-item>
               <el-form-item prop="code" label="验证码" style="margin-left: 10%;margin-top: 5%">
                 <el-input  v-model="beforeUser.code" placeholder="请输入邮箱验证码" ></el-input>
@@ -120,6 +120,7 @@ export default {
       classOptions: null,
       addressOptions: regionData,
       dialogTableVisible: false,
+      emailIsBinded: false,
       sendButtonMessage: '立即发送',
       sendButtonMessageDisabled: false,
       second: 60,
@@ -231,10 +232,28 @@ export default {
         this.sendButtonMessageDisabled = false
       }
     },
-
+    checkEmail(formName){
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          axios.get('/user/queryUserByEmail/'+this.beforeUser.email)
+          .then(res => {
+            if(res.data.code == 200){
+              this.emailIsBinded = false
+            } else {
+              this.emailIsBinded = true
+              this.$message.error(res.data.message)
+            }
+          })
+        }
+      })
+    },
     sendMessage (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          if(this.emailIsBinded){
+            this.$message.error('该邮箱已被绑定')
+            return
+          }
           this.startCountdown()
           axios({
             url: '/user/sendVerificationLogin',

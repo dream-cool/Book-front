@@ -170,11 +170,21 @@ export default {
       })
     },
     commitNewPW () {
-      if (this.newPassword == null || this.confirmNewPassword == null) {
-        this.$message.error('请输入密码')
+      if (this.newPassword == null ||  this.newPassword.trim().length == 0) {
+        this.$message.error('请输入新密码')
+        return
       }
-      if (this.newPassword.length < 6 || this.confirmNewPassword.length < 6) {
+      if (this.confirmNewPassword == null ||  this.confirmNewPassword.trim().length == 0) {
+        this.$message.error('请确认密码')
+        return
+      }
+      if (this.newPassword.trim().length < 6 || this.confirmNewPassword.trim().length < 6) {
         this.$message.error('密码长度不能小于6位')
+        return
+      }
+      if (this.newPassword != this.confirmNewPassword) {
+        this.$message.error('两次密码不一致')
+        return
       }
       axios({
         url: '/user/updatePWByVerificationCode',

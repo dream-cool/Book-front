@@ -4,9 +4,12 @@
     <div class="updateUser">
         <el-dialog title="编辑用户" :visible.sync="dialogFormVisible">
           <el-form>
-            <el-form-item label="班级:">
-                <el-input  v-model="editUser.classId" style="width:40%" ></el-input>
-            </el-form-item>
+            <el-form-item label="班级">
+                <el-cascader style="width: 400px"
+                v-model="editUser.classId"
+                :options="classOptions"
+                ></el-cascader>
+              </el-form-item>
             <el-form-item label="状态:" prop="bookStatus">
               <el-radio-group v-model="editUser.status">
                 <el-radio :label="'1'">正常</el-radio>
@@ -195,11 +198,13 @@ export default {
       },
       editUser: {},
       dialogFormVisible: false,
+      classOptions: {},
       multipleSelection: []
     }
   },
   created () {
     this.getUserInfo(this.pageNum, this.pageSize, this.user)
+    this.getClassInfo()
   },
 
   methods: {
@@ -207,6 +212,9 @@ export default {
       return moment(date).format('YYYY-MM-DD HH:mm:ss')
     },
     editCommit () {
+      if(this.editUser.classId != null){
+        this.editUser.classId  = JSON.stringify(this.editUser.classId)
+      }
       axios.put('/user', this.editUser
       ).then(res => {
         if (res.data.code === 200) {
@@ -267,6 +275,9 @@ export default {
       axios.get('/user/' + row.userId).then(res => {
         if (res.data.code === 200) {
           this.editUser = res.data.data
+          if(this.editUser.classId != null){
+            this.editUser.classId = JSON.parse(this.editUser.classId)
+          }
         } else {
           this.$message.error(res.data.message)
         }
@@ -344,8 +355,31 @@ export default {
         lastLoginTime: null
       }
       this.search()
+    },
+    getClassInfo () {
+      axios.get('/dictionaryData/class/getClassInfo').then(res => {
+        if (res.data.code == 200) {
+          this.classOptions = res.data.data
+          if(this.classOptions != null && this.classOptions != undefined){
+            this.classOptions = this.getTreeData(this.classOptions)
+          }
+        }
+      })
+    },
+    getTreeData (data) {
+      // 循环遍历json数据
+      for (var i = 0; i < data.length; i++) {
+        if (data[i].children.length < 1) {
+          // children若为空数组，则将children设为undefined
+          data[i].children = undefined
+        } else {
+          // children若不为空数组，则继续 递归调用 本方法
+          this.getTreeData(data[i].children)
+        }
+      }
+      return data
     }
-  }
+  },
 }
 </script>
 <style scoped>

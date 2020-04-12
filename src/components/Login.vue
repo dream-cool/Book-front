@@ -2,24 +2,38 @@
   <div class="hello" :style="backgroundDiv" >
     <el-dialog title="励新图书管理系统" style="width:1000px; marginLeft: 25%" center :modal="false"	  :show-close="false" :visible="dialogTableVisible">
        <el-form :model="user" :rules="userRules" ref="userRules" label-width="100px" style="marginLeft:-30px" class="demo-ruleForm">
-            <el-form-item label="用户名" prop="userName">
+            <el-form-item label="用户名" prop="userName" >
               <el-input v-model="user.userName" prefix-icon="el-icon-user-solid" placeholder="请输入用户名"></el-input>
             </el-form-item>
             <el-form-item label="密码" prop="password">
               <el-input type="password" v-model="user.password" prefix-icon="el-icon-lock" placeholder="请输入密码"></el-input>
             </el-form-item>
             <el-form-item label="验证码" prop="code">
-              <el-input  v-model="user.code" placeholder="验证码"  maxlength="4" prefix-icon="el-icon-key" style="width: 150px;float: left" ></el-input>
+              <el-input  v-model="user.code" placeholder="验证码" @focus="popoverVisible=true"  
+                @blur="popoverVisible=false"
+                maxlength="4" prefix-icon="el-icon-key" style="width: 150px;float: left"
+                 @keyup.enter.native="submitForm('userRules')"
+                 @keyup.down.native="createCode"
+                  ></el-input>
+              <el-popover style="float:right;margin-right:100px"
+                placement="right"
+                width="200"
+                trigger="hover"
+                v-model="popoverVisible"
+                content="看不清？点击图片或者按 ↓ 切换">
+                <el-button slot="reference" v-if="false" ></el-button>
+              </el-popover>
               <SIdentify :identifyCode="identifyCode" :createCode="createCode" ></SIdentify>
             </el-form-item>
+
             <el-form-item>
               <el-checkbox v-model="rememberMe" style="float:left">记住密码</el-checkbox>
               <el-link style="marginLeft:50px;marginTop: -5px" type="primary" 
               :underline="false" @click="recoverPasswor">找回密码</el-link>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="submitForm('userRules')">登录</el-button>
-              <el-button @click="resetForm('userRules')">重置</el-button>
+              <el-button type="primary" @click="submitForm('userRules')" :loading="loading">登录</el-button>
+              <el-button @click="resetForm('userRules')" >重置</el-button>
             </el-form-item>
         </el-form>
     
@@ -48,6 +62,8 @@ export default {
   },
   data () {
     return {
+      loading: false,
+      popoverVisible: false,
       dialogTableVisible:true,
       rememberMe: true,
       user: { userName: '', password:'', code: ''},
@@ -86,6 +102,7 @@ export default {
              window.localStorage.removeItem('rememberUserName')
              window.localStorage.removeItem('rememberPassword')
           }
+          this.loading = true
           axios.get('/login?userName=' + this.user.userName + '&password=' + this.user.password).then(
             res => {
               if (res.data.code == 200) {
@@ -105,6 +122,7 @@ export default {
                 this.$message.error(res.data.message)
                 this.createCode()
               }
+              this.loading = true
             }
           )
         } else {

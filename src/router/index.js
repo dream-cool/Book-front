@@ -47,6 +47,8 @@ const Test = resolve => require(['@/components/Test.vue'], resolve)
 const Test1 = resolve => require(['@/components/Test1.vue'], resolve)
 const FrontIndex = resolve => require(['@/components/FrontIndex.vue'], resolve)
 const RecoverPassword = resolve => require(['@/components/RecoverPassword.vue'], resolve)
+const SendMessage = resolve => require(['@/components/back/SendMessage.vue'], resolve)
+const Scheduling = resolve => require(['@/components/back/Scheduling.vue'], resolve)
 export default new Router({
   routes: [
 
@@ -269,6 +271,18 @@ export default new Router({
               name: '用户新增统计',
               meta: {requireAuth: true, permissions: 'statisticsR' }}
           ]
+        },
+        {
+          path: '/back/sendMessage',
+          component: SendMessage,
+          name: '消息推送',
+          meta: {requireAuth: true}
+        },
+        {
+          path: '/back/scheduling',
+          component: Scheduling,
+          name: '定时任务',
+          meta: {requireAuth: true}
         },
         {
           path: '/back/dictionary',

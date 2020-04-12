@@ -66,6 +66,12 @@
             <el-menu-item index="/back/category/addCategory" >
               <i class="el-icon-s-operation"></i>新增类别</el-menu-item>
           </el-submenu>
+          <el-menu-item index="/back/sendMessage">
+            <i class="el-icon-s-operation"></i>消息推送
+          </el-menu-item>
+          <el-menu-item index="/back/scheduling">
+            <i class="el-icon-s-operation"></i>定时任务
+          </el-menu-item>
           <el-menu-item index="/back/dictionary">
             <i class="el-icon-s-operation"></i>字典管理
           </el-menu-item>
