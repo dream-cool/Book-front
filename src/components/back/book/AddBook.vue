@@ -276,7 +276,6 @@ export default {
     },
     addBook (book) {
       if(book.location != null && book.ebook == '0'){
-        debugger
         book.location = JSON.stringify(book.location)
       }
       axios.post('/book', book).then(res => {
@@ -287,6 +286,7 @@ export default {
           this.$message.error(res.data.message)
           book.location  = JSON.parse(book.location)
         }
+        book.location = null
       })
     },
     resetForm (formName) {

@@ -26,7 +26,7 @@
         <span  id="el-free-tag14" v-else-if="!showEditState(column, $index) "> {{ column.formatter == null ? row[column.prop] : column.formatter(row[column.prop]) }} </span>
     </template>
     </el-table-column>
-    <el-table-column id="el-table-column2" align="left" header-align="left" label="操作" width="200px">
+    <el-table-column id="el-table-column2" align="left" header-align="left" label="操作" width="200px" v-if="operations != null">
     <template id="el-free-tag14" slot-scope="{row,$index}">
         <el-button id="el-button10" v-if="showEditButton(operation, $index)" v-for="(operation,index) in operations" :key="index" @click.native="executeOperation(operation,$index, row)" :round="operation.round" size="small" :plain="operation.plain" :disabled="operation.disabled" type="text" :circle="operation.circle" :loading="operation.loading" :autofocus="operation.autofocus">
         {{operation.text}}

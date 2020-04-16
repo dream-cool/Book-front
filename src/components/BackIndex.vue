@@ -69,6 +69,9 @@
           <el-menu-item index="/back/sendMessage">
             <i class="el-icon-s-operation"></i>消息推送
           </el-menu-item>
+          <el-menu-item index="/back/log">
+            <i class="el-icon-s-operation"></i>日志记录
+          </el-menu-item>
           <el-menu-item index="/back/scheduling">
             <i class="el-icon-s-operation"></i>定时任务
           </el-menu-item>

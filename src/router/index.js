@@ -49,6 +49,7 @@ const FrontIndex = resolve => require(['@/components/FrontIndex.vue'], resolve)
 const RecoverPassword = resolve => require(['@/components/RecoverPassword.vue'], resolve)
 const SendMessage = resolve => require(['@/components/back/SendMessage.vue'], resolve)
 const Scheduling = resolve => require(['@/components/back/Scheduling.vue'], resolve)
+const SysLog = resolve => require(['@/components/back/SysLog.vue'], resolve)
 export default new Router({
   routes: [
 
@@ -282,6 +283,12 @@ export default new Router({
           path: '/back/scheduling',
           component: Scheduling,
           name: '定时任务',
+          meta: {requireAuth: true}
+        },
+        {
+          path: '/back/log',
+          component: SysLog,
+          name: '日志记录',
           meta: {requireAuth: true}
         },
         {
