@@ -28,7 +28,6 @@
         layout="total, prev, pager, next, jumper"
         :total="total">
       </el-pagination>
-      <div v-html="'<Com></Com>'"></div>
   </div>
 </template>
 

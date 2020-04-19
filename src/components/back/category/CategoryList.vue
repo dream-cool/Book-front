@@ -1,44 +1,9 @@
 <template>
   <div class="content">
-       <el-table
-          :data="categoryPage.list"
+    <DynamicTbale :columns="columns" :table="table" :operations="operations" > </DynamicTbale>
+       <!-- <el-table
+          :data="table.data"
           style="width: 100%">
-          <el-table-column
-            label="类别ID"
-            width="180">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.id }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="类别名称"
-            width="180">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.title }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="父类名称"
-            width="180">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.pname }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="级别"
-            width="180">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.level }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="创建时间"
-            width="300">
-            <template slot-scope="scope">
-              <i class="el-icon-time"></i>
-              <span style="margin-left: 10px">{{ scope.row.createTime }}</span>
-            </template>
-          </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
               <el-button
@@ -50,62 +15,141 @@
                 @click="handleDelete(scope.$index, scope.row)">删除</el-button>
             </template>
           </el-table-column>
-        </el-table>
+        </el-table> -->
           <div class="block">
             <el-pagination
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
               :current-page.sync="pageNum"
-              :page-size="categoryPage.pageSize"
+              :page-size="pageSize"
               layout="total, prev, pager, next, jumper"
-              :total="categoryPage.total">
+              :total="total">
             </el-pagination>
           </div>
+          <AddCategory  :dialog="dialog"></AddCategory>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import  DynamicTbale from '../../common/DynamicTbale'
+import AddCategory from '../category/AddCategory'
 export default {
+  components: {
+      DynamicTbale,
+      AddCategory
+  },
   data () {
     return {
-      categoryPage: {
-        pageSize: 10
+      dialog: {
+        dialogVisible: false
       },
-      pageNum: 1
+      dialogVisible: false,
+      pageSize: 10,
+      pageNum: 1,
+      total: 0,
+      table: {
+        data: []
+      },
+      columns: [
+        
+        { 
+          label: '类别名称',
+          prop: 'title',
+          width: '250px',
+          editAble: true,
+          editType: 'el-input',
+          required: true,
+          initialValue: null,
+          attribute: { }
+        },
+        {
+          label: '父类名称',
+          prop: 'pname',
+          editAble: false,
+          editType: 'el-input',
+          required: false,
+          attribute: {}
+        },
+        {
+          label: '级别',
+          prop: 'level',
+          editAble: false,
+          editType: 'el-input',
+          required: false,
+          attribute: {}
+        },
+        {
+          label: '排序号',
+          prop: 'sort',
+          editAble: true,
+          editType: 'el-input-number',
+          required: false,
+          attribute: {}
+        },
+        {
+          label: '创建时间',
+          prop: 'createTime',
+          editAble: false,
+          editType: 'el-input-number',
+          required: false,
+          attribute: {}
+        }
+      ],
+      operations: [
+        { text: '新增', intention: 'add', click: this.handleAdd },
+        { text: '编辑', intention: 'edit', click: undefined},
+        { text: '保存', intention: 'save',  click: this.handleEdit},
+        { text: '取消', intention: 'cancel', click: undefined },
+        { text: '删除', intention: 'delete', click: this.handleDelete}
+      ]
     }
   },
   created () {
-    this.getAllCategoryInfo(this.pageNum, this.categoryPage.pageSize)
+    this.getAllCategoryInfo(this.pageNum, this.pageSize)
   },
   methods: {
+    handleAdd(){
+      this.dialog.dialogVisible = true
+    },
     handleEdit (index, row) {
-      this.$prompt('请新的输入类别名称', row.title, {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        inputPattern: /\S/,
-        inputErrorMessage: '类别名称不能为空'
-      }).then(({ value }) => {
-        row.title = value
-        axios.put('/type', row).then(res => {
+      axios.put('/type', row).then(res => {
           if (res.data.code === 200) {
             this.$message(res.data.message)
+            this.getAllCategoryInfo(this.pageNum, this.pageSize)
           } else {
             this.$message.error(res.data.message)
           }
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '取消输入'
-        })
       })
     },
+    // handleEdit (index, row) {
+    //   this.$prompt('请新的输入类别名称', row.title, {
+    //     confirmButtonText: '确定',
+    //     cancelButtonText: '取消',
+    //     inputPattern: /\S/,
+    //     inputErrorMessage: '类别名称不能为空'
+    //   }).then(({ value }) => {
+    //     row.title = value
+    //     axios.put('/type', row).then(res => {
+    //       if (res.data.code === 200) {
+    //         this.$message(res.data.message)
+    //       } else {
+    //         this.$message.error(res.data.message)
+    //       }
+    //     })
+    //   }).catch(() => {
+    //     this.$message({
+    //       type: 'info',
+    //       message: '取消输入'
+    //     })
+    //   })
+    // },
     handleDelete (index, row) {
       this.$confirm('确认删除？')
         .then(_ => {
           axios.delete('/type/' + row.id).then(res => {
             if (res.data.code === 200) {
+              this.getAllCategoryInfo(this.pageNum, this.pageSize)
               this.$message(res.data.message)
             } else {
               this.$message.error(res.data.message)
@@ -114,18 +158,21 @@ export default {
         })
         .catch(_ => {})
     },
+
     handleSizeChange (val) {
 
     },
     handleCurrentChange (pageNum) {
-      this.getAllCategoryInfo(pageNum, this.categoryPage.pageSize)
+      this.getAllCategoryInfo(pageNum, this.pageSize)
     },
     getAllCategoryInfo (pageNum, pageSize) {
       axios.get('/type?pageNum=' + pageNum + '&pageSize=' + pageSize)
         .then(res => {
           if (res.data.code === 200) {
-            this.categoryPage = res.data.data
+            this.table.data = res.data.data.list
             this.pageNum = res.data.data.pageNum
+            this.pageSize = res.data.data.pageSize
+            this.total = res.data.data.total
           } else {
             this.$message.error(res.data.message)
           }

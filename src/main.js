@@ -18,6 +18,7 @@ NProgress.inc(0.5)
 NProgress.configure({ easing: 'ease', speed: 800, showSpinner: false })
 
 axios.defaults.baseURL = 'http://localhost:8090'
+axios.defaults.timeout = 5000
 
 Vue.use(axios)
 Vue.use(VueRouter)
@@ -63,6 +64,7 @@ axios.interceptors.response.use(
     return response
   },
   error => {
+    NProgress.done()
     return Promise.reject(error)
   }
 )

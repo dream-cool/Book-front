@@ -12,10 +12,10 @@
           <el-menu-item index="/front/home">
             <p>首页</p>
           </el-menu-item>
-          <el-menu-item index="1">
+          <el-menu-item index="/front/recommendBook">
             <p>推荐</p>
           </el-menu-item>
-          <el-menu-item index="2">
+          <el-menu-item index="/front/popularBook">
             <p>热门</p>
           </el-menu-item>
           <el-menu-item index="/front/lendBook">

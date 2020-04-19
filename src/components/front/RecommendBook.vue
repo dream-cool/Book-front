@@ -1,9 +1,5 @@
 <template>
   <div class="hello" >
-      <el-row>
-        <el-input suffix-icon="el-icon-search" placeholder="搜索" 
-        v-model="book.bookName" @input="getBookInfo(pageNum, pageSize, book)" > </el-input>
-      </el-row>
       <el-row :gutter="20" bodar>
         <el-col :span="3" v-for="(book,index) in bookList" :key="index" >
             <el-card :body-style="{ padding: '0px' }" style="width: 220px">
@@ -14,12 +10,12 @@
               <div style="padding-left: 20px;padding-right: 20px;">
                 <p style="color: #000;font-size: 14px;font-weight: bold margin-top: -20px; " >  {{book.bookName}}  </p>
                 <p style="font-size: 14px;color: #AEA7A7;margin-top: -10px;float:left ">{{book.author}}</p>
-                <p v-if="book.ebook == 0" style="font-size: 14px;color: #AEA7A7;margin-top: -10px;float:right">借阅: {{book.borrowingNumber}}</p>
+                <p style="font-size: 14px;color: #AEA7A7;margin-top: -10px;float:right">点赞: {{book.zanNumber}}</p>
               </div>
             </el-card>
         </el-col>
       </el-row>
-      <el-row>
+      <!-- <el-row>
         <el-pagination
           style="margin-top: 30px"
           background
@@ -29,7 +25,7 @@
           layout="total, prev, pager, next, jumper"
           :total="total">
         </el-pagination>
-      </el-row>
+      </el-row> -->
   </div>
 </template>
 
@@ -37,8 +33,6 @@
 import axios from 'axios'
 import moment from 'moment'
 export default {
-  name: 'Hello',
-  props: ['bookCondition'],
   data () {
     return {
       Sever_URL: axios.defaults.baseURL,
@@ -46,20 +40,11 @@ export default {
       pageNum: 1,
       pageSize: 30,
       total: 0,
-      book: {
-        ebook: 0,
-        bookStatus: '0',
-        bookName: null,
-      },
       url: ''
     }
   },
   created () {
-    if (this.bookCondition != null && this.bookCondition != 'undenfied') {
-      this.book = this.bookCondition
-    }
-    console.log(this.bookCondition)
-    this.getBookInfo(this.pageNum, this.pageSize, this.book)
+    this.getBookInfo(this.pageNum, this.pageSize)
   },
   methods: {
     goToBookDetail (bookId) {
@@ -67,20 +52,20 @@ export default {
       this.$router.push({path: '/front/bookDetail/' + bookId})
     },
     handleCurrentChange (val) {
-      this.getBookInfo(val, this.pageSize, this.book)
+      this.getBookInfo(val, this.pageSize, )
     },
-    getBookInfo (pageNum, pageSize, book) {
-      axios.post(
-        '/book/all?pageNum=' + pageNum + '&pageSize=' + pageSize, book
+    getBookInfo (pageNum, pageSize) {
+      axios.get(
+        '/book/query/recommendBook'
       ).then(res => {
         if (res.data.code === 200) {
-          this.bookList = res.data.data.list
+          this.bookList = res.data.data
           this.bookList.map(book => {
             book.inputTime = moment(book.inputTime).format('YYYY-MM-DD')
             return book
           })
-          this.pageNum = res.data.data.pageNum
-          this.total = res.data.data.total
+        //   this.pageNum = res.data.data.pageNum
+        //   this.total = res.data.data.total
         } else {
           this.$message.error(res.data.message)
         }
@@ -102,16 +87,5 @@ export default {
 .el-image{
   width: 180px;
   height: 180px;
-}
-.el-input{
-  margin-top: 20px;
-  width: 400px;
-  border-style:solid;
-  border-width:1px;
-  border-color: #409EFF;
-  border-top-left-radius:6px;
-  border-top-right-radius: 6px;
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px
 }
 </style>

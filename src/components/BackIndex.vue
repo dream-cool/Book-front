@@ -14,22 +14,25 @@
               <i class="el-icon-notebook-1"></i>书籍
             </template>
             <el-menu-item index="/back/book/bookInfo" v-if="user.permission.bookR == true" >
-            <i class="el-icon-s-home" ></i>书籍信息</el-menu-item>
+            <i class="el-icon-view" ></i>书籍信息</el-menu-item>
             <el-menu-item index="/back/book/bookList" v-if="user.permission.bookW == true" >
-            <i class="el-icon-s-home" ></i>书籍列表</el-menu-item>
+            <i class="el-icon-edit" ></i>书籍列表</el-menu-item>
             <el-menu-item index="/back/book/addBook" v-if="user.permission.bookW == true">
-              <i class="el-icon-s-operation"></i>新增书籍</el-menu-item>
+              <i class="el-icon-plus"></i>新增书籍</el-menu-item>
           </el-submenu>
+          <el-menu-item index="/back/category/categoryList" v-if="user.permission.categoryW == true">
+            <i class="el-icon-s-promotion"></i>书籍分类
+          </el-menu-item>
           <el-submenu index="/back/borrowing" v-if="user.permission.borrowingR == true || user.permission.borrowingW == true">
             <template slot="title">
               <i class="el-icon-document"></i>借阅
             </template>
             <el-menu-item index="/back/borrowing/borrowingList" v-if="user.permission.borrowingR == true">
-            <i class="el-icon-s-operation"></i>借阅信息</el-menu-item>
+            <i class="el-icon-view"></i>借阅信息</el-menu-item>
             <el-menu-item index="/back/borrowing/handleBorrowing" v-if="user.permission.borrowingW == true">
-            <i class="el-icon-s-operation"></i>处理借阅</el-menu-item>
+            <i class="el-icon-edit"></i>处理借阅</el-menu-item>
             <el-menu-item index="/back/borrowing/handleReturn" v-if="user.permission.borrowingW == true">
-            <i class="el-icon-s-operation"></i>处理归还</el-menu-item>
+            <i class="el-icon-edit"></i>处理归还</el-menu-item>
           </el-submenu>
           <el-submenu index="/back/user" v-if="user.permission.userR == true || user.permission.userW == true" >
             <template slot="title">
@@ -37,11 +40,11 @@
             </template>
             <el-menu-item-group>
               <el-menu-item index="/back/user/userInfo" v-if="user.permission.userR == true">
-              <i class="el-icon-s-operation"></i>用户信息</el-menu-item>
+              <i class="el-icon-view"></i>用户信息</el-menu-item>
               <el-menu-item index="/back/user/userList" v-if="user.permission.userW == true">
-              <i class="el-icon-s-operation"></i>用户列表</el-menu-item>
+              <i class="el-icon-edit"></i>用户列表</el-menu-item>
               <el-menu-item index="/back/user/addUser" v-if="user.permission.userW == true">
-              <i class="el-icon-s-operation"></i>添加用户</el-menu-item>
+              <i class="el-icon-plus"></i>添加用户</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
           <el-submenu index="/back/statistics" v-if="user.permission.statisticsR == true">
@@ -49,37 +52,33 @@
               <i class="el-icon-s-data"></i>统计
             </template>
             <el-menu-item index="/back/statistics/userStatisticsByTime">
-              <i class="el-icon-s-operation"></i>用户统计</el-menu-item>
+              <i class="el-icon-user"></i>用户统计</el-menu-item>
             <el-menu-item index="/back/statistics/storageStatisticsByTime">
-              <i class="el-icon-s-operation"></i>藏量统计</el-menu-item>
+              <i class="el-icon-s-marketing"></i>藏量统计</el-menu-item>
             <el-menu-item index="/back/statistics/categoryStatistics">
-              <i class="el-icon-s-operation"></i>类别统计</el-menu-item>
+              <i class="el-icon-date"></i>类别统计</el-menu-item>
             <el-menu-item index="/back/statistics/borrowingStatistics">
-              <i class="el-icon-s-operation"></i>借阅统计</el-menu-item>
+              <i class="el-icon-menu"></i>借阅统计</el-menu-item>
           </el-submenu>
-          <el-submenu index="/back/category" v-if="user.permission.categoryW == true">
+          <el-submenu index="/back/sys">
             <template slot="title" >
-              <i class="el-icon-s-order"></i>分类
+              <i class="el-icon-setting"></i>系统管理
             </template>
-            <el-menu-item index="/back/category/categoryList">
-              <i class="el-icon-s-operation"></i>分类列表</el-menu-item>
-            <el-menu-item index="/back/category/addCategory" >
-              <i class="el-icon-s-operation"></i>新增类别</el-menu-item>
+            <el-menu-item index="/back/sys/sendMessage">
+              <i class="el-icon-message"></i>消息推送
+            </el-menu-item>
+            <el-menu-item index="/back/sys/log">
+              <i class="el-icon-postcard"></i>日志记录
+            </el-menu-item>
+            <el-menu-item index="/back/sys/scheduling">
+              <i class="el-icon-alarm-clock"></i>定时任务
+            </el-menu-item>
+            <el-menu-item index="/back/sys/dictionary">
+              <i class="el-icon-notebook-2"></i>字典管理
+            </el-menu-item>
           </el-submenu>
-          <el-menu-item index="/back/sendMessage">
-            <i class="el-icon-s-operation"></i>消息推送
-          </el-menu-item>
-          <el-menu-item index="/back/log">
-            <i class="el-icon-s-operation"></i>日志记录
-          </el-menu-item>
-          <el-menu-item index="/back/scheduling">
-            <i class="el-icon-s-operation"></i>定时任务
-          </el-menu-item>
-          <el-menu-item index="/back/dictionary">
-            <i class="el-icon-s-operation"></i>字典管理
-          </el-menu-item>
           <el-menu-item index="/back/grantPrivilege" v-if="user.role == '3'" >
-            <i class="el-icon-s-operation"></i>权限
+            <i class="el-icon-lock"></i>权限
           </el-menu-item>
         </el-menu>
       </el-aside>

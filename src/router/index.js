@@ -42,6 +42,8 @@ const Index = resolve => require(['@/components/front/Index.vue'], resolve)
 const UserCollection = resolve => require(['@/components/front/UserCollection.vue'], resolve)
 const Ebook = resolve => require(['@/components/front/Ebook.vue'], resolve)
 const LendBook = resolve => require(['@/components/front/LendBook.vue'], resolve)
+const RecommendBook = resolve => require(['@/components/front/RecommendBook.vue'], resolve)
+const PopularBook = resolve => require(['@/components/front/PopularBook.vue'], resolve)
 const MyBorrowing = resolve => require(['@/components/front/MyBorrowing.vue'], resolve)
 const Test = resolve => require(['@/components/Test.vue'], resolve)
 const Test1 = resolve => require(['@/components/Test1.vue'], resolve)
@@ -50,6 +52,7 @@ const RecoverPassword = resolve => require(['@/components/RecoverPassword.vue'],
 const SendMessage = resolve => require(['@/components/back/SendMessage.vue'], resolve)
 const Scheduling = resolve => require(['@/components/back/Scheduling.vue'], resolve)
 const SysLog = resolve => require(['@/components/back/SysLog.vue'], resolve)
+
 export default new Router({
   routes: [
 
@@ -116,7 +119,19 @@ export default new Router({
           name: '电子书',
           meta: {}
         },
-        {
+        { 
+          path: '/front/popularBook',
+          component: PopularBook,
+          name: '热门',
+          meta: {}
+        },
+        { 
+          path: '/front/recommendBook',
+          component: RecommendBook,
+          name: '推荐',
+          meta: { requireAuth: true }
+        },
+        { 
           path: '/front/lendBook',
           component: LendBook,
           name: '借出',
@@ -274,34 +289,42 @@ export default new Router({
           ]
         },
         {
-          path: '/back/sendMessage',
-          component: SendMessage,
-          name: '消息推送',
-          meta: {requireAuth: true}
-        },
-        {
-          path: '/back/scheduling',
-          component: Scheduling,
-          name: '定时任务',
-          meta: {requireAuth: true}
-        },
-        {
-          path: '/back/log',
-          component: SysLog,
-          name: '日志记录',
-          meta: {requireAuth: true}
-        },
-        {
-          path: '/back/dictionary',
-          component: DictionaryList,
-          name: '字典管理',
-          meta: {requireAuth: true}
-        },
-        {
-          path: '/back/dictionary/data/:type',
-          component: DictionaryDataList,
-          name: '字典数据',
-          meta: {requireAuth: true}
+          path: '/back/sys',
+          component: Book,
+          name: '系统管理',
+          meta: {requireAuth: true},
+          children: [
+            {
+              path: '/back/sys/sendMessage',
+              component: SendMessage,
+              name: '消息推送',
+              meta: {requireAuth: true}
+            },
+            {
+              path: '/back/sys/scheduling',
+              component: Scheduling,
+              name: '定时任务',
+              meta: {requireAuth: true}
+            },
+            {
+              path: '/back/sys/log',
+              component: SysLog,
+              name: '日志记录',
+              meta: {requireAuth: true}
+            },
+            {
+              path: '/back/sys/dictionary',
+              component: DictionaryList,
+              name: '字典管理',
+              meta: {requireAuth: true}
+            },
+            {
+              path: '/back/sys/dictionary/data/:type',
+              component: DictionaryDataList,
+              name: '字典数据',
+              meta: {requireAuth: true}
+            }
+          ]
         },
         {path: '/back/grantPrivilege',
           component: GrantPrivilege,

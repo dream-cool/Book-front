@@ -4,7 +4,9 @@
       :data="chartData"
       :loading="loading"
       :data-empty="dataEmpty"
-      :settings="chartSettings">
+      :settings="chartSettings"
+      :extend="extend"
+      >
       </ve-line>
   </div>
 </template>
@@ -15,6 +17,11 @@ export default {
   data () {
     this.chartSettings = {
       yAxisType: ['0,0a']
+    },
+    this.extend = {
+        series: {
+          label: { show: true, position: "top" }
+        }
     }
     return {
       chartData: {

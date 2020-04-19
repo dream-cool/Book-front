@@ -10,7 +10,7 @@
                     :key="index"
                     :timestamp="index"
                     >
-                    <el-card>
+                    <el-card >
                       <el-row :gutter="20" bodar style="margin-top: -30px">
                         <el-col :span="4" v-for="(useCollection,index) in item" :key="index"  >
                             <el-card :body-style="{ padding: '0px' }" style="width: 220px">
@@ -67,6 +67,9 @@ export default {
     this.getUseCollectionInfoGroupTime(this.useCollection)
   },
   methods: {
+    aa(){
+      console.log(11)
+    },
     handleTabsEdit () {
 
     },

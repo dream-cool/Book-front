@@ -27,14 +27,14 @@
     </template>
     </el-table-column>
     <el-table-column id="el-table-column2" align="left" header-align="left" label="操作" width="200px" v-if="operations != null">
-    <template id="el-free-tag14" slot-scope="{row,$index}">
-        <el-button id="el-button10" v-if="showEditButton(operation, $index)" v-for="(operation,index) in operations" :key="index" @click.native="executeOperation(operation,$index, row)" :round="operation.round" size="small" :plain="operation.plain" :disabled="operation.disabled" type="text" :circle="operation.circle" :loading="operation.loading" :autofocus="operation.autofocus">
-        {{operation.text}}
-        </el-button>
-        <el-button id="el-button11" v-if="showSaveButton(operation, $index)" v-for="(operation,index) in operations" :key="index" @click.native="executeOperation(operation,$index, row)" :round="operation.round" size="small" :plain="operation.plain" :disabled="operation.disabled" type="text" :circle="operation.circle" :loading="operation.loading" :autofocus="operation.autofocus">
-        {{operation.text}}
-        </el-button>
-    </template>
+      <template id="el-free-tag14" slot-scope="{row,$index}">
+          <el-button id="el-button10" v-if="showEditButton(operation, $index)" v-for="(operation,index) in operations" :key="index" @click.native="executeOperation(operation,$index, row)" :round="operation.round" size="small" :plain="operation.plain" :disabled="operation.disabled" type="text" :circle="operation.circle" :loading="operation.loading" :autofocus="operation.autofocus">
+          {{operation.text}}
+          </el-button>
+          <el-button id="el-button11" v-if="showSaveButton(operation, $index)" v-for="(operation,index) in operations" :key="index" @click.native="executeOperation(operation,$index, row)" :round="operation.round" size="small" :plain="operation.plain" :disabled="operation.disabled" type="text" :circle="operation.circle" :loading="operation.loading" :autofocus="operation.autofocus">
+          {{operation.text}}
+          </el-button>
+      </template>
     </el-table-column>
     </el-table>
       <aa></aa>
@@ -71,23 +71,32 @@ export default {
     executeOperation (operation, index, row) {
       if (operation.intention == 'edit') {
         this.handleEdit(index, row)
-        operation.click(index, row, this)
+        if(operation.click != null || typeof operation.click === "function"){
+          operation.click(index, row, this)
+        }
       }
       if (operation.intention == 'delete') {
-        debugger
-        operation.click(index, row)
+        if(operation.click != null || typeof operation.click === "function"){
+          operation.click(index, row)
+        }
       }
       if (operation.intention == 'add') {
         // this.handleAdd()
-        operation.click(index, row)
+        if(operation.click != null || typeof operation.click === "function"){
+          operation.click(index, row)
+        }
       }
       if (operation.intention == 'save') {
         this.handleSave(index, row)
-        operation.click(index, row)
+        if(operation.click != null || typeof operation.click === "function"){
+          operation.click(index, row)
+        }
       }
       if (operation.intention == 'cancel') {
         this.handleCancel(index, row)
-        operation.click(index, row)
+        if(operation.click != null || typeof operation.click === "function"){
+          operation.click(index, row)
+        }
       }
     },
 

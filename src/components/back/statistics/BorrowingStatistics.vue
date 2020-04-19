@@ -9,6 +9,13 @@ import axios from 'axios'
 export default {
   data () {
     this.chartSettings = {
+        // metrics: ['yesterdayApply', 'yesterdayHandle', 'yesterdayReturn'],
+        // dimension: ['period'],
+       labelMap: {
+         
+        'status': '申请借阅',
+        'numbers': '处理借阅'
+      },
     }
     return {
       chartData: {

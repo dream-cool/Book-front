@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-      <ve-pie :data="chartData" ></ve-pie>
+      <ve-pie :data="chartData" :extend="extend"></ve-pie>
   </div>
 </template>
 
@@ -8,6 +8,11 @@
 import axios from 'axios'
 export default {
   data () {
+    this.extend = {
+        series: {
+          label: { show: true, position: "top" }
+        }
+    }
     return {
       chartData: {
         columns: ['title', 'numbers'],
