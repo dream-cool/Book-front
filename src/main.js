@@ -17,6 +17,7 @@ import 'nprogress/nprogress.css'
 NProgress.inc(0.5)
 NProgress.configure({ easing: 'ease', speed: 800, showSpinner: false })
 
+// axios.defaults.baseURL = 'http://39.97.239.108:8090'
 axios.defaults.baseURL = 'http://localhost:8090'
 axios.defaults.timeout = 5000
 
