@@ -175,7 +175,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
 .el-header  {
   margin-top: -20px;
