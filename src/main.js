@@ -3,13 +3,8 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import VueRouter from 'vue-router'
 import axios from 'axios'
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
 import './assets/icon/iconfont.css'
-import VCharts from 'v-charts'
-import Vuex from 'vuex'
 
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
@@ -18,17 +13,13 @@ NProgress.inc(0.5)
 NProgress.configure({ easing: 'ease', speed: 800, showSpinner: false })
 
 // axios.defaults.baseURL = 'http://39.97.239.108:8090'
-axios.defaults.baseURL = 'http://localhost:8090'
+axios.defaults.baseURL = 'http://39.97.239.108:8090'
 axios.defaults.timeout = 5000
 
 Vue.use(axios)
-Vue.use(VueRouter)
-Vue.use(ElementUI)
-Vue.use(VCharts)
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
-Vue.use(Vuex)
 
 axios.interceptors.request.use(
 

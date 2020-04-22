@@ -113,23 +113,32 @@ export default {
                 required: false,
                 attribute: {}
                 },
+                { 
+                label: '调用方法',
+                prop: 'method',
+                width: '250px',
+                editAble: false,
+                editType: 'el-input',
+                required: false,
+                initialValue: null
+                },
                 {
                 label: '主机',
                 prop: 'ip',
-                width: '250px',
+                width: '220px',
                 editAble: true,
                 editType: 'el-input-number',
                 required: false,
                 attribute: {}
                 },
-                { 
-                label: '调用方法',
-                prop: 'method',
-                width: '400px',
-                editAble: false,
-                editType: 'el-input',
+                {
+                label: '地址',
+                prop: 'addr',
+                width: '200px',
+                editAble: true,
+                editType: 'el-input-number',
                 required: false,
-                initialValue: null
+                attribute: {}
                 },
                 { label: '操作时间',
                 prop: 'startTime',

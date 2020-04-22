@@ -10,13 +10,14 @@
           :min="column.attribute.min" :max="column.attribute.max" :controls-position="column.attribute.controlsPosition" style="width: 150px">
         </el-input-number>
         <el-switch id="el-free-tag12" v-if="showEditState(column, $index) &&column.editType == 'el-switch' " v-model="row[column.prop]"
-          :active-text="column.attribute.activeText" :inactive-text="column.attribute.inactiveText" >
+          :active-text="column.attribute.activeText" :inactive-text="column.attribute.inactiveText"  
+          :active-value="column.attribute.activeValue" :inactive-value="column.attribute.inactiveValue" >
         </el-switch>
           <el-select id="el-select1" placeholder="请选择" v-if="showEditState(column, $index) &&  column.editType == 'el-select' " v-model="row[column.prop]" >
             <el-option id="el-option1" v-for="item in column.attribute.options" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
-        
+         
         <el-link v-if="column.editType == 'el-link'" @click="column.click($index,row)"
           :type="column.attribute.type" :underline="column.attribute.underline" :disabled="column.attribute.disabled" 
           :icon="column.attribute.icon"   >  
@@ -82,6 +83,7 @@ export default {
       }
       if (operation.intention == 'add') {
         // this.handleAdd()
+        debugger
         if(operation.click != null || typeof operation.click === "function"){
           operation.click(index, row)
         }

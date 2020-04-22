@@ -1,6 +1,6 @@
 <template>
   <div>
-      <DynamicTbale :columns="columns" :table="table"  > </DynamicTbale>
+      <DynamicTbale :columns="columns" :table="table" :operations="operations" > </DynamicTbale>
       <el-pagination
           style="margin-top: 10px"
           background
@@ -61,14 +61,21 @@ export default {
                 initialValue: null,
                 attribute: { }
                 },
-                { 
+                {
                 label: '状态',
                 prop: 'status',
-                width: '100px',
+                width: '250px',
                 editAble: true,
                 editType: 'el-switch',
                 required: true,
-                initialValue: null
+                attribute: { activeText: '启用', inactiveText: '禁用', activeValue: 1, inactiveValue: 0},
+                formatter: function (val) {
+                        if (val == '1') {
+                        return '启用'
+                        } else if (val == '0') {
+                        return '禁用'
+                        }
+                    }
                 },
                 {
                 label: '备注',
@@ -88,14 +95,44 @@ export default {
                 required: false,
                 attribute: {}
                 }
-                
             ],
+            operations: [
+                { text: '执行一次', intention: 'add', click: this.executeOnce},
+                { text: '编辑', intention: 'edit' },
+                { text: '保存', intention: 'save', click: this.update},
+                { text: '取消', intention: 'cancel' },
+            ]
         }
     },
     created(){
         this.getSchedulingData(this.pageNum, this.pageSize, this.scheduling)
     },
     methods: {
+        executeOnce(index, row){
+            axios.get('/' + row.note + '/executeOnce').then ( res => {
+                if(res && res.data.code == 200){
+                    this.$message(res.data.message)
+                } else {
+                    this.$message.error('任务执行失败')
+                }
+            })
+        },
+        update(index, row){
+            axios.put('/schedulingTask', row).then( res => {
+                if(res && res.data.code == 200){
+                    var task = res.data.data
+                    axios.get('/' + task.note + '/changeTask').then( res => {
+                        if(res && res.data.code == 200){
+                            this.$message(res.data.message)
+                        } else {
+                            this.$message('修改失败')
+                        }
+                    })
+                } else {
+                    this.$message.error('修改失败')
+                }
+            })
+        },
         getSchedulingData (pageNum, pageSize, scheduling) {
             axios.post('/schedulingTask/all?pageNum=' + pageNum + '&pageSize=' + pageSize, scheduling ).then(res => {
                 if (res.data.code == 200) {
