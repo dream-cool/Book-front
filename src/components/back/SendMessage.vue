@@ -46,8 +46,8 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button @click="sendMessage('form')"> 推送</el-button>
-        <el-button @click="reset('form')"> 重置</el-button>
+        <el-button @click="sendMessage('form')" type="primary" icon="el-icon-thumb"> 推送</el-button>
+        <el-button @click="reset('form')" type="info"> 重置</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -106,24 +106,26 @@ export default {
         sendMessage(form){
           this.$refs[form].validate((valid) => {
             if (valid) {
+              if(!this.message.singleSend){
+                this.message.receivers = JSON.stringify(this.message.receivers)
+              }
               axios.get('/sendMessage', {
                 params: {
                   singleSend: this.message.singleSend,
-                  receivers: JSON.stringify(this.message.receivers),
+                  receivers: this.message.receivers,
                   messageContent: this.message.messageContent,
                   sendAccount: this.message.sendAccount,
                   sendEmail: this.message.sendEmail,
-                  sender: this.user.userName
-                  // sendTime: moment(this.sendTime).format('YYYY-MM-DD HH:mm:ss') 
+                  sender: this.user.userName,
+                  sendTime: moment(this.message.sendTime).format('YYYY-MM-DD HH:mm:ss') 
                 },
                 paramsSerializer: function(params) {
                             return Qs.stringify(params, {arrayFormat: 'repeat'})
                 }
               }).then( res => {
                 if(res.data.code == 200){
-                  this.messageContent = ''
+                  this.message = {}
                   this.classIdList = []
-                  this.sendTime = null
                   this.$message(res.data.message)
                 } else {
                   this.$message.error(res.data.message)

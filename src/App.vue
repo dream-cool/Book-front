@@ -1,6 +1,5 @@
 <template>
-  <div id="app">
-
+  <div id="app" style="width: 100%;height: 100%;">
     <NotFound  v-if="invalidRoute"></NotFound>
     <router-view v-else></router-view>
   </div>

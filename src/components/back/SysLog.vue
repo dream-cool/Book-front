@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-form :model="logCondition" :inline="true"  label-width="150px" class="demo-form-inline">
+        <el-form :model="logCondition" :inline="true"   class="demo-form-inline">
           <el-form-item label="类型">
             <el-select v-model="logCondition.type" placeholder="全部" clearable >
                 <el-option label="登录" value="登录"> </el-option>
@@ -10,11 +10,11 @@
                 <el-option label="删除" value="删除"> </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="耗时大于" prop="spendTime">
+          <el-form-item label="耗时大于" prop="spendTime" label-width="150px">
             <el-input-number v-model="logCondition.spendTime" controls-position="right"
                 :min="0" :max="10000"></el-input-number>
           </el-form-item>
-          <el-form-item label="操作时间早于" prop="startTime">
+          <el-form-item label="操作时间早于" prop="startTime" label-width="150px">
             <el-date-picker
                 v-model="logCondition.startTime"
                 type="datetime"
@@ -23,9 +23,9 @@
                 >
             </el-date-picker>
           </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="search()">搜索</el-button>
-            <el-button @click="resetForm()">重置</el-button>
+          <el-form-item style="margin-left: 100px">
+            <el-button type="primary" @click="search()" icon="el-icon-search">搜索</el-button>
+            <el-button @click="resetForm()" type="info">重置</el-button>
           </el-form-item>
         </el-form>
 

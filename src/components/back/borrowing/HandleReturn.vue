@@ -20,7 +20,7 @@
               </el-form-item>
           </el-form-item>
             <div class="operation" style="float:right; margin-right: 10%;">
-              <el-button type="primary" @click="search()">搜索</el-button>
+              <el-button type="primary" @click="search()" icon="el-icon-search">搜索</el-button>
               <el-button @click="resetForm()">重置</el-button>
             </div>
         </el-form>
@@ -87,6 +87,7 @@
         </el-table>
         <div class="block">
           <el-pagination
+            background
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page.sync="pageNum"

@@ -72,9 +72,9 @@
                 <el-date-picker  value-format="timestamp" type="date" placeholder="选择日期" v-model="user.lastLoginTime" ></el-date-picker>
               </el-form-item>
           </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="search()">搜索</el-button>
-            <el-button @click="resetForm()">重置</el-button>
+          <el-form-item style="margin-left:100px">
+            <el-button type="primary" icon="el-icon-search"  @click="search()">搜索</el-button>
+            <el-button @click="resetForm()" type="info">重置</el-button>
           </el-form-item>
         </el-form>
       </el-container>
@@ -141,6 +141,16 @@
             width="100">
           </el-table-column>
           <el-table-column
+            prop="email"
+            label="邮箱"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="address"
+            label="地址"
+            width="180">
+          </el-table-column>
+          <el-table-column
             prop="registerTime"
             label="录入时间"
             width="150">
@@ -163,6 +173,7 @@
         </el-table>
         <div class="block">
           <el-pagination
+            background
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page.sync="pageNum"
@@ -185,7 +196,7 @@ export default {
     return {
       userList: [],
       pageNum: 1,
-      pageSize: 10,
+      pageSize: 12,
       total: 0,
       user: {
         userName: null,

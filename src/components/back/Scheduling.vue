@@ -44,7 +44,7 @@ export default {
                 {
                 label: '任务名称',
                 prop: 'taskName',
-                width: '200px',
+                width: '250px',
                 editAble: false,
                 editType: 'el-input',
                 required: true,
@@ -64,7 +64,7 @@ export default {
                 {
                 label: '状态',
                 prop: 'status',
-                width: '250px',
+                width: '200px',
                 editAble: true,
                 editType: 'el-switch',
                 required: true,
@@ -80,7 +80,7 @@ export default {
                 {
                 label: '备注',
                 prop: 'note',
-                width: '200px',
+                width: '300px',
                 editAble: true,
                 editType: 'el-input',
                 required: false,
@@ -100,7 +100,7 @@ export default {
                 { text: '执行一次', intention: 'add', click: this.executeOnce},
                 { text: '编辑', intention: 'edit' },
                 { text: '保存', intention: 'save', click: this.update},
-                { text: '取消', intention: 'cancel' },
+                { text: '取消', intention: 'cancel',icon: 'el-icon-caret-right' },
             ]
         }
     },

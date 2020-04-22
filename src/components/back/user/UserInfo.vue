@@ -57,7 +57,7 @@
           style="width: 100%">
           <el-table-column
             label="用户名称"
-            width="250">
+            width="200">
             <template slot-scope="scope">
               <el-popover trigger="hover" placement="top">
                 <p>学号: {{ scope.row.stu_No }}</p>
@@ -99,10 +99,25 @@
             width="80">
           </el-table-column>
           <el-table-column
-            prop="role"
-            :formatter="userRoleFormatter"
-            label="角色"
-            width="100">
+            prop="sex"
+            :formatter="userStatusFormatter"
+            label="状态"
+            width="80">
+          </el-table-column>
+          <el-table-column
+            prop="email"
+            label="邮箱"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="address"
+            label="地址"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="classId"
+            label="班级"
+            width="350">
           </el-table-column>
           <el-table-column
             prop="registerTime"
@@ -138,7 +153,7 @@ export default {
     return {
       userList: [],
       pageNum: 1,
-      pageSize: 10,
+      pageSize: 15,
       total: 0,
       user: {
         userName: null,

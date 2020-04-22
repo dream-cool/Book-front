@@ -1,43 +1,66 @@
 <template>
   <div class="content">
       <el-row :gutter="20" bodar>
-        <el-col :span="5" style="height: 110px;margin-left: 5%;
-           box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)">
-          <div class="grid-content bg-purple">
-            <i class="el-icon-user" style="font-size: 40px; margin-top: 10%"  ></i>
-          <p>用户总量{{yesterdayInfo.totalUser}}</p>
-          </div></el-col>
-        <el-col :span="5" style="height: 110px;margin-left: 10%;
-           box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)">
-          <div class="grid-content bg-purple">
+        <el-col :span="5" style="height:100px;width:300px">
+          <card class="grid-content bg-purple">
+            <i class="el-icon-user" style="font-size: 40px; margin-top: 10%" ></i>
+            <p>用户总量{{yesterdayInfo.totalUser}}</p>
+          </card>
+        </el-col>
+
+        <el-col :span="5" style="height:100px;width:300px">
+          <card class="grid-content bg-purple">
             <i class="el-icon-notebook-2" style="font-size: 40px; margin-top: 10%"></i>
           <p>书籍总量{{yesterdayInfo.totalPaperBook}}</p>
-          </div></el-col>
-        <el-col :span="5" style="height: 110px;margin-left: 10%;
-           box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)">
-          <div class="grid-content bg-purple" >
+          </card>
+        </el-col>
+
+        <el-col :span="5" style="height:100px;width:300px">
+          <card class="grid-content bg-purple" >
           <p>借出书籍总量{{yesterdayInfo.totalLentBook}}</p>
-          </div></el-col>
+          </card>
+        </el-col>
       </el-row>
 
-      <el-row :gutter="20" bodar>
-        <el-col :span="4">
-          <div class="grid-content bg-purple">
-          <p>昨日申请借阅 {{yesterdayInfo.yesterdayApply}}</p> </div>
-        </el-col>
-        <el-col :span="4">
-          <div class="grid-content bg-purple">
-          <p>昨日处理借阅 {{yesterdayInfo.yesterdayHandle}}</p> </div>
-        </el-col>
-        <el-col :span="4">
-        <div class="grid-content bg-purple">
-          <p>昨日归还 {{yesterdayInfo.yesterdayReturn}}</p> </div>
-        </el-col>
-      </el-row>
+    <card class="grid-content bg-purple">
+        <div slot="header" class="clearfix"
+                style="width:100%;height:60px;
+                  background-color: rgb(241,245,252);padding: 0px;margin-top: 50px
+                  margin-left: 100px;margin-bottom: 0px; margin-right: 50px;">
+                  <span>昨日借阅详情</span>
+        </div>
+          <el-row :gutter="20" bodar>
+            <el-col :span="4" style="height:100px;width:200px;padding: 0px">
+              
+                
+                <p> {{yesterdayInfo.yesterdayApply}}</p> 
+              
+            </el-col>
+            <el-col :span="4" style="height:100px;width:200px;padding: 0px">
+              
+                <p> {{yesterdayInfo.yesterdayHandle}}</p>
+            </el-col>
+            <el-col :span="4" style="height:100px;width:200px;padding: 0px">
+              
+                <p> {{yesterdayInfo.yesterdayReturn}}</p> 
+            </el-col>
+          </el-row>
+    </card>
+
       <div>
-        <ve-histogram :data="chartData" :settings="histSettings"  style="margin-top:20px; width: 1200px"></ve-histogram>
-
-        <ve-line :data="chartData" :settings="lineSettings" style="margin-top:20px; width: 1200px"></ve-line>
+        <el-card style="width:100%; margin-top:5%" >
+          <div slot="header" class="clearfix">
+            <span>近一周的借阅处理</span>
+          </div>
+          <ve-histogram :data="chartData" :settings="histSettings" ></ve-histogram>
+        </el-card>
+        
+        <el-card style="width:100%; margin-top:5%">
+          <div slot="header" class="clearfix">
+            <span>近一周的变化趋势</span>
+          </div>
+          <ve-line :data="chartData" :settings="lineSettings" style="margin-top:20px; width: 1200px"></ve-line>
+        </el-card>
       </div>
   </div>
 </template>

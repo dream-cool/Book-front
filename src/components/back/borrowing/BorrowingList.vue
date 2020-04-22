@@ -76,10 +76,10 @@
                 type="date" placeholder="选择日期" v-model="borrowing.returnTime" ></el-date-picker>
               </el-form-item>
           </el-form-item>
-          <div class="operation" style="float:right; margin-right: 10%;">
-            <el-button type="primary" @click="search()">搜索</el-button>
-            <el-button @click="resetForm()">重置</el-button>
-          </div>
+          <el-form-item  style="margin-left: 100px;">
+            <el-button type="primary" @click="search()" icon="el-icon-search"  >搜索</el-button>
+            <el-button @click="resetForm()" type="info">重置</el-button>
+          </el-form-item>          
         </el-form>
       </el-container>
       <el-table
@@ -103,7 +103,7 @@
 
           <el-table-column
             label="借阅人"
-            width="150">
+            width="250">
             <template slot-scope="scope">
               <el-popover trigger="hover" placement="top">
                 <p>用户id: {{ scope.row.userId }}</p>
@@ -121,9 +121,19 @@
             width="120">
           </el-table-column>
           <el-table-column
+            prop="applicationTime"
+            label="申请时间"
+            width="200">
+          </el-table-column>
+          <el-table-column
             prop="borrowingTime"
             label="借阅日期"
-            width="100">
+            width="150">
+          </el-table-column>
+          <el-table-column
+            prop="handleTime"
+            label="处理时间"
+            width="200">
           </el-table-column>
           <el-table-column
             prop="returnTime"
@@ -135,12 +145,13 @@
             width="250"
             >
             <template slot-scope="scope">
-              <el-button @click="handleQuery(scope.row)" size="mini">查看流程</el-button>
+              <el-button @click="handleQuery(scope.row)"  type="info" icon="el-icon-view">查看流程</el-button>
             </template>
           </el-table-column>
         </el-table>
         <div class="block">
           <el-pagination
+            background
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page.sync="pageNum"

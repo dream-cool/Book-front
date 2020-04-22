@@ -3,7 +3,7 @@
       <el-container>
           <el-form :model="book" :inline="true"  label-width="100px" class="demo-form-inline">
           <el-form-item label="书籍名称">
-            <el-input v-model="book.bookName" placeholder="模糊查询书籍名称" ></el-input>
+            <el-input v-model="book.bookName" placeholder="模糊查询书籍名称和作者名称" ></el-input>
           </el-form-item>
 
           <el-form-item label="书籍作者" prop="author">
@@ -43,15 +43,15 @@
             </el-cascader>
           </el-form-item>
 
-          <el-form-item label="入馆日期早于">
+          <el-form-item label="录入日期早于">
               <el-form-item prop="inputTime">
                 <el-date-picker  value-format="timestamp" type="date" placeholder="选择日期" v-model="time" ></el-date-picker>
               </el-form-item>
           </el-form-item>
 
-          <el-form-item>
-            <el-button type="primary" @click="search()">搜索</el-button>
-            <el-button @click="resetForm()">重置</el-button>
+          <el-form-item style="margin-left: 100px">
+            <el-button type="primary" icon="el-icon-search" @click="search()">搜索</el-button>
+            <el-button type="info" @click="resetForm()">重置</el-button>
           </el-form-item>
         </el-form>
       </el-container>
@@ -76,18 +76,20 @@
             <template slot-scope="scope">
               <el-popover trigger="hover" placement="top">
                 <p>书籍编号: {{ scope.row.bookId }}</p>
-                <p>书籍作者: {{ scope.row.author }}</p>
-                <p>出版社: {{ scope.row.published }}</p>
                 <p>价格: {{ scope.row.price }}</p>
-                <p>书籍位置: {{ scope.row.location }}</p>
-                <p>书籍状态: {{ scope.row.bookStatus }}</p>
-                <p>点赞数: {{ scope.row.zanNumber }}</p>
                 <p>得分: {{ scope.row.score }}</p>
+                <p>出版社: {{ scope.row.published }}</p>
+                <p>点赞数: {{ scope.row.zanNumber }}</p>
                 <div slot="reference" class="name-wrapper">
                   <el-tag size="medium">{{ scope.row.bookName }}</el-tag>
                 </div>
               </el-popover>
             </template>
+          </el-table-column>
+          <el-table-column
+            prop="author"
+            label="书籍作者"
+            width="150">
           </el-table-column>
           <el-table-column
             prop="categoryId"
@@ -100,9 +102,20 @@
             label="类型"
             width="80">
           </el-table-column>
+
+          <el-table-column
+            prop="bookStatus"
+            label="书籍状态"
+            width="80">
+          </el-table-column>
+          <el-table-column
+            prop="location"
+            label="书籍位置"
+            width="230">
+          </el-table-column>
           <el-table-column
             prop="inputTime"
-            label="入馆时间"
+            label="录入时间"
             width="150">
           </el-table-column>
           <el-table-column
@@ -115,8 +128,8 @@
             width="250"
             >
             <template slot-scope="scope">
-              <el-button @click="handleQuery(scope.row)" size="mini">查看</el-button>
-              <el-button @click="handleEdit(scope.row)"   size="small">编辑</el-button>
+              <!-- <el-button @click="handleQuery(scope.row)" size="mini">查看</el-button> -->
+              <el-button @click="handleEdit(scope.row)" icon="el-icon-edit" type="primary" size="small">编辑</el-button>
               <el-button @click="handleDelete(scope.row)" type="danger"  size="small">删除</el-button>
             </template>
           </el-table-column>
@@ -146,7 +159,7 @@ export default {
       category: [''],
       bookList: [],
       pageNum: 1,
-      pageSize: 10,
+      pageSize: 12,
       total: 0,
       time: null,
       book: {

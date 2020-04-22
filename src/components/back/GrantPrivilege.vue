@@ -72,7 +72,7 @@
           <el-table-column
             label="查看书籍"
             align='center'
-            width="100">
+            width="150">
             <template slot-scope="scope">
               <i v-if="scope.row.bookR == 1" class="el-icon-check"></i>
             </template>
@@ -80,7 +80,7 @@
           <el-table-column
             label="修改书籍"
             align='center'
-            width="100">
+            width="150">
             <template slot-scope="scope">
                 <i v-if="scope.row.bookW == 1" class="el-icon-check"></i>
             </template>
@@ -88,7 +88,7 @@
           <el-table-column
             label="查看用户"
             align='center'
-            width="100">
+            width="150">
             <template slot-scope="scope">
              <i v-if="scope.row.userR == 1" class="el-icon-check"></i>
             </template>
@@ -96,7 +96,7 @@
           <el-table-column
             label="修改用户"
             align='center'
-            width="100">
+            width="150">
             <template slot-scope="scope">
               <i v-if="scope.row.userW == 1" class="el-icon-check"></i>
             </template>
@@ -104,7 +104,7 @@
           <el-table-column
             label="查看借阅"
             align='center'
-            width="100">
+            width="150">
             <template slot-scope="scope">
               <i v-if="scope.row.borrowingR == 1" class="el-icon-check"></i>
             </template>
@@ -112,7 +112,7 @@
           <el-table-column
             label="处理借阅"
             align='center'
-            width="100">
+            width="150">
             <template slot-scope="scope">
                <i v-if="scope.row.borrowingW == 1" class="el-icon-check"></i>
             </template>
@@ -120,7 +120,7 @@
           <el-table-column
             label="修改类别"
             align='center'
-            width="100">
+            width="150">
             <template slot-scope="scope">
               <i v-if="scope.row.categoryW == 1" class="el-icon-check"></i>
             </template>
@@ -128,7 +128,7 @@
           <el-table-column
             label="查看统计"
             align='center'
-            width="100">
+            width="150">
             <template slot-scope="scope">
                <i v-if="scope.row.statisticsR == 1" class="el-icon-check"></i>
             </template>
@@ -136,7 +136,7 @@
           <el-table-column label="操作">
             <template slot-scope="scope">
               <el-button
-                size="mini"
+                icon="el-icon-edit" type="primary" size="small"
                 @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
             </template>
           </el-table-column>

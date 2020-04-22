@@ -1,7 +1,6 @@
 <template>
   <div>
-  {{table.data}}
-  <DynamicTbale :columns="columns" :table="table" :operations="operations" > </DynamicTbale>
+    
   </div>
 
 </template>

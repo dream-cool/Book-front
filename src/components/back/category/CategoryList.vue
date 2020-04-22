@@ -97,7 +97,7 @@ export default {
         }
       ],
       operations: [
-        { text: '新增', intention: 'add', click: this.handleAdd },
+        { text: '新增', intention: 'add', click: this.handleAdd,  },
         { text: '编辑', intention: 'edit', click: undefined},
         { text: '保存', intention: 'save',  click: this.handleEdit},
         { text: '取消', intention: 'cancel', click: undefined },
