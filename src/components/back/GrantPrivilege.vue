@@ -136,13 +136,14 @@
           <el-table-column label="操作">
             <template slot-scope="scope">
               <el-button
-                icon="el-icon-edit" type="primary" size="small"
+                icon="el-icon-edit" type="primary" 
                 @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
             </template>
           </el-table-column>
         </el-table>
           <div class="block">
             <el-pagination
+              background
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
               :current-page.sync="pageNum"

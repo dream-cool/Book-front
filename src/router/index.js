@@ -54,8 +54,8 @@ const Scheduling = resolve => require(['@/components/back/Scheduling.vue'], reso
 const SysLog = resolve => require(['@/components/back/SysLog.vue'], resolve)
 
 export default new Router({
+  mode: 'history',
   routes: [
-
     {path: '/login', component: Login},
     {path: '/recoverPasswor', component: RecoverPassword},
     {path: '/front/ebookRead/:id', component: EbookRead},
@@ -270,13 +270,9 @@ export default new Router({
           name: '统计管理',
           meta: {requireAuth: true},
           children: [
-            {path: '/back/statistics/borrowingStatistics',
-              component: BorrowingStatistics,
-              name: '书籍状态统计',
-              meta: {requireAuth: true, permissions: 'statisticsR' }},
             {path: '/back/statistics/categoryStatistics',
               component: CategoryStatistics,
-              name: '书籍分类统计',
+              name: '占比统计',
               meta: {requireAuth: true, permissions: 'statisticsR' }},
             {path: '/back/statistics/storageStatisticsByTime',
               component: StorageStatisticsByTime,

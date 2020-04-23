@@ -12,19 +12,19 @@
                <el-input-number v-model="borrowing.duration" controls-position="right"
                 :min="1" :max="365"></el-input-number>
           </el-form-item>
-          <el-form-item label="借阅时间早于" prop="borrowingTime">
+          <el-form-item label="借阅时间早于" prop="borrowingTime" label-width="100px">
                 <el-date-picker
                  value-format="yyyy-MM-dd" format="yyyy-MM-dd"
                  type="date" placeholder="选择日期" v-model="borrowing.borrowingTime" ></el-date-picker>
           </el-form-item>
-          <el-form-item label="申请时间早于" prop="applicationTime" label-width="100px">
+          <el-form-item label="申请时间早于" prop="applicationTime" >
                 <el-date-picker
                  value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"
                  type="date" placeholder="选择日期" v-model="borrowing.applicationTime" ></el-date-picker>
           </el-form-item>
           <el-form-item style="margin-left: 100px">
             <el-button type="primary" @click="search()" icon="el-icon-search">搜索</el-button>
-            <el-button @click="resetForm()">重置</el-button>
+            <el-button type= "info" @click="resetForm()">重置</el-button>
           </el-form-item>
         </el-form>
       </el-container>
@@ -103,6 +103,7 @@
         </el-table>
         <div class="block">
           <el-pagination
+            background
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page.sync="pageNum"

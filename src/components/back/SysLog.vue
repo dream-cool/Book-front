@@ -98,25 +98,16 @@ export default {
                 { 
                 label: '耗时(毫秒)',
                 prop: 'spendTime',
-                width: '100px',
+                width: '120px',
                 editAble: true,
                 editType: 'el-input',
                 required: true,
                 initialValue: null
                 },
-                {
-                label: 'url',
-                prop: 'url',
-                width: '300px',
-                editAble: true,
-                editType: 'el-input-number',
-                required: false,
-                attribute: {}
-                },
                 { 
                 label: '调用方法',
                 prop: 'method',
-                width: '250px',
+                width: '280px',
                 editAble: false,
                 editType: 'el-input',
                 required: false,
@@ -140,8 +131,10 @@ export default {
                 required: false,
                 attribute: {}
                 },
-                { label: '操作时间',
+                { 
+                label: '操作时间',
                 prop: 'startTime',
+                width: '200px',
                 editAble: true,
                 editType: 'el-input',
                 required: true,

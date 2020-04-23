@@ -42,9 +42,9 @@
                 <el-date-picker  value-format="timestamp" type="date" placeholder="选择日期" v-model="user.lastLoginTime" ></el-date-picker>
               </el-form-item>
           </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="search()">搜索</el-button>
-            <el-button @click="resetForm()">重置</el-button>
+          <el-form-item style="margin-left: 50px">
+            <el-button type="primary" icon="el-icon-search" @click="search()">搜索</el-button>
+            <el-button type="info" @click="resetForm()">重置</el-button>
           </el-form-item>
         </el-form>
       </el-container>
@@ -57,7 +57,7 @@
           style="width: 100%">
           <el-table-column
             label="用户名称"
-            width="200">
+            width="120">
             <template slot-scope="scope">
               <el-popover trigger="hover" placement="top">
                 <p>学号: {{ scope.row.stu_No }}</p>
@@ -73,7 +73,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            label="申请人信誉"
+            label="信誉"
             width="180">
             <template slot-scope="scope">
                <el-rate
@@ -99,12 +99,6 @@
             width="80">
           </el-table-column>
           <el-table-column
-            prop="sex"
-            :formatter="userStatusFormatter"
-            label="状态"
-            width="80">
-          </el-table-column>
-          <el-table-column
             prop="email"
             label="邮箱"
             width="180">
@@ -112,12 +106,14 @@
           <el-table-column
             prop="address"
             label="地址"
+            :formatter="userAddressFormatter"
             width="180">
           </el-table-column>
           <el-table-column
             prop="classId"
             label="班级"
-            width="350">
+            :formatter="userClassFormatter"
+            width="250">
           </el-table-column>
           <el-table-column
             prop="registerTime"
@@ -133,6 +129,7 @@
         </el-table>
         <div class="block">
           <el-pagination
+            background
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page.sync="pageNum"
@@ -141,13 +138,13 @@
             :total="total">
           </el-pagination>
         </div>
-
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 import moment from 'moment'
+import { CodeToText } from 'element-china-area-data'
 export default {
   data () {
     return {
@@ -166,11 +163,14 @@ export default {
       },
       editUser: {},
       dialogFormVisible: false,
-      multipleSelection: []
+      multipleSelection: [],
+      CodeToText,
+      classOptions: []
     }
   },
   created () {
     this.getUserInfo(this.pageNum, this.pageSize, this.user)
+    this.getClassInfo()
   },
 
   methods: {
@@ -221,6 +221,45 @@ export default {
       } else if (row.role == 3) {
         return '超级管理员'
       }
+    },
+    userAddressFormatter (row, column, cellValue, index) {
+      const {CodeToText} = this
+      var addrList = JSON.parse(row.address)
+      var addrString = ''
+      if (addrList != null) {
+        addrList.forEach(addr => {
+          addrString += CodeToText[addr] + ' '
+        })
+        return addrString
+      } else {
+        return '未知'
+      }
+    },
+    userClassFormatter (row, column, cellValue, index) {
+      if (row.classId != null) {
+        var classObj = JSON.parse(row.classId)
+        var { classOptions } = this
+        if (classObj != null && classOptions.length > 0) {
+          var classStr = ''
+          var oo
+          classObj.forEach(code => {
+            oo = classOptions.filter(item => item.value == code)
+            classStr += oo[0].label + ' '
+            classOptions = oo[0].children
+          })
+          return classStr
+        } else {
+          return '未知'
+        }
+      }
+    },
+    getClassInfo () {
+      axios.get('/dictionaryData/class/getClassInfo').then(res => {
+        if (res.data.code == 200) {
+          this.classOptions = res.data.data
+          
+        }
+      })
     },
     search () {
       this.getUserInfo(this.pageNum, this.pageSize, this.user)

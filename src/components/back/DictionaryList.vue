@@ -181,12 +181,11 @@ export default {
         }
       ],
       operations: [
-        { text: '新增', intention: 'add', click: this.addDictionary },
-        { text: '查看', intention: 'add', click: this.goToDetail },
-        { text: '编辑', intention: 'edit', click: undefined},
-        { text: '保存', intention: 'save',  click: this.updateData},
-        { text: '取消', intention: 'cancel', click: undefined },
-        { text: '删除', intention: 'delete', click: this.deleteData}
+        { text: '新增', intention: 'add', click: this.addDictionary, icon: 'el-icon-plus', type: 'primary' },
+        { text: '编辑', intention: 'edit', click: undefined, icon: 'el-icon-edit', type: 'primary' },
+        { text: '保存', intention: 'save', click: this.updateData, icon: 'el-icon-check ', type: 'primary' },
+        { text: '取消', intention: 'cancel', click: undefined, icon: 'el-icon-close ', type: 'primary' },
+        { text: '删除', intention: 'delete', click: this.deleteData, icon: 'el-icon-delete', type: 'danger' }
       ]
     }
   },

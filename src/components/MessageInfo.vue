@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-      <el-button @click="readMessage"  >一键已读</el-button>
+      <el-button @click="readMessage" type="info" icon="el-icon-thumb" style="margin-left: -100px;float:left"  >一键已读</el-button>
             <el-timeline >
                 <el-timeline-item placement="top"
                     v-for="(message, index) in messageList"

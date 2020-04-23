@@ -18,6 +18,7 @@
         </el-table> -->
           <div class="block">
             <el-pagination
+              background
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
               :current-page.sync="pageNum"
@@ -81,6 +82,7 @@ export default {
         },
         {
           label: '排序号',
+          width: '200px',
           prop: 'sort',
           editAble: true,
           editType: 'el-input-number',
@@ -90,6 +92,7 @@ export default {
         {
           label: '创建时间',
           prop: 'createTime',
+          width: '200px',
           editAble: false,
           editType: 'el-input-number',
           required: false,
@@ -97,11 +100,11 @@ export default {
         }
       ],
       operations: [
-        { text: '新增', intention: 'add', click: this.handleAdd,  },
-        { text: '编辑', intention: 'edit', click: undefined},
-        { text: '保存', intention: 'save',  click: this.handleEdit},
-        { text: '取消', intention: 'cancel', click: undefined },
-        { text: '删除', intention: 'delete', click: this.handleDelete}
+        { text: '新增', intention: 'add', click: this.handleAdd, icon: 'el-icon-plus', type: 'primary'   },
+        { text: '编辑', intention: 'edit', click: undefined , icon: 'el-icon-edit', type: 'primary'},
+        { text: '保存', intention: 'save',  click: this.handleEdit , icon: 'el-icon-check ', type: 'primary'},
+        { text: '取消', intention: 'cancel', click: undefined, icon: 'el-icon-close ', type: 'primary' },
+        { text: '删除', intention: 'delete', click: this.handleDelete , icon: 'el-icon-delete', type: 'danger'}
       ]
     }
   },

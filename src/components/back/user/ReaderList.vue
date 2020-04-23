@@ -21,6 +21,7 @@
                 <el-radio :label="'0'">学生</el-radio>
                 <el-radio :label="'1'">老师</el-radio>
                 <el-radio :label="'2'">管理员</el-radio>
+                <el-radio :label="'3'" disabled >超级管理员</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-form>
@@ -93,7 +94,7 @@
           </el-table-column>
           <el-table-column
             label="用户名称"
-            width="250">
+            width="130">
             <template slot-scope="scope">
               <el-popover trigger="hover" placement="top">
                 <p>学号: {{ scope.row.stu_No }}</p>
@@ -135,39 +136,29 @@
             width="80">
           </el-table-column>
           <el-table-column
-            prop="role"
-            :formatter="userRoleFormatter"
-            label="角色"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            prop="email"
-            label="邮箱"
-            width="180">
-          </el-table-column>
-          <el-table-column
             prop="address"
             label="地址"
-            width="180">
+            :formatter="userAddressFormatter"
+            width="230">
           </el-table-column>
           <el-table-column
             prop="registerTime"
-            label="录入时间"
+            label="注册时间"
             width="150">
           </el-table-column>
           <el-table-column
             prop="lastLoginTime"
             label="最后登录时间"
-            width="200">
+            width="180">
           </el-table-column>
           <el-table-column
             label="操作"
-            width="250"
+            width="350"
             >
             <template slot-scope="scope">
-              <el-button @click="handleEdit(scope.row)"   size="small">编辑</el-button>
-              <el-button @click="handleResetPassword(scope.row)" size="mini">重置密码</el-button>
-              <el-button @click="handleDelete(scope.row)" type="danger"  size="small">删除</el-button>
+              <el-button type="primary" @click="handleEdit(scope.row)"    icon="el-icon-edit">编辑</el-button>
+              <el-button type="primary" @click="handleResetPassword(scope.row)"  icon="el-icon-refresh"  >重置密码</el-button>
+              <el-button @click="handleDelete(scope.row)" type="danger"   icon="el-icon-delete">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -191,6 +182,7 @@
 <script>
 import axios from 'axios'
 import moment from 'moment'
+import { CodeToText } from 'element-china-area-data'
 export default {
   data () {
     return {
@@ -210,7 +202,8 @@ export default {
       editUser: {},
       dialogFormVisible: false,
       classOptions: {},
-      multipleSelection: []
+      multipleSelection: [],
+      CodeToText
     }
   },
   created () {
@@ -389,6 +382,19 @@ export default {
         }
       }
       return data
+    },
+    userAddressFormatter (row, column, cellValue, index) {
+      const {CodeToText} = this
+      var addrList = JSON.parse(row.address)
+      var addrString = ''
+      if (addrList != null) {
+        addrList.forEach(addr => {
+          addrString += CodeToText[addr] + ' '
+        })
+        return addrString
+      } else {
+        return '未知'
+      }
     }
   },
 }

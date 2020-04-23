@@ -2,15 +2,15 @@
   <div class="backIndex" style="width: 100%;height: 100%;" >
     <el-container style="width: 100%;height: 100%;">
         <el-aside width="200px" style="height: 100%;">
-          <el-menu 
-            unique-opened
+          <el-menu  unique-opened
             text-color="rgb(225,225,225)"
             background-color="#394458"
-            default-active="/back" router >
-            <el-menu-item index="/login">
-              <i class="el-icon-s-home"></i>登录
+            default-active="/back/home" router >
+            <el-menu-item index="/back" style="height: 60px;">
+              <img :src="icon" width="40px" height="40px" class="img-style" style="margin-right: 5px">励新图书管理系统
+              <!-- <i class="el-icon-s-home" style="font-size: 50px"></i> 登录 -->
             </el-menu-item>
-            <el-menu-item index="/back">
+            <el-menu-item index="/back/home">
               <i class="el-icon-s-home"></i>首页
             </el-menu-item>
             <el-submenu index="/back/book"  v-if="user.permission.bookR == true || user.permission.bookW == true">
@@ -60,9 +60,7 @@
               <el-menu-item index="/back/statistics/storageStatisticsByTime">
                 <i class="el-icon-s-marketing"></i>藏量统计</el-menu-item>
               <el-menu-item index="/back/statistics/categoryStatistics">
-                <i class="el-icon-date"></i>类别统计</el-menu-item>
-              <el-menu-item index="/back/statistics/borrowingStatistics">
-                <i class="el-icon-menu"></i>借阅统计</el-menu-item>
+                <i class="el-icon-date"></i>占比统计</el-menu-item>
             </el-submenu>
             <el-submenu index="/back/sys">
               <template slot="title" >
@@ -124,12 +122,15 @@
 
 <script>
 import axios from 'axios'
+import icon from '../assets/imgages/favicon.png'
+// import icon from '../assets/icon/favicon.ico'
 export default {
   name: 'index',
   components: {
   },
   data () {
     return {
+      icon,
       Server_URL: axios.defaults.baseURL,
       levelList: null,
       routerList: [],

@@ -30,7 +30,7 @@ export default {
       history.go(-1)
     },
     handleGoMain () {
-      this.$router.push({path: '/front'})
+      this.$router.push({path: '/back'})
     }
   }
 }

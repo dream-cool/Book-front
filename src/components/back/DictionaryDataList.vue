@@ -210,11 +210,11 @@ export default {
 
       ],
       operations: [
-        { text: '新增', intention: 'add', click: this.addDictionaryData},
-        { text: '编辑', intention: 'edit' },
-        { text: '保存', intention: 'save', click: this.updateData },
-        { text: '取消', intention: 'cancel' },
-        { text: '删除', intention: 'delete', click: this.deleteData }
+        { text: '新增', intention: 'add', click: this.addDictionaryData, icon: 'el-icon-plus', type: 'primary', size: '' },
+        { text: '编辑', intention: 'edit', icon: 'el-icon-edit', type: 'primary' },
+        { text: '保存', intention: 'save', click: this.updateData, icon: 'el-icon-check ', type: 'primary' },
+        { text: '取消', intention: 'cancel', icon: 'el-icon-close ', type: 'primary' },
+        { text: '删除', intention: 'delete', click: this.deleteData, icon: 'el-icon-delete', type: 'danger' }
       ]
     }
   },

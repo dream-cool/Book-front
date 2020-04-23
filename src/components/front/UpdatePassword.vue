@@ -13,8 +13,8 @@
                     <el-input type="password" v-model="pw.confirmNewPassword"></el-input>
                 </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="submitForm('userRule')">立即修改</el-button>
-                <el-button @click="resetForm('userRule')">重置</el-button>
+                <el-button  type="primary" icon="el-icon-thumb" @click="submitForm('userRule')">立即修改</el-button>
+                <el-button type="info" @click="resetForm('userRule')">重置</el-button>
               </el-form-item>
             </el-form>
         </el-tab-pane>
@@ -32,8 +32,8 @@
               <el-input label="邮箱" :disabled="true" v-model="userInfo.email" style="margin-left: 10%;margin-top: 10%;"></el-input>
               <el-input  v-model="code" placeholder="请输入邮箱验证码" style="margin-left: 10%;margin-top: 10%;"></el-input>
               <br>
-                <el-button @click="sendMessage" :disabled="sendButtonMessageDisabled" style="margin-left: 20%;margin-top: 10%"> {{sendButtonMessage}} </el-button>
-                <el-button @click="checkCode" > 验证 </el-button>
+                <el-button type="primary" icon="el-icon-thumb" @click="sendMessage" :disabled="sendButtonMessageDisabled" style="margin-left: 20%;margin-top: 10%"> {{sendButtonMessage}} </el-button>
+                <el-button type="info" icon="el-icon-check" @click="checkCode" > 验证 </el-button>
             </div>
             <div class="second" v-if="active == 1">
               <el-input type="password" placeholder="请输入新密码" v-model="newPassword" style="margin-left: 10%;margin-top: 10%;"></el-input>

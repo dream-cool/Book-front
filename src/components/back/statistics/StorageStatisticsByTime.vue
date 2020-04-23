@@ -6,24 +6,29 @@
       :data-empty="dataEmpty"
       :settings="chartSettings">
       </ve-line>
-      <el-date-picker style="margin-left: 30%"
-        v-model="timeRange"
-        type="daterange"
-        align="right"
-        value-format="timestamp"
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-        @change="getData"
-        :picker-options="pickerOptions">
-      </el-date-picker>
-
-      <el-radio-group @change="handleChangeTime" v-model="timeslot" >
+    <el-form style="margin-left: 30%;margin-top:2%">
+      <el-form-item label="时间范围">
+        <el-date-picker
+          v-model="timeRange"
+          type="daterange"
+          align="right"
+          value-format="timestamp"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          @change="getData"
+          :picker-options="pickerOptions">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="日期格式">
+          <el-radio-group @change="handleChangeTime" v-model="timeslot" >
                 <el-radio :label="'YEAR'">年</el-radio>
                 <el-radio :label="'MONTH'">月</el-radio>
                 <el-radio :label="'DAY'">日</el-radio>
-      </el-radio-group>
-
+          </el-radio-group>
+      </el-form-item>
+    </el-form>
+      
   </div>
 </template>
 

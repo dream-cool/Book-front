@@ -39,7 +39,7 @@
             </el-cascader>
           </el-form-item>
 
-          <el-form-item label="入馆日期早于">
+          <el-form-item label="录入日期早于">
               <el-form-item prop="inputTime">
                 <el-date-picker  value-format="timestamp" type="date" placeholder="选择日期" v-model="time" ></el-date-picker>
               </el-form-item>
@@ -69,6 +69,7 @@
                 <p>书籍编号: {{ scope.row.bookId }}</p>
                 <p>价格: {{ scope.row.price }}</p>
                 <p>得分: {{ scope.row.score }}</p>
+                <p>点赞数: {{ scope.row.zanNumber }}</p>
                 <div slot="reference" class="name-wrapper">
                   <el-tag size="medium">{{ scope.row.bookName }}</el-tag>
                 </div>
@@ -91,11 +92,6 @@
             width="150">
           </el-table-column>
           <el-table-column
-            prop="zanNumber"
-            label="点赞数"
-            width="150">
-          </el-table-column>
-          <el-table-column
             prop="ebook"
             :formatter="bookTypeFormatter"
             label="类型"
@@ -105,16 +101,18 @@
           <el-table-column
             prop="bookStatus"
             label="书籍状态"
+            :formatter="bookStatusFormatter"
             width="80">
           </el-table-column>
           <el-table-column
             prop="location"
             label="书籍位置"
+            :formatter="bookLocatFormatter"
             width="230">
           </el-table-column>
           <el-table-column
             prop="inputTime"
-            label="入馆时间"
+            label="录入时间"
             width="150">
           </el-table-column>
           <el-table-column
@@ -161,20 +159,21 @@ export default {
       categoryList: [],
       optionProps: {
         value: 'id',
-        label: 'title',
-        children: 'child'
+        label: 'title'
       },
       none: {
         id: '',
         title: '所有',
-        child: []
+        children: []
       },
-      multipleSelection: []
+      multipleSelection: [],
+      locationOptions: []
     }
   },
   created () {
     this.getAllCategory()
     this.getBookInfo(this.pageNum, this.pageSize, this.book)
+    this.getLocationInfo()
   },
 
   methods: {
@@ -205,12 +204,12 @@ export default {
     getTreeData (data) {
       // 循环遍历json数据
       for (var i = 0; i < data.length; i++) {
-        if (data[i].child.length < 1) {
+        if (data[i].children.length < 1) {
           // children若为空数组，则将children设为undefined
-          data[i].child = undefined
+          data[i].children = undefined
         } else {
           // children若不为空数组，则继续 递归调用 本方法
-          this.getTreeData(data[i].child)
+          this.getTreeData(data[i].children)
         }
       }
       return data
@@ -263,6 +262,48 @@ export default {
       this.book.inputTime = null
       this.category = [''],
       this.search()
+    },
+    getLocationInfo () {
+      axios.get('/dictionaryData/book/getLocationInfo').then(res => {
+        if (res.data.code == 200) {
+          this.locationOptions = res.data.data
+          if (this.locationOptions != null && this.locationOptions != undefined) {
+            this.locationOptions = this.getTreeData(this.locationOptions)
+          }
+        }
+      })
+    },
+    bookLocatFormatter (row, column, cellValue, index) {
+      if (row.location != null && row.ebook == '0') {
+        var locationObj = JSON.parse(row.location)
+        var { locationOptions } = this
+        if (locationObj != null && locationObj.length > 0 && locationOptions.length > 0) {
+          var locationStr = ''
+          var oo
+          locationObj.forEach(code => {
+            oo = locationOptions.filter(item => item.value == code)
+            locationStr += oo[0].label + ' '
+            locationOptions = oo[0].children
+          })
+          return locationStr
+        } else {
+          return '未知'
+        }
+      } else {
+        return '无'
+      }
+    },
+    bookStatusFormatter (row, column, cellValue, index) {
+      if (row && row.bookStatus == 0) {
+        return '在库'
+      }
+      if (row && row.bookStatus == 1) {
+        return '借出'
+      }
+      if (row && row.bookStatus == 2) {
+        return '损坏'
+      }
+      return '未知'
     }
   }
 }

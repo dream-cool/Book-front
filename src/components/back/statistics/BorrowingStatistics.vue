@@ -1,6 +1,6 @@
 <template>
-  <div class="content">
-      <ve-pie :data="chartData" :settings="chartSettings" ></ve-pie>
+  <div class="content" >
+      <ve-pie  :data="chartData" :settings="chartSettings" ></ve-pie>
   </div>
 </template>
 

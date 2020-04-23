@@ -103,7 +103,7 @@
 
           <el-table-column
             label="借阅人"
-            width="250">
+            width="150">
             <template slot-scope="scope">
               <el-popover trigger="hover" placement="top">
                 <p>用户id: {{ scope.row.userId }}</p>
@@ -142,7 +142,7 @@
           </el-table-column>
           <el-table-column
             label="操作"
-            width="250"
+            width="120"
             >
             <template slot-scope="scope">
               <el-button @click="handleQuery(scope.row)"  type="info" icon="el-icon-view">查看流程</el-button>

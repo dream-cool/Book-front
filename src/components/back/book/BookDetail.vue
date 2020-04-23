@@ -148,6 +148,7 @@
             </el-card>
           </div>
           <el-pagination
+            background
             @current-change="handleCurrentChange"
             :current-page.sync="pageNum"
             :page-size="pageSize"

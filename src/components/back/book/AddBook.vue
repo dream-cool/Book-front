@@ -65,8 +65,8 @@
                   style="width: 500px"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="submitForm('bookRuleForm')">立即创建</el-button>
-              <el-button @click="resetForm('bookRuleForm')">重置</el-button>
+              <el-button type="primary" @click="submitForm('bookRuleForm')">立即录入</el-button>
+              <el-button type="info" @click="resetForm('bookRuleForm')">重置</el-button>
             </el-form-item>
           </el-form>
         </el-tab-pane>
@@ -121,7 +121,7 @@
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="submitForm('ebookRuleForm')">立即录入</el-button>
-                <el-button @click="resetForm('ebookRuleForm')">重置</el-button>
+                <el-button type="info" @click="resetForm('ebookRuleForm')" >重置</el-button>
               </el-form-item>
             </el-form>
         </el-tab-pane>

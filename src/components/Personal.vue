@@ -80,8 +80,8 @@
               <el-form-item prop="code" label="验证码" style="margin-left: 10%;margin-top: 5%">
                 <el-input  v-model="beforeUser.code" placeholder="请输入邮箱验证码" ></el-input>
               </el-form-item>
-              <el-button @click="sendMessage('userRules')" :disabled="sendButtonMessageDisabled" style="margin-left: 20%;margin-top: 5%"> {{sendButtonMessage}} </el-button>
-              <el-button @click="checkCode('userRules')" > 验证 </el-button>
+              <el-button type="primary" icon="el-icon-thumb" @click="sendMessage('userRules')" :disabled="sendButtonMessageDisabled" style="margin-left: 20%;margin-top: 5%"> {{sendButtonMessage}} </el-button>
+              <el-button type="info" icon="el-icon-check" @click="checkCode('userRules')" > 验证 </el-button>
             </el-form>
           </el-dialog>
         </div>

@@ -34,7 +34,7 @@ export default {
                 {
                 label: '编号',
                 prop: 'id',
-                width: '100px',
+                width: '50px',
                 editAble: false,
                 editType: 'el-input',
                 required: true,
@@ -44,7 +44,7 @@ export default {
                 {
                 label: '任务名称',
                 prop: 'taskName',
-                width: '250px',
+                width: '180px',
                 editAble: false,
                 editType: 'el-input',
                 required: true,
@@ -64,7 +64,7 @@ export default {
                 {
                 label: '状态',
                 prop: 'status',
-                width: '200px',
+                width: '150px',
                 editAble: true,
                 editType: 'el-switch',
                 required: true,
@@ -80,7 +80,7 @@ export default {
                 {
                 label: '备注',
                 prop: 'note',
-                width: '300px',
+                width: '250px',
                 editAble: true,
                 editType: 'el-input',
                 required: false,
@@ -89,7 +89,7 @@ export default {
                 {
                 label: '创建时间',
                 prop: 'createTime',
-                width: '250px',
+                width: '200px',
                 editAble: false,
                 editType: 'el-input-number',
                 required: false,
@@ -97,10 +97,10 @@ export default {
                 }
             ],
             operations: [
-                { text: '执行一次', intention: 'add', click: this.executeOnce},
-                { text: '编辑', intention: 'edit' },
-                { text: '保存', intention: 'save', click: this.update},
-                { text: '取消', intention: 'cancel',icon: 'el-icon-caret-right' },
+                { text: '执行一次', intention: 'add', click: this.executeOnce , icon: 'el-icon-caret-right', type: 'primary' },
+                { text: '编辑', intention: 'edit', icon: 'el-icon-edit', type: 'primary'  },
+                { text: '保存', intention: 'save', click: this.update , icon: 'el-icon-check ', type: 'primary' },
+                { text: '取消', intention: 'cancel',icon: 'el-icon-caret-right' , icon: 'el-icon-close ', type: 'primary' },
             ]
         }
     },

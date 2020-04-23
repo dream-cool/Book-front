@@ -1,8 +1,8 @@
 <template>
   <div class="content">
   <el-container>
-          <el-form :model="borrowing" :inline="true"  label-width="100px" class="demo-form-inline">
-          <el-form-item label="书籍名称">
+        <el-form :model="borrowing" :inline="true"  label-width="200px" class="demo-form-inline">
+          <el-form-item label="书籍名称" label-width="100px">
             <el-input v-model="borrowing.bookName" placeholder="模糊查询书籍名称" ></el-input>
           </el-form-item>
           <el-form-item label="借阅人">
@@ -12,17 +12,17 @@
                <el-input-number v-model="borrowing.duration" controls-position="right"
                 :min="1" :max="365"></el-input-number>
           </el-form-item>
-          <el-form-item label="借阅时间早于">
+          <el-form-item label="借阅时间早于" label-width="100px">
               <el-form-item prop="borrowingTime">
                 <el-date-picker
                  value-format="yyyy-MM-dd" format="yyyy-MM-dd"
                  type="date" placeholder="选择日期" v-model="borrowing.borrowingTime" ></el-date-picker>
               </el-form-item>
           </el-form-item>
-            <div class="operation" style="float:right; margin-right: 10%;">
+          <el-form-item style="margin-left: 100px">
               <el-button type="primary" @click="search()" icon="el-icon-search">搜索</el-button>
-              <el-button @click="resetForm()">重置</el-button>
-            </div>
+              <el-button type="info" @click="resetForm()">重置</el-button>
+          </el-form-item>
         </el-form>
       </el-container>
       <el-table
