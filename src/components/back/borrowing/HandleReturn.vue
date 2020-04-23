@@ -12,12 +12,10 @@
                <el-input-number v-model="borrowing.duration" controls-position="right"
                 :min="1" :max="365"></el-input-number>
           </el-form-item>
-          <el-form-item label="借阅时间早于" label-width="100px">
-              <el-form-item prop="borrowingTime">
+          <el-form-item label="借阅时间早于" prop="borrowingTime" >
                 <el-date-picker
                  value-format="yyyy-MM-dd" format="yyyy-MM-dd"
                  type="date" placeholder="选择日期" v-model="borrowing.borrowingTime" ></el-date-picker>
-              </el-form-item>
           </el-form-item>
           <el-form-item style="margin-left: 100px">
               <el-button type="primary" @click="search()" icon="el-icon-search">搜索</el-button>
@@ -31,30 +29,25 @@
           :data="borrowingList"
           style="width: 100%">
           <el-table-column
-             fixed
+            fixed
             label="书籍名称"
-            width="310">
-            <template slot-scope="scope">
-              <el-popover trigger="hover" placement="top">
-                <p>书籍编号: {{ scope.row.bookId }}</p>
-                <div slot="reference" class="name-wrapper">
-                  <el-tag size="medium">{{ scope.row.bookName }}</el-tag>
-                </div>
-              </el-popover>
-            </template>
+            width="210"
+            prop="bookName">
           </el-table-column>
-
           <el-table-column
-            label="借阅人"
-            width="250">
-            <template slot-scope="scope">
-              <el-popover trigger="hover" placement="top">
-                <p>用户id: {{ scope.row.userId }}</p>
-                <div slot="reference" class="name-wrapper">
-                  <el-tag size="medium">{{ scope.row.userName }}</el-tag>
-                </div>
-               </el-popover>
-            </template>
+            prop="bookId"
+            label="书籍编号"
+            width="350">
+          </el-table-column>
+          <el-table-column
+            label="借阅用户"
+            width="150"
+            prop="userName">
+          </el-table-column>
+          <el-table-column
+            label="借阅用户编号"
+            width="350"
+            prop="userId">
           </el-table-column>
           <el-table-column
             prop="borrowingTime"
@@ -68,7 +61,14 @@
               <span style="margin-left: 10px">{{ scope.row.duration }}天</span>
             </template>
           </el-table-column>
+          <el-table-column
+            label="是否逾期"
+            width="100"
+            prop="overdueDays"
+            :formatter="overdueDaysformatter"
+            >
 
+          </el-table-column>
           <el-table-column
             label="逾期天数"
             width="100">
@@ -133,7 +133,7 @@ export default {
     handleReturn (row) {
       this.$confirm('确认归还？')
         .then(_ => {
-          axios('/borrowing/handleReturn/' + row.borrowingId + '?userName='+this.user.userName)
+          axios('/borrowing/handleReturn/' + row.borrowingId + '?userName=' + this.user.userName)
             .then(res => {
               if (res.data.code === 200) {
                 this.book = res.data.data
@@ -173,6 +173,13 @@ export default {
           this.$message.error(res.data.message)
         }
       })
+    },
+    overdueDaysformatter (row, column, cellValue, index) {
+      if (row.overdueDays == null) {
+        return '否'
+      } else {
+        return '是'
+      }
     }
   }
 }

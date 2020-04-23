@@ -92,7 +92,7 @@
 
 <script>
 import axios from 'axios'
-import { regionData, CodeToText } from 'element-china-area-data'
+import { regionData } from 'element-china-area-data'
 
 export default {
   data () {

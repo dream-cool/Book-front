@@ -88,6 +88,21 @@
             width="140">
           </el-table-column>
           <el-table-column
+            prop="price"
+            label="价格(￥)"
+            width="80">
+          </el-table-column>
+          <el-table-column
+            prop="zanNumber"
+            label="点赞"
+            width="80">
+          </el-table-column>
+          <el-table-column
+            prop="score"
+            label="得分"
+            width="80">
+          </el-table-column>
+          <el-table-column
             prop="categoryId"
             label="类别"
             width="150">
@@ -96,7 +111,7 @@
             prop="ebook"
             :formatter="bookTypeFormatter"
             label="类型"
-            width="80">
+            width="60">
           </el-table-column>
 
           <el-table-column
@@ -109,7 +124,7 @@
             prop="location"
             label="书籍位置"
             :formatter="bookLocatFormatter"
-            width="230">
+            width="160">
           </el-table-column>
           <el-table-column
             prop="inputTime"
@@ -123,12 +138,12 @@
           </el-table-column>
           <el-table-column
             label="操作"
-            width="200"
+            width="220"
             >
             <template slot-scope="scope">
               <!-- <el-button @click="handleQuery(scope.row)" size="mini">查看</el-button> -->
               <el-button @click="handleEdit(scope.row)" icon="el-icon-edit" type="primary" >编辑</el-button>
-              <el-button @click="handleDelete(scope.row)" type="danger"  >删除</el-button>
+              <el-button @click="handleDelete(scope.row)" type="danger" icon="el-icon-delete"  >删除</el-button>
             </template>
           </el-table-column>
         </el-table>

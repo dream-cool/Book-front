@@ -56,6 +56,7 @@ const SysLog = resolve => require(['@/components/back/SysLog.vue'], resolve)
 export default new Router({
   mode: 'history',
   routes: [
+    
     {path: '/login', component: Login},
     {path: '/recoverPasswor', component: RecoverPassword},
     {path: '/front/ebookRead/:id', component: EbookRead},

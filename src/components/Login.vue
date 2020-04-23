@@ -15,8 +15,8 @@
                  @keyup.enter.native="submitForm('userRules')"
                  @keyup.down.native="createCode"
                   ></el-input>
-              <el-popover style="float:right;margin-right:100px"
-                placement="right"
+              <el-popover style="float:right;margin-right:15%"
+                placement="top"
                 width="200"
                 trigger="hover"
                 v-model="popoverVisible"

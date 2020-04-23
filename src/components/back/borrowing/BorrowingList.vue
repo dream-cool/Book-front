@@ -7,7 +7,7 @@
                 <el-card>
                   <h4>归还书籍</h4>
                   <p>管理员{{borrowingDetail.returnOperator}} 于 {{borrowingDetail.returnTime}}
-                    处理了用户 {{borrowingDetail.userName}} 归还 {{borrowingDetail.bookName}}书籍，
+                    处理了用户 {{borrowingDetail.userName}} 归还 《 {{borrowingDetail.bookName}} 》书籍，
                     书籍编号为 {{borrowingDetail.bookId}}</p>
                   <p v-if="borrowingDetail.borrowingStatus == '5'">逾期归还, 逾期 {{borrowingDetail.overdueDays}} 天</p>
                   <p v-if="borrowingDetail.borrowingStatus == '6'"> 正常归还</p>
@@ -21,11 +21,19 @@
                     <p v-if="borrowingDetail.note != null">已驳回，驳回理由：{{borrowingDetail.note}}</p>
                 </el-card>
               </el-timeline-item>
+              <el-timeline-item v-if="borrowingDetail.cancelTime != null" :timestamp="borrowingDetail.cancelTime" placement="top">
+                <el-card>
+                  <h4>取消借阅</h4>
+                  <p>用户 {{borrowingDetail.userName}} 于 {{borrowingDetail.cancelTime}} 取消了,
+                  借阅 《 {{borrowingDetail.bookName}} 》 书籍的申请。
+                  </p>
+                </el-card>
+              </el-timeline-item>
               <el-timeline-item :timestamp="borrowingDetail.applicationTime" placement="top">
                 <el-card>
                   <h4>申请借阅</h4>
                   <p>用户 {{borrowingDetail.userName}} 于 {{borrowingDetail.applicationTime}} 发起申请,
-                  借阅书籍 {{borrowingDetail.bookName}} ,从 {{borrowingDetail.borrowingTime}} 开始借阅,
+                  借阅书籍 《 {{borrowingDetail.bookName}} 》,从 {{borrowingDetail.borrowingTime}} 开始借阅,
                     借阅{{borrowingDetail.duration}}天。
                   </p>
                 </el-card>
@@ -123,22 +131,37 @@
           <el-table-column
             prop="applicationTime"
             label="申请时间"
-            width="200">
+            width="150">
           </el-table-column>
           <el-table-column
             prop="borrowingTime"
             label="借阅日期"
-            width="150">
+            width="100">
+          </el-table-column>
+          <el-table-column
+            prop="duration"
+            label="借阅时长"
+            width="80">
           </el-table-column>
           <el-table-column
             prop="handleTime"
             label="处理时间"
-            width="200">
+            width="150">
+          </el-table-column>
+          <el-table-column
+            prop="borrowingOperator"
+            label="借阅处理人"
+            width="130">
           </el-table-column>
           <el-table-column
             prop="returnTime"
             label="归还时间"
-            width="200">
+            width="150">
+          </el-table-column>
+          <el-table-column
+            prop="returnOperator"
+            label="归还处理人"
+            width="130">
           </el-table-column>
           <el-table-column
             label="操作"

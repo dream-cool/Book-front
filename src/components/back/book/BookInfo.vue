@@ -67,9 +67,6 @@
             <template slot-scope="scope">
               <el-popover trigger="hover" placement="top">
                 <p>书籍编号: {{ scope.row.bookId }}</p>
-                <p>价格: {{ scope.row.price }}</p>
-                <p>得分: {{ scope.row.score }}</p>
-                <p>点赞数: {{ scope.row.zanNumber }}</p>
                 <div slot="reference" class="name-wrapper">
                   <el-tag size="medium">{{ scope.row.bookName }}</el-tag>
                 </div>
@@ -85,6 +82,21 @@
             prop="published"
             label="出版社"
             width="150">
+          </el-table-column>
+          <el-table-column
+            prop="price"
+            label="价格(￥)"
+            width="80">
+          </el-table-column>
+          <el-table-column
+            prop="zanNumber"
+            label="点赞"
+            width="80">
+          </el-table-column>
+          <el-table-column
+            prop="score"
+            label="得分"
+            width="80">
           </el-table-column>
           <el-table-column
             prop="categoryId"
@@ -108,7 +120,7 @@
             prop="location"
             label="书籍位置"
             :formatter="bookLocatFormatter"
-            width="230">
+            width="160">
           </el-table-column>
           <el-table-column
             prop="inputTime"

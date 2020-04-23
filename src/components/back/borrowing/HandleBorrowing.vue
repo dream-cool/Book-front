@@ -2,7 +2,7 @@
 <div class="content">
   <el-container>
           <el-form :model="borrowing" :inline="true"  label-width="200px" class="demo-form-inline">
-          <el-form-item label="书籍名称" label-width="100px">
+          <el-form-item label="书籍名称" >
             <el-input v-model="borrowing.bookName" placeholder="模糊查询书籍名称" ></el-input>
           </el-form-item>
           <el-form-item label="借阅人">
@@ -12,7 +12,7 @@
                <el-input-number v-model="borrowing.duration" controls-position="right"
                 :min="1" :max="365"></el-input-number>
           </el-form-item>
-          <el-form-item label="借阅时间早于" prop="borrowingTime" label-width="100px">
+          <el-form-item label="借阅时间早于" prop="borrowingTime" >
                 <el-date-picker
                  value-format="yyyy-MM-dd" format="yyyy-MM-dd"
                  type="date" placeholder="选择日期" v-model="borrowing.borrowingTime" ></el-date-picker>
@@ -37,28 +37,23 @@
           <el-table-column
             fixed
             label="书籍名称"
-            width="310">
-            <template slot-scope="scope">
-              <el-popover trigger="hover" placement="top">
-                <p>书籍编号: {{ scope.row.bookId }}</p>
-                <div slot="reference" class="name-wrapper">
-                  <el-tag size="medium">{{ scope.row.bookName }}</el-tag>
-                </div>
-              </el-popover>
-            </template>
+            width="210"
+            prop="bookName">
           </el-table-column>
-
           <el-table-column
-            label="借阅人"
-            width="250">
-            <template slot-scope="scope">
-              <el-popover trigger="hover" placement="top">
-                <p>用户id: {{ scope.row.userId }}</p>
-                <div slot="reference" class="name-wrapper">
-                  <el-tag size="medium">{{ scope.row.userName }}</el-tag>
-                </div>
-               </el-popover>
-            </template>
+            prop="bookId"
+            label="书籍编号"
+            width="200">
+          </el-table-column>
+          <el-table-column
+            label="借阅用户"
+            width="150"
+            prop="userName">
+          </el-table-column>
+          <el-table-column
+            label="借阅用户编号"
+            width="200"
+            prop="userId">
           </el-table-column>
           <el-table-column
             label="申请人信誉"

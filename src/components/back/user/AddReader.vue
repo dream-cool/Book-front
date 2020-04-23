@@ -37,7 +37,7 @@
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="submitForm('userRuleForm')">立即创建</el-button>
-              <el-button @click="resetForm('userRuleForm')">重置</el-button>
+              <el-button type="info" @click="resetForm('userRuleForm')">重置</el-button>
             </el-form-item>
           </el-form>
     </template>

@@ -16,7 +16,7 @@
             <el-form-item label="书籍出版社" prop="published">
               <el-input v-model="book.published"></el-input>
             </el-form-item>
-            <el-form-item label="书籍价格" prop="price">
+            <el-form-item label="价格(￥)" prop="price">
                <el-input-number v-model="book.price" controls-position="right"
                 :min="0" :max="10000"></el-input-number>
             </el-form-item>

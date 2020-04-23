@@ -32,12 +32,12 @@
             <el-input-number v-model="user.credit" controls-position="right"
                 :min="0" :max="100"></el-input-number>
           </el-form-item>
-          <el-form-item label-width="120px" label="录入时间早于">
+          <el-form-item  label="录入时间早于">
               <el-form-item prop="registerTime">
                 <el-date-picker  value-format="timestamp" type="date" placeholder="选择日期" v-model="user.registerTime" ></el-date-picker>
               </el-form-item>
           </el-form-item>
-          <el-form-item label-width="160px" label="最后登录时间早于">
+          <el-form-item label="最后登录早于">
               <el-form-item prop="lastLoginTime">
                 <el-date-picker  value-format="timestamp" type="date" placeholder="选择日期" v-model="user.lastLoginTime" ></el-date-picker>
               </el-form-item>
@@ -60,12 +60,8 @@
             width="120">
             <template slot-scope="scope">
               <el-popover trigger="hover" placement="top">
-                <p>学号: {{ scope.row.stu_No }}</p>
-                <p>班级: {{ scope.row.classId }}</p>
+                <p>编号: {{ scope.row.userId }}</p>
                 <p>身份证: {{ scope.row.idcard }}</p>
-                <p>电话: {{ scope.row.tel }}</p>
-                <p>邮箱: {{ scope.row.email }}</p>
-                <p>地址: {{ scope.row.address }}</p>
                 <div slot="reference" class="name-wrapper">
                   <el-tag size="medium">{{ scope.row.userName }}</el-tag>
                 </div>
@@ -90,18 +86,23 @@
             prop="sex"
             :formatter="userSexFormatter"
             label="性别"
-            width="80">
+            width="100">
           </el-table-column>
           <el-table-column
             prop="sex"
             :formatter="userStatusFormatter"
             label="状态"
-            width="80">
+            width="100">
           </el-table-column>
           <el-table-column
             prop="email"
             label="邮箱"
             width="180">
+          </el-table-column>
+          <el-table-column
+            prop="tel"
+            label="电话"
+            width="150">
           </el-table-column>
           <el-table-column
             prop="address"
@@ -113,12 +114,12 @@
             prop="classId"
             label="班级"
             :formatter="userClassFormatter"
-            width="250">
+            width="230">
           </el-table-column>
           <el-table-column
             prop="registerTime"
             label="录入时间"
-            width="150">
+            width="180">
           </el-table-column>
           <el-table-column
             prop="lastLoginTime"
