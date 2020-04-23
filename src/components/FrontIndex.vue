@@ -73,7 +73,6 @@
             </el-card >
           </div>
           <el-pagination style="margin-top: 10%; margin-left: 5%"
-            background
             @current-change="handleCurrentChange"
             :page-size="pageSize"
             :current-page.sync="pageNum"

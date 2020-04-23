@@ -9,8 +9,8 @@
         </el-steps>
 
         <div class="first" v-if="active == 0">
-          <el-input v-model="user.userName" placeholder="请输入用户名" style="margin-top: 50px;" ></el-input>
-          <el-input  v-model="user.email" placeholder="请输入邮箱" style="margin-top: 50px;"></el-input>
+          <el-input v-model="user.userName" placeholder="请输入用户名" style="margin-top: 50px;" @blur="getUserByUserName"></el-input>
+          <el-input  v-model="user.email" disabled placeholder="账号邮箱"  style="margin-top: 50px;"></el-input>
           <el-input  v-model="code" placeholder="请输入邮箱验证码" style="margin-top: 50px;"></el-input>
           <br>
             <el-button type="primary" icon="el-icon-thumb" @click="getUserInfo" :disabled="sendButtonMessageDisabled" style="margin-top: 50px;"> {{sendButtonMessage}} </el-button>
@@ -33,7 +33,7 @@ export default {
   data () {
     return {
       activeName: 'updateByOldPW',
-      user: {},
+      user: { email: ''},
       sendButtonMessage: '立即发送',
       sendButtonMessageDisabled: false,
       second: 60,
@@ -150,9 +150,33 @@ export default {
           this.$message(res.data.message)
           this.active = 0
           this.user = {}
+          this.code = ''
           this.resetForm()
+          this.$router.push({path: '/login'})
         } else {
           this.$message.error(res.data.message)
+        }
+      })
+    },
+    getUserByUserName(){
+      if (this.user.userName == null || this.user.userName.trim().length <= 0) {
+        return
+      }
+      axios.get('/user/queryUserByUserName/' + this.user.userName).then(res => {
+        if (res.data.code === 200) {
+          const user = res.data.data
+          if (user == null){
+            this.$message.error('没有找到用户信息')
+            this.user.email = ''
+            return 
+          }
+          if(user.email == null || user.email.trim().length < 0){
+            this.$message.error('该用户没有绑定邮箱，请联系管理员重置密码') 
+          }
+          this.user.email = user.email
+        } else {
+          this.$message.error('没有找到用户信息')
+          this.user.email = ''
         }
       })
     },

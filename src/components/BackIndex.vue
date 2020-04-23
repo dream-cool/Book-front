@@ -6,7 +6,7 @@
             text-color="rgb(225,225,225)"
             background-color="#394458"
             default-active="/back/home" router >
-            <el-menu-item index="/back" style="height: 60px;">
+            <el-menu-item index="/" style="height: 60px;">
               <img :src="icon" width="40px" height="40px" class="img-style" style="margin-right: 5px">励新图书管理系统
               <!-- <i class="el-icon-s-home" style="font-size: 50px"></i> 登录 -->
             </el-menu-item>
@@ -123,7 +123,6 @@
 <script>
 import axios from 'axios'
 import icon from '../assets/imgages/favicon.png'
-// import icon from '../assets/icon/favicon.ico'
 export default {
   name: 'index',
   components: {

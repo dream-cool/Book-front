@@ -102,6 +102,7 @@ export default {
 .el-image{
   width: 180px;
   height: 180px;
+  border-radius:10px 10px;
 }
 .el-input{
   margin-top: 20px;

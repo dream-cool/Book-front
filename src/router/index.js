@@ -141,7 +141,8 @@ export default new Router({
       ]
     },
     {
-      path: '/back',
+      
+      path: '/',
       name: '首页',
       redirect () {
         return '/back/home'

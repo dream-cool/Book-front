@@ -16,7 +16,16 @@
             <el-button @click="dialogFormVisible = false">取 消</el-button>
             <el-button type="primary" @click="confirmBorrowing">确 定</el-button>
           </div>
-        </el-dialog>
+      </el-dialog>
+
+      <el-dialog title="分享书籍" :visible.sync="dialogShareVisible"
+          style="margin-left: 20%;width: 60%">
+          <el-avatar :size="200" shape="square" object-fit='fill' style="object-fit: fill;" :src="Server_URl+'/download/'+book.bookId+'.jpg?filePath=QRCode'" ></el-avatar>
+          
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogShareVisible = false">确 定</el-button>
+          </div>
+      </el-dialog>
 
       <div class="book">
 
@@ -46,7 +55,7 @@
                 <p> {{book.zanNumber}} </p> </el-link>
               <el-link v-if="userCollection.isCollect" icon="iconfont icon-collect"  :underline="false" style="margin-left:40px;margin-top:30px" @click="collect"></el-link>
               <el-link v-if="!userCollection.isCollect" icon="iconfont icon-cancel-collect"  :underline="false" style="margin-left:40px;margin-top:30px" @click="collect"></el-link>
-              <el-link  icon="el-icon-s-comment" style="font-size: 30px;margin-left:60px;margin-top:30px" :underline="false"  @click=""></el-link>
+              <el-link @click="dialogShareVisible = true"  icon="el-icon-s-comment" style="font-size: 30px;margin-left:60px;margin-top:30px" :underline="false" ></el-link>
               <el-rate v-if="book.score != null" v-model="book.score" disabled show-score text-color="#ff9900" style="margin-top:20px"></el-rate>
               <p v-else > 该书籍还没有人进行评分呢！</p>
               <el-button v-if ="book.ebook == 0"  type="info" @click="applyBorrowing"  circle style="margin-top:20px">申请借阅</el-button>
@@ -185,6 +194,7 @@ import axios from 'axios'
 export default {
   data () {
     return {
+      dialogShareVisible: false,
       Server_URl: axios.defaults.baseURL,
       id: '',
       book: {
@@ -473,11 +483,13 @@ export default {
 </script>
 
 <style scoped>
-
+.el-avatar{
+   border-radius:20px 20px;
+}
 .el-image{
   width: 320px;
   height: 320px;
-
+  border-radius:150px 150px;
 }
 
 .author-title{

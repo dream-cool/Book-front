@@ -122,7 +122,7 @@ export default {
                 this.$message.error(res.data.message)
                 this.createCode()
               }
-              this.loading = true
+              this.loading = false
             }
           )
         } else {
