@@ -38,7 +38,7 @@
       </el-tabs>
 
             <div class="borrowing-detail">
-                <el-dialog title="借阅流程" :visible.sync="dialogFormVisible" >
+                <el-dialog :lock-scroll="false"  title="借阅流程" :visible.sync="dialogFormVisible" >
                     <el-timeline style="width:700px">
                         <el-timeline-item v-if="borrowingDetail.returnOperator != null" :timestamp="borrowingDetail.returnTime" placement="top">
                           <el-card>

@@ -2,7 +2,7 @@
   <div class="content">
 
     <div class="updateUser">
-        <el-dialog title="编辑用户" :visible.sync="dialogFormVisible">
+        <el-dialog :lock-scroll="false" title="编辑用户" :visible.sync="dialogFormVisible">
           <el-form>
             <el-form-item label="班级">
                 <el-cascader style="width: 400px"
@@ -185,6 +185,7 @@
 import axios from 'axios'
 import moment from 'moment'
 import { CodeToText } from 'element-china-area-data'
+const Qs = require('qs')
 export default {
   data () {
     return {
@@ -241,13 +242,14 @@ export default {
       this.$confirm('确认删除？')
         .then(_ => {
           var idArray = []
-          this.multipleSelection.forEach(user => {
-            ids.push(user.userId)
+          this.multipleSelection.forEach(book => {
+            idArray.push(book.userId)
           })
-          // todo
-          axios.get({
-            url: '/user/delete/batch',
-            params: { ids: [1, 2, 3]}
+          axios.get('/user/delete/batch', {
+            params: {ids: idArray},
+            paramsSerializer: function (params) {
+              return Qs.stringify(params, {arrayFormat: 'repeat'})
+            }
           }).then(res => {
             if (res.data.code === 200) {
               this.$message(res.data.message)
@@ -389,7 +391,7 @@ export default {
       const {CodeToText} = this
       var addrList = JSON.parse(row.address)
       var addrString = ''
-      if (addrList != null) {
+      if (addrList != null && addrList.length > 0) {
         addrList.forEach(addr => {
           addrString += CodeToText[addr] + ' '
         })

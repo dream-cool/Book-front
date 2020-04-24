@@ -72,7 +72,7 @@
         </div>
 
         <div class="bind-email">
-          <el-dialog title="绑定邮箱" :visible.sync="dialogTableVisible" :before-close = "checkEmailUpdate">
+          <el-dialog  :lock-scroll="false" title="绑定邮箱" :visible.sync="dialogTableVisible" :before-close = "checkEmailUpdate">
             <el-form :model="beforeUser" :rules="userRules" ref="userRules" label-width="100px" class="demo-ruleForm">
               <el-form-item prop="email" label="邮箱" style="margin-left: 10%" >
                 <el-input label="邮箱"  placeholder="请输入邮箱" v-model="beforeUser.email" @blur="checkEmail('userRules')" ></el-input>
@@ -139,6 +139,9 @@ export default {
       if (this.beforeUser.address != null && this.beforeUser.address.length != 0) {
         this.beforeUser.address = JSON.stringify(this.beforeUser.address)
       }
+      if (this.beforeUser.classId != null && this.beforeUser.classId.length != 0) {
+        this.beforeUser.classId = JSON.stringify(this.beforeUser.classId)
+      }
       axios.put('/user', this.beforeUser).then(res => {
         if (res.data.code === 200) {
           this.beforeUser = res.data.data
@@ -174,7 +177,7 @@ export default {
           if (res.data.data.address != null && res.data.data.address.length != 0) {
             res.data.data.address = JSON.parse(res.data.data.address)
           }
-          if (res.data.data.address != null && res.data.data.address.length != 0) {
+          if (res.data.data.classId != null && res.data.data.classId.length != 0) {
             res.data.data.classId = JSON.parse(res.data.data.classId)
           }
           this.beforeUser = res.data.data

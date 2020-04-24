@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-      <el-dialog title="修改权限" style="margin-left: 20%;width: 60%" :visible.sync="dialogFormVisible">
+      <el-dialog :lock-scroll="false" title="修改权限" style="margin-left: 20%;width: 60%" :visible.sync="dialogFormVisible">
         <el-form :model="user" label-width="120px" :inline="true"  class="demo-form-inline" >
 
           <el-form-item label="浏览书籍">

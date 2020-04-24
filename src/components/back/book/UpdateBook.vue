@@ -86,10 +86,10 @@ export default {
       activeName: 'first',
       fileList: [],
       category: [],
-      locationOptions:{},
+      locationOptions: {},
       optionProps: {
         value: 'id',
-        label: 'title',
+        label: 'title'
       },
       categoryList: [],
       id: '',
@@ -144,16 +144,16 @@ export default {
       })
     },
     update (book) {
-      if(book.location != null){
-          book.location = JSON.stringify(book.location)
+      if (book.location != null && book.location.length > 0) {
+        book.location = JSON.stringify(book.location)
       }
       axios.put('/book', book).then(res => {
         if (res.data.code === 200) {
           this.book = res.data.data.book
           this.category = res.data.data.typeList
           this.$message(res.data.message)
-          if(this.book != null && this.book.location != null){
-             this.book.location = JSON.parse(this.book.location)
+          if (this.book != null && this.book.location != null) {
+            this.book.location = JSON.parse(this.book.location)
           }
         } else {
           book.location = JSON.parse(book.location)
@@ -167,7 +167,7 @@ export default {
           if (res.data.code === 200) {
             this.book = res.data.data.book
             this.category = res.data.data.typeList
-            if(this.book.location != null){
+            if (this.book.location != null) {
               this.book.location = JSON.parse(this.book.location)
             }
             console.log(this.book)
@@ -190,7 +190,7 @@ export default {
       axios.get('/dictionaryData/book/getLocationInfo').then(res => {
         if (res.data.code == 200) {
           this.locationOptions = res.data.data
-          if(this.locationOptions != null && this.locationOptions != undefined){
+          if (this.locationOptions != null && this.locationOptions != undefined) {
             this.locationOptions = this.getTreeData(this.locationOptions)
           }
         }
@@ -214,12 +214,16 @@ export default {
     },
     handleBookImgUploadSuccess (response, file, fileList) {
       this.book.img = response.data
+      if (this.book.location != null && this.book.location.length > 0) {
+        this.book.location = JSON.stringify(this.book.location)
+      }
       axios.put('/book', this.book).then(res => {
         if (res.data.code === 200) {
           this.book = res.data.data
           location.reload()
         } else {
           this.$message.error(res.data.message)
+          this.book.location = JSON.parse(this.book.location)
         }
       })
     }

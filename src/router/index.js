@@ -34,6 +34,7 @@ const UpdateBook = resolve => require(['@/components/back/book/UpdateBook.vue'],
 const UpdateEbook = resolve => require(['@/components/back/book/UpdateEbook.vue'], resolve)
 const Login = resolve => require(['@/components/Login.vue'], resolve)
 const NoAuthority = resolve => require(['@/components/403.vue'], resolve)
+const NotFound = resolve => require(['@/components/404.vue'], resolve)
 const MessageInfo = resolve => require(['@/components/MessageInfo.vue'], resolve)
 const UpdatePassword = resolve => require(['@/components/front/UpdatePassword.vue'], resolve)
 const Home = resolve => require(['@/components/back/Home.vue'], resolve)
@@ -56,7 +57,7 @@ const SysLog = resolve => require(['@/components/back/SysLog.vue'], resolve)
 export default new Router({
   mode: 'history',
   routes: [
-    
+    {path: '/404', component: NotFound},
     {path: '/login', component: Login},
     {path: '/recoverPasswor', component: RecoverPassword},
     {path: '/front/ebookRead/:id', component: EbookRead},

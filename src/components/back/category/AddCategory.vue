@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <el-dialog
+    <el-dialog :lock-scroll="false"
       title="新增类别"
       :visible.sync="dialog.dialogVisible"
       width="30%"

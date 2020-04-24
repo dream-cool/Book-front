@@ -65,14 +65,15 @@
                         style="margin-left: 20px;float:right; font-size:20px" ></el-link>
                           <br>
                       <span class="author-time"
-                        style="font-size: 13px; font-color: #655E5E;">{{item.descr}}</span>
+                        style="font-size: 13px; font-color: #655E5E;">{{item.descr.trim().length > 50 ? item.descr.substring(0,50) + '......' : item.descr }}</span>
                       <br>
                       <span class="author-time"
                         style="font-size: 14px;color: #AEA7A7;float:bottom">{{item.browsingTime}}</span>
                   </div>
             </el-card >
           </div>
-          <el-pagination style="margin-top: 10%; margin-left: 5%"
+          <el-pagination style="margin-top: 2%; margin-left: 2%"
+            background
             @current-change="handleCurrentChange"
             :page-size="pageSize"
             :current-page.sync="pageNum"

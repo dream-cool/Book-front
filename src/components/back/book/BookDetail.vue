@@ -1,6 +1,6 @@
 <template>
   <div class="content" style="margin-left: 10%">
-      <el-dialog title="申请借阅" :visible.sync="dialogFormVisible"
+      <el-dialog title="申请借阅" :visible.sync="dialogFormVisible" :lock-scroll="false"
           style="margin-left: 20%;width: 60%">
           <el-form>
             <el-form-item label="借阅时间" label-width="100px">
@@ -19,18 +19,22 @@
       </el-dialog>
 
       <el-dialog title="分享书籍" :visible.sync="dialogShareVisible"
-          style="margin-left: 20%;width: 60%">
-          <el-avatar :size="200" shape="square" object-fit='fill' style="object-fit: fill;" :src="Server_URl+'/download/'+book.bookId+'.jpg?filePath=QRCode'" ></el-avatar>
-          
+        :lock-scroll="false"
+          style="width: 80%">
+          <el-avatar class="book-QRcode" :size="200" shape="square" object-fit='fill' style="object-fit: fill;margin-left: 25%" :src="Server_URl+'/download/'+book.bookId+'.jpg?filePath=QRCode'" ></el-avatar>
+          <br>
+          <div style="margin-top: 50px">
+            <a :href="curlPath" target="_blank" >{{curlPath}}</a>
+            <el-link style="margin-left:20px" class="copy-link" :underline="false" :data-clipboard-text="curlPath" @click="copyText">复制</el-link>
+          </div>
           <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogShareVisible = false">确 定</el-button>
+            <el-button type="primary" @click="dialogShareVisible = false">确 定</el-button>
           </div>
       </el-dialog>
 
       <div class="book">
-
         <div class="bookImg" style="float:left;margin-right: 5%; height: 400px" >
-          <el-avatar v-if="book.img != null" :size="300" shape="square" object-fit='fill' style="object-fit: fill;" :src="Server_URl+'/download/'+book.img" >
+          <el-avatar v-if="book.img != null" :size="300" shape="square"   :src="Server_URl+'/download/'+book.img" >
            {{book.bookName}}
           </el-avatar>
         </div>
@@ -55,7 +59,7 @@
                 <p> {{book.zanNumber}} </p> </el-link>
               <el-link v-if="userCollection.isCollect" icon="iconfont icon-collect"  :underline="false" style="margin-left:40px;margin-top:30px" @click="collect"></el-link>
               <el-link v-if="!userCollection.isCollect" icon="iconfont icon-cancel-collect"  :underline="false" style="margin-left:40px;margin-top:30px" @click="collect"></el-link>
-              <el-link @click="dialogShareVisible = true"  icon="el-icon-s-comment" style="font-size: 30px;margin-left:60px;margin-top:30px" :underline="false" ></el-link>
+              <el-link @click="shareBook"  icon="el-icon-share" style="font-size: 30px;margin-left:60px;margin-top:30px" :underline="false" ></el-link>
               <el-rate v-if="book.score != null" v-model="book.score" disabled show-score text-color="#ff9900" style="margin-top:20px"></el-rate>
               <p v-else > 该书籍还没有人进行评分呢！</p>
               <el-button v-if ="book.ebook == 0"  type="info" @click="applyBorrowing"  circle style="margin-top:20px">申请借阅</el-button>
@@ -166,6 +170,7 @@
           </el-pagination>
         </div>
         <el-dialog title="我的收藏" :visible.sync="dialogCollectionVisible"
+          :lock-scroll="false"
           style="margin-left: 20%;width: 60%">
            <el-radio-group  v-model="userCollection.groupName" >
               <el-radio v-for="(item,index) in collectGroupList" :key="index"
@@ -191,9 +196,11 @@
 
 <script>
 import axios from 'axios'
+import Clipboard from 'clipboard'
 export default {
   data () {
     return {
+      curlPath: window.location.href,
       dialogShareVisible: false,
       Server_URl: axios.defaults.baseURL,
       id: '',
@@ -418,6 +425,7 @@ export default {
             this.borrowing.borrowingTime = new Date().getTime() + 86400000
           } else {
             this.$message.error(res.data.message)
+            this.$router.push({path: '/404'})
           }
         })
     },
@@ -477,19 +485,36 @@ export default {
     },
     goToLogin () {
       this.$router.push({path: '/login'})
+    },
+    copyText () {
+      var clipboard = new Clipboard('.copy-link')
+      clipboard.on('success', e => {
+        this.$message('复制成功')
+        // 释放内存
+        clipboard.destroy()
+      })
+      clipboard.on('error', e => {
+        // 不支持复制
+        this.$message.error('该浏览器不支持自动复制')
+        // 释放内存
+        clipboard.destroy()
+      })
+    },
+    shareBook () {
+      this.dialogShareVisible = true
     }
   }
 }
 </script>
 
 <style scoped>
-.el-avatar{
-   border-radius:20px 20px;
-}
 .el-image{
   width: 320px;
   height: 320px;
-  border-radius:150px 150px;
+
+}
+.el-avatar{
+  border-radius:20px 20px;
 }
 
 .author-title{

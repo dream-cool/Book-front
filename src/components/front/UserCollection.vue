@@ -12,7 +12,6 @@
                 closable
                 @close="handleDelete(item)"
                 @click="handleEdit(item)"
-                type="info"
                 >
                 {{item.name}}
               </el-tag>
@@ -48,7 +47,6 @@
                               <div style="padding-left: 20px;padding-right: 20px;">
                                 <p style="color: #000;font-size: 14px;font-weight: bold margin-top: -20px; " >  {{useCollection.bookName}}  </p>
                                 <p style="font-size: 14px;color: #AEA7A7;margin-top: -10px;float:right">收藏于{{useCollection.collectionTime}}  </p>
-                                <p style="font-size: 14px;color: #AEA7A7;margin-top: -10px;float:right">借阅:100</p>
                               </div>
                             </el-card>
                         </el-col>
@@ -59,7 +57,6 @@
                 <p v-if="messageList.length == total">我也是有底线的</p> -->
             </el-timeline>
         </el-tab-pane>
-       
       </el-tabs>
   </div>
 </template>
@@ -105,6 +102,7 @@ export default {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           inputValue: item.name,
+          lockScroll: false,
           inputPattern: /\S/,
           inputErrorMessage: '分组名不能为空'
         }).then(({ value }) => {
@@ -118,6 +116,7 @@ export default {
       this.$confirm('删除分组，将删除该分组下的所有收藏信息，确认删除？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
+          lockScroll: false,
           type: 'warning'
         }).then(() => {
           axios.delete('/collectionGroup/'+item.collectionGroupId).then( res => {

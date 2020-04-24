@@ -43,23 +43,45 @@ export default {
       url: ''
     }
   },
+  mounted () {
+    window.addEventListener('scroll', this.scrollBottom)
+  },
   created () {
     this.getBookInfo(this.pageNum, this.pageSize)
   },
+  destroyed () {
+    window.removeEventListener('scroll', this.scrollBottom)
+  },
   methods: {
+    scrollBottom () {
+      var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      var windowHeight = document.documentElement.clientHeight || document.body.clientHeight
+      var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+      if (scrollTop + windowHeight == scrollHeight) {
+        this.pageNum = this.pageNum + 1
+        this.getBookInfo(this.pageNum, this.pageSize, this.book)
+      }
+    },
     goToBookDetail (bookId) {
       document.body.style.overflow = null
       this.$router.push({path: '/front/bookDetail/' + bookId})
     },
     handleCurrentChange (val) {
-      this.getBookInfo(val, this.pageSize, )
+      this.getBookInfo(val, this.pageSize)
     },
     getBookInfo (pageNum, pageSize) {
       axios.get(
         '/book/query/recommendBook'
       ).then(res => {
         if (res.data.code === 200) {
-          this.bookList = res.data.data
+          if (res.data.data.list == null || res.data.data.list.length == 0) {
+            this.$message('暂无数据')
+          }
+          if (res.data.data.pageNum != this.pageNum) {
+            this.$message('没有更多了')
+            return
+          }
+          this.bookList = this.bookList.concat(res.data.data.list)
           this.bookList.map(book => {
             book.inputTime = moment(book.inputTime).format('YYYY-MM-DD')
             return book

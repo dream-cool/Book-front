@@ -1,6 +1,6 @@
 <template>
   <div class="dictionary-list">
-      <el-dialog title="新增字典类型"  :visible.sync="dialogFormVisible" width="500px">
+      <el-dialog :lock-scroll="false" title="新增字典类型"  :visible.sync="dialogFormVisible" width="500px">
       <el-form :model="dictionary" :rules="rules" ref="dictionary">
         <el-form-item label="名称" label-width="70px" prop="name">
           <el-input v-model="dictionary.name" autocomplete="off" placeholder="请输入名称"  style = "width: 400px"></el-input>

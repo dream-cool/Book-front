@@ -163,10 +163,11 @@
         </div>
   </div>
 </template>
-
+ 
 <script>
 import axios from 'axios'
 import moment from 'moment'
+const Qs = require('qs')
 export default {
   data () {
     return {
@@ -218,11 +219,13 @@ export default {
         .then(_ => {
           var idArray = []
           this.multipleSelection.forEach(book => {
-            ids.push(book.bookId)
+            idArray.push(book.bookId)
           })
-          // todo
           axios.get('/book/delete/batch', {
-            params: {ids: [1, 2, 3]}
+            params: {ids: idArray},
+            paramsSerializer: function (params) {
+              return Qs.stringify(params, {arrayFormat: 'repeat'})
+            }
           }).then(res => {
             if (res.data.code === 200) {
               this.$message(res.data.message)

@@ -118,7 +118,7 @@ export default {
                   sendEmail: this.message.sendEmail,
                   sender: this.user.userName,
                   sendTime: moment(this.message.sendTime).format('YYYY-MM-DD HH:mm:ss') 
-                },
+                },   
                 paramsSerializer: function(params) {
                             return Qs.stringify(params, {arrayFormat: 'repeat'})
                 }

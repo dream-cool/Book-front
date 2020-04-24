@@ -22,11 +22,10 @@
         </span>
         <br>
         <br>
-
         <br>
         <br>
       </div>
-     <p :style="fontStyle"  v-html="data.content"></p>
+     <p :style="fontStyle" v-html="data.content"></p>
 
      <el-pagination
             background
@@ -66,6 +65,7 @@ export default {
           inputTime: null
         }
       },
+      loading: true,
       URL: axios.defaults.baseURL + '/download/',
       pageNum: 1,
       pageSize: 100,
@@ -170,7 +170,12 @@ export default {
       this.$router.push({ path: '/front/bookDetail/' + this.$route.params.id })
     },
     getEbookContent (pageNum, pageSize) {
-      console.log(pageSize)
+      const loading = this.$loading({
+        lock: true,
+        text: '加载中',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
       axios.get('/book/ebook/' + this.$route.params.id + '?pageNum=' + pageNum + '&pageSize=' + pageSize)
         .then(res => {
           if (res.data.code === 200) {
@@ -186,6 +191,7 @@ export default {
           } else {
             this.$message.error(res.data.$message)
           }
+          loading.close()
         })
     },
     goToLogin () {

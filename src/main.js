@@ -16,10 +16,7 @@ NProgress.configure({ easing: 'ease', speed: 800, showSpinner: false })
 axios.defaults.baseURL = 'http://localhost:8090'
 axios.defaults.timeout = 5000
 
-Vue.use(axios)
-
 Vue.config.productionTip = false
-Vue.prototype.$http = axios
 
 axios.interceptors.request.use(
 

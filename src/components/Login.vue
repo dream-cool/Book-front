@@ -1,6 +1,6 @@
 <template>
   <div class="hello" :style="backgroundDiv" >
-    <el-dialog title="励新图书管理系统" width="30%" :modal="false"	 :show-close="false" :visible="dialogTableVisible">
+    <el-dialog :lock-scroll="false" title="励新图书管理系统" width="30%" :modal="false"	 :show-close="false" :visible="dialogTableVisible">
        <el-form :model="user" :rules="userRules" ref="userRules" label-width="100px" class="demo-ruleForm">
             <el-form-item label="用户名" prop="userName" >
               <el-input v-model="user.userName" prefix-icon="el-icon-user-solid" placeholder="请输入用户名"></el-input>

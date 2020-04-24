@@ -154,10 +154,10 @@ export default {
       categoryList: [
 
       ],
-      locationOptions:{},
+      locationOptions: {},
       optionProps: {
         value: 'id',
-        label: 'title',
+        label: 'title'
       },
       none: {
         id: '',
@@ -177,19 +177,18 @@ export default {
       bookRules: {
         bookName: [
           { required: true, message: '请输入书籍名称', trigger: 'blur' },
-          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+          { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
         ],
         author: [
           { required: true, message: '请输入书籍作者', trigger: 'blur' },
-          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+          { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
         ],
         published: [
           { required: true, message: '请输入书籍出版社', trigger: 'blur' },
-          { min: 3, max: 15, message: '长度在 3 到 15 个字符', trigger: 'blur' }
+          { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
         ],
         price: [
-          { required: true, message: '请输入书籍出版社', trigger: 'blur' },
-          { type: 'number', message: '价格必须为数字', trigger: 'blur' }
+          { required: true, message: '请输入书籍价格', trigger: 'blur' }
         ],
         inputTime: [
           { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
@@ -203,11 +202,11 @@ export default {
       ebookRules: {
         bookName: [
           { required: true, message: '请输入书籍名称', trigger: 'blur' },
-          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+          { min: 1, max: 10, message: '长度在 3 到 50 个字符', trigger: 'blur' }
         ],
         author: [
           { required: true, message: '请输入书籍作者', trigger: 'blur' },
-          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+          { min: 1, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur' }
         ],
         category: [
           // { type: 'array', required: true, message: '请至少选择类别', trigger: 'change' }
@@ -275,16 +274,21 @@ export default {
       })
     },
     addBook (book) {
-      if(book.location != null && book.ebook == '0'){
+      if (book.location != null && book.ebook == '0') {
         book.location = JSON.stringify(book.location)
       }
       axios.post('/book', book).then(res => {
         if (res.data.code === 200) {
           this.$message(res.data.message)
-          this.book = {}
+          if (res.data.data.ebook == '1') {
+            this.ebook = {ebokk: '1'}
+            location.reload()
+          } else {
+            this.book = {}
+          }
         } else {
           this.$message.error(res.data.message)
-          book.location  = JSON.parse(book.location)
+          book.location = JSON.parse(book.location)
         }
         book.location = null
       })
@@ -346,7 +350,7 @@ export default {
       axios.get('/dictionaryData/book/getLocationInfo').then(res => {
         if (res.data.code == 200) {
           this.locationOptions = res.data.data
-          if(this.locationOptions != null && this.locationOptions != undefined){
+          if (this.locationOptions != null && this.locationOptions != undefined) {
             this.locationOptions = this.getTreeData(this.locationOptions)
           }
         }
