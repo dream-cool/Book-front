@@ -98,6 +98,7 @@ export default {
       axios.post('/type', this.category).then(res => {
         if (res.data.code === 200) {
           this.$message(res.data.message)
+          this.getAllCategory()
           this.dialog.dialogVisible=false
         } else {
           this.$message.error(res.data.message)

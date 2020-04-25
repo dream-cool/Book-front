@@ -6,22 +6,24 @@
       </el-row>
         <el-row :gutter="20" bodar>
           <el-col :span="3" v-for="(book,index) in bookList" :key="index" >
-              <el-card :body-style="{ padding: '0px' }" style="width: 220px">
+              <el-card :body-style="{ padding: '0px' }" style="width: 220px;height:300px">
                 <el-image v-if="book.img != null"  style="margin-left: 20px"
                   :src='Sever_URL + "/download/"+book.img'
                   @click="goToBookDetail(book.bookId)"
                   ></el-image>
                 <div style="padding-left: 20px;padding-right: 20px;">
-                  <p style="color: #000;font-size: 14px;font-weight: bold margin-top: -20px; " >  {{book.bookName}}  </p>
-                  <p style="font-size: 14px;color: #AEA7A7;margin-top: -10px;float:left ">{{book.author}}</p>
-                  <p v-if="book.ebook == 0" style="font-size: 14px;color: #AEA7A7;margin-top: -10px;float:right">借阅: {{book.borrowingNumber}}</p>
-                  <p v-if="book.ebook == 1" style="font-size: 14px;color: #AEA7A7;margin-top: -10px;float:right">{{book.categoryId}}</p>
+                  <p style="color: #000;font-size: 14px;font-weight: bold margin-top: -0px;height: 30px " >  {{ book.bookName.trim().length > 30 ? book.bookName.substring(0,30) + '......' : book.bookName}}  </p>
+                  <p style="font-size: 14px;color: #AEA7A7;margin-bottom: 0px;float:left ">{{book.author}}</p>
+                  <p v-if="book.ebook == 0" style="font-size: 14px;color: #AEA7A7;margin-bottom: 0px;float:right">借阅: {{book.borrowingNumber}}</p>
+                  <p v-if="book.ebook == 1" style="font-size: 14px;color: #AEA7A7;margin-bottom: 0px;float:right">{{book.categoryId}}</p>
                 </div>
               </el-card>
           </el-col>
         </el-row>
-      <!-- <el-row>
-        <el-pagination
+      <el-row style="margin-left: 45%;margin-top:3%">
+        <el-link @click="loadMore" v-if="bookList.length < total" type="primary">加载更多</el-link>
+                <p v-if="bookList.length == total">我也是有底线的</p>
+        <!-- <el-pagination
           style="margin-top: 30px"
           background
           @current-change="handleCurrentChange"
@@ -29,8 +31,8 @@
           :page-size="pageSize"
           layout="total, prev, pager, next, jumper"
           :total="total">
-        </el-pagination>
-      </el-row> -->
+        </el-pagination> -->
+      </el-row>
       {{aa}}
   </div>
 </template>
@@ -57,7 +59,7 @@ export default {
     }
   },
   mounted () {
-    window.addEventListener('scroll', this.scrollBottom)
+    // window.addEventListener('scroll', this.scrollBottom)
   },
   created () {
     if (this.bookCondition != null && this.bookCondition != 'undenfied') {
@@ -65,15 +67,19 @@ export default {
     }
     this.getBookInfo(this.pageNum, this.pageSize, this.book)
   },
-  destroyed () {
-    window.removeEventListener('scroll', this.scrollBottom)
-  },
+  // destroyed () {
+  //   window.removeEventListener('scroll', this.scrollBottom)
+  // },
   methods: {
+    loadMore(){
+      this.pageNum = this.pageNum + 1
+      this.getBookInfo(this.pageNum, this.pageSize, this.book)
+    },
     scrollBottom () {
       var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
       var windowHeight = document.documentElement.clientHeight || document.body.clientHeight
       var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
-      if (scrollTop + windowHeight == scrollHeight) {
+      if (scrollTop + windowHeight >= (scrollHeight - 10)) {
         this.pageNum = this.pageNum + 1
         this.getBookInfo(this.pageNum, this.pageSize, this.book)
       }
@@ -93,11 +99,8 @@ export default {
           if (res.data.data.list == null || res.data.data.list.length == 0) {
             this.$message('暂无数据')
           }
-          if (res.data.data.pageNum != this.pageNum) {
-            this.$message('没有更多了')
-            return
-          }
           this.bookList = this.bookList.concat(res.data.data.list)
+          // this.bookList = res.data.data.list
           this.bookList.map(book => {
             book.inputTime = moment(book.inputTime).format('YYYY-MM-DD')
             return book

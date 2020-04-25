@@ -62,7 +62,7 @@
               </el-cascader>
             </el-form-item>
             <el-form-item label="书籍描述" prop="bookDescribe">
-              <el-input :rows="4" maxlength="100"
+              <el-input :rows="6" maxlength="300"
                   show-word-limit type="textarea" v-model="book.bookDescribe"
                   style="width: 500px"></el-input>
             </el-form-item>
@@ -97,15 +97,15 @@ export default {
       bookRules: {
         bookName: [
           { required: true, message: '请输入书籍名称', trigger: 'blur' },
-          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+          { min: 3, max: 10, message: '长度在 1 到 100个字符', trigger: 'blur' }
         ],
         author: [
           { required: true, message: '请输入书籍作者', trigger: 'blur' },
-          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+          { min: 3, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur' }
         ],
         published: [
           { required: true, message: '请输入书籍出版社', trigger: 'blur' },
-          { min: 3, max: 15, message: '长度在 3 到 15 个字符', trigger: 'blur' }
+          { min: 3, max: 15, message: '长度在 1 到 20 个字符', trigger: 'blur' }
         ],
         price: [
           { required: true, message: '请输入书籍出版社', trigger: 'blur' },

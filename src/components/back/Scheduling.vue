@@ -109,7 +109,7 @@ export default {
     },
     methods: {
         executeOnce(index, row){
-            axios.get('/' + row.note + '/executeOnce').then ( res => {
+            axios.get('/' + row.taskCode + '/executeOnce').then ( res => {
                 if(res && res.data.code == 200){
                     this.$message(res.data.message)
                 } else {
@@ -121,7 +121,7 @@ export default {
             axios.put('/schedulingTask', row).then( res => {
                 if(res && res.data.code == 200){
                     var task = res.data.data
-                    axios.get('/' + task.note + '/changeTask').then( res => {
+                    axios.get('/' + task.taskCode + '/changeTask').then( res => {
                         if(res && res.data.code == 200){
                             this.$message(res.data.message)
                         } else {

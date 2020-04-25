@@ -60,7 +60,7 @@
               </el-cascader>
             </el-form-item>
             <el-form-item label="书籍描述" prop="bookDescribe">
-              <el-input :rows="4" maxlength="100"
+              <el-input :rows="6" maxlength="300"
                   show-word-limit type="textarea" v-model="book.bookDescribe"
                   style="width: 500px"></el-input>
             </el-form-item>
@@ -115,7 +115,7 @@
                 </el-upload>
               </el-form-item>
               <el-form-item label="书籍描述" prop="bookDescribe">
-                <el-input :rows="4" maxlength="100"
+                <el-input :rows="6" maxlength="300"
                     show-word-limit type="textarea" v-model="ebook.bookDescribe"
                     style="width: 500px"></el-input>
               </el-form-item>
@@ -177,15 +177,15 @@ export default {
       bookRules: {
         bookName: [
           { required: true, message: '请输入书籍名称', trigger: 'blur' },
-          { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
+          { min: 1, max: 50, message: '长度在 1 到 100 个字符', trigger: 'blur' }
         ],
         author: [
           { required: true, message: '请输入书籍作者', trigger: 'blur' },
-          { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
+          { min: 1, max: 30, message: '长度在 1 到 10 个字符', trigger: 'blur' }
         ],
         published: [
           { required: true, message: '请输入书籍出版社', trigger: 'blur' },
-          { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
+          { min: 1, max: 30, message: '长度在 1 到 20 个字符', trigger: 'blur' }
         ],
         price: [
           { required: true, message: '请输入书籍价格', trigger: 'blur' }
@@ -202,11 +202,11 @@ export default {
       ebookRules: {
         bookName: [
           { required: true, message: '请输入书籍名称', trigger: 'blur' },
-          { min: 1, max: 10, message: '长度在 3 到 50 个字符', trigger: 'blur' }
+          { min: 1, max: 10, message: '长度在 1 到 300 个字符', trigger: 'blur' }
         ],
         author: [
           { required: true, message: '请输入书籍作者', trigger: 'blur' },
-          { min: 1, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur' }
+          { min: 1, max: 30, message: '长度在 1 到 100 个字符', trigger: 'blur' }
         ],
         category: [
           // { type: 'array', required: true, message: '请至少选择类别', trigger: 'change' }

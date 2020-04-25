@@ -36,7 +36,7 @@
                     </el-upload>
                 </el-form-item>
               <el-form-item label="书籍描述" prop="bookDescribe">
-                <el-input :rows="4" maxlength="100"
+                <el-input :rows="6" maxlength="300"
                     show-word-limit type="textarea" v-model="ebook.bookDescribe"
                     style="width: 500px"></el-input>
               </el-form-item>
@@ -78,11 +78,11 @@ export default {
       ebookRules: {
         bookName: [
           { required: true, message: '请输入书籍名称', trigger: 'blur' },
-          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+          { min: 3, max: 10, message: '长度在 1 到 100 个字符', trigger: 'blur' }
         ],
         author: [
           { required: true, message: '请输入书籍作者', trigger: 'blur' },
-          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+          { min: 3, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur' }
         ],
         bookDescribe: [
           { required: true, message: '请填写书籍描述', trigger: 'blur' }
