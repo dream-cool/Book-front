@@ -13,7 +13,7 @@
                       >
                       <div class="el-upload__tip" slot="tip">只支持jpg/png/jpeg文件</div>
                         <el-avatar v-if="beforeUser.avatar != null "  fit="fill"
-                        :size="150"  :src='server_URL+"/download/"+beforeUser.avatar' style="float:left">{{beforeUser.userName}}</el-avatar>
+                        :size="150"  :src='beforeUser.avatar.substring(0, 7) == "http://" ? beforeUser.avatar : server_URL+"/download/"+beforeUser.avatar' style="float:left">{{beforeUser.userName}}</el-avatar>
                     </el-upload>
               </el-form-item>
               <el-form-item label="用户名">

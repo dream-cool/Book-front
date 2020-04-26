@@ -32,11 +32,11 @@
                       :on-success="handleEbookImgUploadSuccess">
                       <div class="el-upload__tip" slot="tip">只支持jpg/png/jpeg文件</div>
                           <el-avatar v-if="ebook.img != null "  shape="square"
-                          :size="150"  :src='server_URL+"/download/"+ebook.img' style="float:left">{{ebook.bookName}}</el-avatar>
+                          :size="150"  :src='ebook.img.substring(0, 7) == "http://" ? ebook.img  : server_URL+"/download/"+ebook.img' style="float:left">{{ebook.bookName}}</el-avatar>
                     </el-upload>
                 </el-form-item>
               <el-form-item label="书籍描述" prop="bookDescribe">
-                <el-input :rows="6" maxlength="300"
+                <el-input :rows="4" maxlength="100"
                     show-word-limit type="textarea" v-model="ebook.bookDescribe"
                     style="width: 500px"></el-input>
               </el-form-item>
@@ -78,11 +78,11 @@ export default {
       ebookRules: {
         bookName: [
           { required: true, message: '请输入书籍名称', trigger: 'blur' },
-          { min: 3, max: 10, message: '长度在 1 到 100 个字符', trigger: 'blur' }
+          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
         ],
         author: [
           { required: true, message: '请输入书籍作者', trigger: 'blur' },
-          { min: 3, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur' }
+          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
         ],
         bookDescribe: [
           { required: true, message: '请填写书籍描述', trigger: 'blur' }

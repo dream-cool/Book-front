@@ -34,12 +34,13 @@
 
       <div class="book">
         <div class="bookImg" style="float:left;margin-right: 5%; height: 500px" >
-          <el-avatar v-if="book.img != null" :size="300" shape="square"   :src="Server_URl+'/download/'+book.img" >
+          <el-avatar v-if="book.img != null" :size="300" shape="square" 
+           :src='book.img.substring(0, 7) == "http://" ? book.img :  Server_URl+"/download/"+book.img' >
            {{book.bookName}}
           </el-avatar>
         </div>
 
-        <div class="bookContent" style="margin-left: 100px;width:800px">
+        <div class="bookContent" style="margin-left: 100px;width:800px;height: 500px">
           <p style="color: #000;font-size: 25px;font-weight: bold">{{book.bookName}}</p>
            {{book.bookDescribe}}
            <br>
@@ -89,7 +90,8 @@
           <el-radio v-model="sortWay" @change="getCommentInfo(id, sortWay)" label="score">按评分排序</el-radio>
           <div v-for="(item,i) in comments" :key="i" class="comment-list" style="margin-top: 2%">
             <el-card style="width: 1000px">
-              <el-avatar class="header-img" :size="30" :src="Server_URl+'/download/'+item.avatar" style="float: left"></el-avatar>
+              <el-avatar class="header-img" :size="30" 
+              :src='item.avatar.substring(0, 7) == "http://" ? item.avatar : Server_URl+"/download/"+item.avatar' style="float: left"></el-avatar>
               <div class="author-info" style="margint-left:5%">
                   <span class="author-name" style="color: #000;font-size: 18px;font-weight: bold">
                       {{item.userName}}</span>
