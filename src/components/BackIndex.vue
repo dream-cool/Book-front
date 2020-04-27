@@ -2,7 +2,7 @@
   <div class="backIndex" style="width: 100%;height: 100%;" >
     <el-container style="width: 100%;height: 100%;">
         <el-aside width="200px" style="height: 100%;">
-          <el-menu  unique-opened
+          <el-menu  unique-opened  
             text-color="rgb(225,225,225)"
             background-color="#394458"
             default-active="/back/home" router >

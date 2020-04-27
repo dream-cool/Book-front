@@ -1,6 +1,6 @@
 <template>
   <div class="hello" >
-    <el-tabs type="border-card"  v-model="active"
+    <el-tabs type="border-card"  v-model="active" tab-position="left"
         @tab-click="handleTabChange">
         <el-tab-pane v-for="(item,index) in borrowingGroup" :key="index"
             :label="item.name" :name="item.name">

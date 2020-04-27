@@ -56,7 +56,7 @@
           <div v-for="(item,i) in records" :key="i" class="record-list" >
             <el-card style="margin-top: 20px" >
 
-                  <el-image class="header-img"  :src='Server_URL +"/download/"+ item.bookImg'
+                  <el-image class="header-img"  :src='item.bookImg.substring(0, 7) == "http://" ? item.bookImg : Server_URL +"/download/"+ item.bookImg'
                         style="float: left;height: 100px; width: 100px" @click="goToBookDetail(item.bookId)"></el-image>
                   <div class="author-info" style="margint-left:5%;height: 100px;">
                       <span class="author-name" style="color: #000;font-size: 18px;font-weight: bold">

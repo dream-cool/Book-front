@@ -1,18 +1,18 @@
 <template>
     <div>
       <template v-for="list in this.menuList">
-        <el-submenu style="margin-left: 10px" v-if="list.c != null && list.c.length>0" :key="list.l" :index="list.l"  >
+        <el-submenu style="margin-left: 10px" v-if="list[children] != null && list[children].length>0" :key="list[id]" :index="list[path]"  >
           <template slot="title"  >
-            <i :class="list.i"></i>
-            <span slot="title">{{ list.t}}</span>
+            <i :class="list[icon]"></i>
+            <span slot="title">{{ list[name]}}</span>
           </template>
           <el-menu-item-group>
-            <Menu :menuList="list.c"></Menu>
+            <Menu :menuList="list[children]"></Menu>
           </el-menu-item-group>
         </el-submenu>
-        <el-menu-item style="margin-left: 10px"  v-else :index="list.l"  :key="list.l">
-          <i :class="list.i"></i>
-          <span slot="title">{{list.t}}</span>
+        <el-menu-item style="margin-left: 10px"  v-else :index="list[path]"  :key="list[id]">
+          <i :class="list[icon]"></i>
+          <span slot="title">{{list[name]}}</span>
         </el-menu-item>
       </template>
     </div>
@@ -22,6 +22,7 @@
 import Menu from '../common/Menu.vue'
 export default{
   name: 'Menu',
+  props: ['menuList', 'id', 'name', 'path', 'icon', 'children'],
   data () {
     return {
 
@@ -29,7 +30,6 @@ export default{
   },
   beforeMount () {
   },
-  props: ['menuList'],
   components: {
     Menu: Menu
   }
