@@ -114,7 +114,7 @@ export default {
                   window.localStorage.setItem('rememberPassword', this.user.password)
                 }
                 if (res.data.data.userDetail.role == '2' || res.data.data.userDetail.role == '3') {
-                  this.$router.push({path: '/back'})
+                  this.$router.push({path: '/back/home'})
                 } else {
                   this.$router.push({path: '/front'})
                 }

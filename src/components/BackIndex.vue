@@ -97,7 +97,7 @@
             </div>
           <el-badge is-dot class="item" v-if="messageList.length > 0"> </el-badge>
             <el-dropdown  @command="handleCommand" style="margin-top:0.5%">
-            <el-avatar :size="50"  :src='user.avatar.substring(0, 7) == "http://" ? user.avatar : Server_URL+"/download/"+user.avatar' style="margin-right: 15px;">{{user.userName}}</el-avatar>
+            <el-avatar :size="50"  :src='(user.avatar != null && user.avatar.substring(0, 7) == "http://") ? user.avatar : Server_URL+"/download/"+user.avatar' style="margin-right: 15px;">{{user.userName}}</el-avatar>
               <el-dropdown-menu slot="dropdown" style="margin-top:-1%">
                 <el-dropdown-item command="userDetail">个人中心</el-dropdown-item>
                 <el-badge v-if="messageList.length > 0" :value="messageList.length" :max="99" class="item">

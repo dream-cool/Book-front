@@ -32,7 +32,7 @@
                       :on-success="handleEbookImgUploadSuccess">
                       <div class="el-upload__tip" slot="tip">只支持jpg/png/jpeg文件</div>
                           <el-avatar v-if="ebook.img != null "  shape="square"
-                          :size="150"  :src='ebook.img.substring(0, 7) == "http://" ? ebook.img  : server_URL+"/download/"+ebook.img' style="float:left">{{ebook.bookName}}</el-avatar>
+                          :size="150"  :src='ebook.img != null && ebook.img.substring(0, 7) == "http://" ? ebook.img  : server_URL+"/download/"+ebook.img' style="float:left">{{ebook.bookName}}</el-avatar>
                     </el-upload>
                 </el-form-item>
               <el-form-item label="书籍描述" prop="bookDescribe">
