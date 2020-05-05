@@ -27,14 +27,14 @@
 import axios from 'axios'
 import BorrowingStatistics from './BorrowingStatistics'
 export default {
-  components:{
+  components: {
     BorrowingStatistics
   },
   data () {
     this.extend = {
-        series: {
-          label: { show: true, position: "top" }
-        }
+      series: {
+        label: { show: true, position: 'top' }
+      }
     }
     return {
       chartData: {

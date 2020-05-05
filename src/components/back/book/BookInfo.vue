@@ -12,8 +12,7 @@
           </el-form-item>
 
           <el-form-item label="书籍状态" prop="status">
-            <el-select v-model="book.bookStatus" placeholder="书籍状态">
-              <el-option label="所有" :value='null'></el-option>
+            <el-select v-model="book.bookStatus" placeholder="全部" clearable>
               <el-option label="在库" value="0"></el-option>
               <el-option label="已借" value="1"></el-option>
               <el-option label="损坏" value="2"></el-option>
@@ -21,8 +20,7 @@
           </el-form-item>
 
           <el-form-item label="书籍类型" prop="ebook">
-            <el-select v-model="book.ebook" placeholder="书籍类型">
-              <el-option label="所有" :value='null'></el-option>
+            <el-select v-model="book.ebook" placeholder="全部" clearable> 
               <el-option label="纸质书" value="0"></el-option>
               <el-option label="电子书" value="1"></el-option>
             </el-select>
@@ -30,6 +28,8 @@
 
           <el-form-item label="书籍分类" prop="category">
             <el-cascader
+                  clearable
+                  placeholder="全部"
                   v-model="category"
                   :options="categoryList"
                   :props="optionProps"
@@ -206,7 +206,7 @@ export default {
       axios.get('/type/cascade').then(res => {
         if (res.data.code === 200) {
           this.categoryList = res.data.data
-          this.categoryList.push(this.none)
+          // this.categoryList.push(this.none)
           this.categoryList = this.getTreeData(this.categoryList)
         } else {
           this.$message.error(res.data.message)

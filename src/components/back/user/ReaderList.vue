@@ -37,22 +37,19 @@
             <el-input v-model="user.userName" placeholder="模糊查询用户姓名" ></el-input>
           </el-form-item>
           <el-form-item label="性别" prop="author">
-             <el-select v-model="user.sex" placeholder="书籍状态">
-              <el-option label="所有" :value='null'></el-option>
+             <el-select v-model="user.sex" placeholder="全部" clearable>
               <el-option label="男" value="1"></el-option>
               <el-option label="女" value="0"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="用户状态" prop="status">
-            <el-select v-model="user.status" placeholder="书籍状态">
-              <el-option label="所有" :value='null'></el-option>
+            <el-select v-model="user.status" placeholder="全部" clearable>
               <el-option label="正常" value="1"></el-option>
               <el-option label="锁定" value="0"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="角色" prop="">
-            <el-select v-model="user.role" placeholder="书籍类型">
-              <el-option label="所有" :value='null'></el-option>
+            <el-select v-model="user.role" placeholder="全部" clearable>
               <el-option label="学生" value="0"></el-option>
               <el-option label="老师" value="1"></el-option>
               <el-option label="管理员" value="2"></el-option>

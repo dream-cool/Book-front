@@ -4,7 +4,7 @@
         <el-col :span="3" v-for="(book,index) in bookList" :key="index" >
             <el-card :body-style="{ padding: '0px' }" style="width: 220px">
               <el-image v-if="book.img != null"  style="margin-left: 20px"
-                :src='Sever_URL + "/download/"+book.img'
+                :src='book.img.substring(0, 7) == "http://" ? book.img : Sever_URL + "/download/"+book.img'
                 @click="goToBookDetail(book.bookId)"
                 ></el-image>
               <div style="padding-left: 20px;padding-right: 20px;">
