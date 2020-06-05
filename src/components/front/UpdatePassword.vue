@@ -218,12 +218,7 @@ export default {
     },
     goToPersonal () {
       var currentPath = this._routerRoot._route.fullPath
-      if (currentPath.startsWith('/front')) {
-        this.$router.push({path: '/front/personal'})
-      }
-      if (currentPath.startsWith('/back')) {
-        this.$router.push({path: '/back/personal'})
-      }
+      this.$router.push({path: '/personal'})
     }
   }
 }

@@ -484,7 +484,7 @@ export default {
       }
     },
     goToEookRead () {
-      this.$router.push({path: '/front/ebookRead/' + this.id})
+      this.$router.push({path: '/ebookRead/' + this.id})
     },
     goToLogin () {
       this.$router.push({path: '/login'})

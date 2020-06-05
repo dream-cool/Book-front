@@ -107,7 +107,7 @@ export default {
           this.loading = true
           axios.get('/login?userName=' + this.user.userName + '&password=' + this.user.password).then(
             res => {
-              if (res.data.code == 200) {
+              if (res.data.code == 200 && res.data.data.userDetail.role == '1') {
                 window.localStorage.setItem('userDetail', JSON.stringify(res.data.data.userDetail))
                 window.localStorage.setItem('token', res.data.data.token)
                 this.$message(res.data.message)
@@ -115,18 +115,19 @@ export default {
                   window.localStorage.setItem('rememberUserName', this.user.userName)
                   window.localStorage.setItem('rememberPassword', this.user.password)
                 }
-                if (res.data.data.userDetail.role == '2' || res.data.data.userDetail.role == '3') {
-                  this.$router.push({path: '/back/home'})
-                } else {
-                  this.$router.push({path: '/front'})
-                }
+                this.$router.push({path: '/home'})
+              } else if (res.data.code == 200 && res.data.data.userDetail.role != '1') {
+                this.$message.error('登录失败，该账号为系统管理员账号，请登录后台系统')
               } else {
                 this.$message.error(res.data.message)
                 this.createCode()
               }
               this.loading = false
             }
-          )
+          ).catch(e => {
+            this.loading = false
+            this.$message.error('服务异常')
+          })
         } else {
           return false
         }

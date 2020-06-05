@@ -169,7 +169,7 @@ export default {
       document.body.scrollTop = document.documentElement.scrollTop = 0
     },
     backBookDeatil () {
-      this.$router.push({ path: '/front/bookDetail/' + this.$route.params.id })
+      this.$router.push({ path: '/bookDetail/' + this.$route.params.id })
     },
     getEbookContent (pageNum, pageSize) {
       const loading = this.$loading({

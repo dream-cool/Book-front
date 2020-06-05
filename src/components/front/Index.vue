@@ -123,7 +123,7 @@ export default {
     },
     goToBookDetail (bookId) {
       document.body.style.overflow = null
-      this.$router.push({path: '/front/bookDetail/' + bookId})
+      this.$router.push({path: '/bookDetail/' + bookId})
     },
     handleCurrentChange (val) {
       this.getBookInfo(val, this.pageSize, this.book)

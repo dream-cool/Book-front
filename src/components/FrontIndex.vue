@@ -3,25 +3,25 @@
     <el-container>
       <el-header>
         <el-menu
-          default-active="/front/home"
+          default-active="/home"
           class="el-menu-demo"
           mode="horizontal"
           router
           @select="handleSelect"
         >
-          <el-menu-item index="/front/home">
+          <el-menu-item index="/home">
             <p>首页</p>
           </el-menu-item>
-          <el-menu-item index="/front/recommendBook">
+          <el-menu-item index="/recommendBook">
             <p>推荐</p>
           </el-menu-item>
-          <el-menu-item index="/front/popularBook">
+          <el-menu-item index="/popularBook">
             <p>热门</p>
           </el-menu-item>
-          <el-menu-item index="/front/lendBook">
+          <el-menu-item index="/lendBook">
             <p>借出</p>
           </el-menu-item>
-          <el-menu-item index="/front/ebook">
+          <el-menu-item index="/ebook">
             <p>电子书</p>
           </el-menu-item>
 
@@ -30,15 +30,15 @@
               <template slot="title">
                 <el-avatar :size="50"  :src='(user.avatar != null && user.avatar.substring(0, 7) == "http://") ? user.avatar : Server_URL + "/download/"+user.avatar' style="margin-right: 15px;">{{user.userName}}</el-avatar>
               </template>
-              <el-menu-item index="/front/personal">个人中心</el-menu-item>
+              <el-menu-item index="/personal">个人中心</el-menu-item>
               <el-badge v-if="messageList.length > 0" :value="messageList.length" :max="99" class="item">
-                <el-menu-item index="/front/messageInfo">消息</el-menu-item>
+                <el-menu-item index="/messageInfo">消息</el-menu-item>
               </el-badge>
-              <el-menu-item v-else index="/front/messageInfo">消息</el-menu-item>
-              <el-menu-item index="/front/myborrowing">我的借阅</el-menu-item>
-              <el-menu-item index="/front/collection">我的收藏</el-menu-item>
+              <el-menu-item v-else index="/messageInfo">消息</el-menu-item>
+              <el-menu-item index="/myborrowing">我的借阅</el-menu-item>
+              <el-menu-item index="/collection">我的收藏</el-menu-item>
               <el-menu-item index="" @click="openReadRecord">浏览记录</el-menu-item>
-              <el-menu-item index="/front/updatePassword">修改密码</el-menu-item>
+              <el-menu-item index="/updatePassword">修改密码</el-menu-item>
               <el-menu-item index="" @click="logout">退出</el-menu-item>
             </el-submenu>
         </el-menu>
@@ -121,7 +121,7 @@ export default {
     },
     goToBookDetail (bookId) {
       document.body.style.overflow = null
-      this.$router.push({path: '/front/bookDetail/' + bookId})
+      this.$router.push({path: '/bookDetail/' + bookId})
       this.drawer = false
     },
     handleCurrentChange () {

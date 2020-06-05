@@ -179,7 +179,7 @@ export default {
     },
     goToBookDetail (bookId) {
       document.body.style.overflow = null
-      this.$router.push({path: '/front/bookDetail/' + bookId})
+      this.$router.push({path: '/bookDetail/' + bookId})
     },
     updateCollectionGroup (collectionGroup) {
       if (collectionGroup != null) {
