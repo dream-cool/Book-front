@@ -18,7 +18,7 @@
         <span class="demonstration" style="float:left;margin-left: 14%;">上传时间: {{data.book.inputTime}} </span>
         <span class="demonstration" style="float:left;margin-left: 14%;">大小: {{data.fileSize}}</span>
         <span class="demonstration" style="float:left;margin-left: 0%;">
-          <el-link type="primary" :href = 'URL'>下载</el-link>
+          <el-link type="primary" :href = '""+ URL + data.book.location'>下载</el-link>
         </span>
         <br>
         <br>
@@ -102,10 +102,12 @@ export default {
       )
         .then(res => {
           if (res.data.code == 200) {
-            debugger
             if (res.data.data.list != null && res.data.data.list.length > 0) {
               let recordNum = res.data.data.list[0].bookPage
               if (recordNum <= 1) {
+                return
+              }
+              if (this.pageNum != 1) {
                 return
               }
               this.$confirm('记忆您上次阅读到第' + recordNum + '页,是否跳转?', '提示', {
@@ -185,13 +187,16 @@ export default {
             this.pageNum = res.data.data.pageNum
             this.pageSize = res.data.data.pageSize
             this.total = res.data.data.total
-            this.URL = this.URL + res.data.data.book.location
             this.percentage = (this.pageNum / (this.total / this.pageSize) * 100)
             this.percentage = Number(this.percentage.toFixed(2))
           } else {
             this.$message.error(res.data.$message)
           }
           loading.close()
+        })
+        .catch(e => {
+          loading.close()
+          this.$message.error(e)
         })
     },
     goToLogin () {

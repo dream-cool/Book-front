@@ -81,7 +81,7 @@ export default new Router({
           component: Test,
           meta: {}
         },
-        {path: '/front/test1',
+        {path: '/oauth/callback',
           component: Test1,
           meta: {}
         },

@@ -1,8 +1,47 @@
 <template>
   <div class="hello" >
+    <el-form :model="book" :inline="true"  label-width="100px" class="demo-form-inline">
+          <el-form-item label="书籍名称">
+            <el-input suffix-icon="el-icon-search" placeholder="搜索"
+               v-model="book.bookName" >
+            </el-input>
+          </el-form-item>
+
+          <el-form-item label="价格大于" prop="price">
+            <el-input-number v-model="book.price" controls-position="right"
+                :min="0" :max="10000"></el-input-number>
+          </el-form-item>
+
+          <el-form-item label="点赞超过" prop="price">
+            <el-input-number v-model="book.price" controls-position="right"
+                :min="0" :max="10000"></el-input-number>
+          </el-form-item>
+
+          <el-form-item label="书籍分类" prop="category">
+            <el-cascader
+                  clearable
+                  placeholder="全部"
+                  v-model="category"
+                  :options="categoryList"
+                  :props="optionProps"
+                  :show-all-levels="false"
+                  change-on-select
+                  @change="handleCategoryChange">
+            </el-cascader>
+          </el-form-item>
+
+          <el-form-item label="录入日期早于">
+              <el-form-item prop="inputTime">
+                <el-date-picker  value-format="timestamp" type="date" placeholder="选择日期" v-model="time" ></el-date-picker>
+              </el-form-item>
+          </el-form-item>
+
+          <el-form-item style="margin-left: 100px">
+            <el-button type="primary" icon="el-icon-search" @click="search()">搜索</el-button>
+            <el-button type="info" @click="resetForm()">重置</el-button>
+          </el-form-item>
+        </el-form>
       <el-row>
-        <el-input suffix-icon="el-icon-search" placeholder="搜索"
-        v-model="book.bookName" @input="getBookInfo(pageNum, pageSize, book)" > </el-input>
       </el-row>
         <el-row :gutter="20" bodar>
           <el-col :span="3" v-for="(book,index) in bookList" :key="index" >
@@ -33,7 +72,6 @@
           :total="total">
         </el-pagination> -->
       </el-row>
-      {{aa}}
   </div>
 </template>
 
@@ -52,7 +90,6 @@ export default {
       total: 0,
       book: {
         ebook: 0,
-        bookStatus: '0',
         bookName: null
       },
       url: ''
@@ -71,7 +108,7 @@ export default {
   //   window.removeEventListener('scroll', this.scrollBottom)
   // },
   methods: {
-    loadMore(){
+    loadMore () {
       this.pageNum = this.pageNum + 1
       this.getBookInfo(this.pageNum, this.pageSize, this.book)
     },
@@ -90,6 +127,9 @@ export default {
     },
     handleCurrentChange (val) {
       this.getBookInfo(val, this.pageSize, this.book)
+    },
+    search () {
+
     },
     getBookInfo (pageNum, pageSize, book) {
       axios.post(
@@ -132,11 +172,8 @@ export default {
   border-radius:10px 10px;
 }
 .el-input{
-  margin-top: 20px;
   width: 400px;
-  border-style:solid;
   border-width:1px;
-  border-color: #409EFF;
   border-top-left-radius:6px;
   border-top-right-radius: 6px;
   border-bottom-left-radius: 6px;
