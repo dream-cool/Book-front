@@ -107,7 +107,7 @@ export default {
           this.loading = true
           axios.get('/login?userName=' + this.user.userName + '&password=' + this.user.password).then(
             res => {
-              if (res.data.code == 200) {
+              if (res.data.code == 200 && (res.data.data.userDetail.role == '2' || res.data.data.userDetail.role == '3')) {
                 window.localStorage.setItem('userDetail', JSON.stringify(res.data.data.userDetail))
                 window.localStorage.setItem('token', res.data.data.token)
                 this.$message(res.data.message)
@@ -115,13 +115,13 @@ export default {
                   window.localStorage.setItem('rememberUserName', this.user.userName)
                   window.localStorage.setItem('rememberPassword', this.user.password)
                 }
-                if (res.data.data.userDetail.role == '2' || res.data.data.userDetail.role == '3') {
-                  this.$router.push({path: '/back/home'})
-                } else {
-                  this.$router.push({path: '/front'})
-                }
+                this.$router.push({path: '/home'})
               } else {
-                this.$message.error(res.data.message)
+                if (res.data.data.userDetail.role == '1') {
+                  this.$message.error('请使用管理员账号登录')
+                } else {
+                  this.$message.error(res.data.message)
+                }
                 this.createCode()
               }
               this.loading = false

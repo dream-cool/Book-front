@@ -241,14 +241,14 @@ export default {
       this.multipleSelection = val
     },
     handleQuery (row) {
-      this.$router.push({path: '/back/book/bookDetail/' + row.bookId})
+      this.$router.push({path: '/book/bookDetail/' + row.bookId})
     },
     handleEdit (row) {
       console.log(row)
       if (row.ebook == 1) {
-        this.$router.push({path: '/back/book/updateEbook/' + row.bookId})
+        this.$router.push({path: '/book/updateEbook/' + row.bookId})
       } else {
-        this.$router.push({path: '/back/book/updateBook/' + row.bookId})
+        this.$router.push({path: '/book/updateBook/' + row.bookId})
       }
     },
     handleDelete (row) {

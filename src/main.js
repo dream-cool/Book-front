@@ -12,13 +12,9 @@ import 'nprogress/nprogress.css'
 NProgress.inc(0.5)
 NProgress.configure({ easing: 'ease', speed: 800, showSpinner: false })
 
-<<<<<<< HEAD
 // axios.defaults.baseURL = 'http://39.97.239.108:8090'
 axios.defaults.baseURL = 'http://127.0.0.1:8443'
-=======
-axios.defaults.baseURL = 'http://39.97.239.108:8090'
-// axios.defaults.baseURL = 'http://localhost:8090'
->>>>>>> 9e82edda9372c0cb4905c86f155748907c64c0f4
+
 axios.defaults.timeout = 5000
 
 Vue.config.productionTip = false

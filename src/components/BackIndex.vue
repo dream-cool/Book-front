@@ -5,81 +5,81 @@
           <el-menu  unique-opened  
             text-color="rgb(225,225,225)"
             background-color="#394458"
-            default-active="/back/home" router >
+            default-active="/home" router >
             <el-menu-item index="/" style="height: 60px;">
               <img :src="icon" width="40px" height="40px" class="img-style" style="margin-right: 5px">励新图书管理系统
               <!-- <i class="el-icon-s-home" style="font-size: 50px"></i> 登录 -->
             </el-menu-item>
-            <el-menu-item index="/back/home">
+            <el-menu-item index="/home">
               <i class="el-icon-s-home"></i>首页
             </el-menu-item>
-            <el-submenu index="/back/book"  v-if="user.permission.bookR == true || user.permission.bookW == true">
+            <el-submenu index="/book"  v-if="user.permission.bookR == true || user.permission.bookW == true">
               <template slot="title">
                 <i class="el-icon-notebook-1"></i>书籍
               </template>
-              <el-menu-item index="/back/book/bookInfo" v-if="user.permission.bookR == true" >
+              <el-menu-item index="/book/bookInfo" v-if="user.permission.bookR == true" >
               <i class="el-icon-view" ></i>书籍信息</el-menu-item>
-              <el-menu-item index="/back/book/bookList" v-if="user.permission.bookW == true" >
+              <el-menu-item index="/book/bookList" v-if="user.permission.bookW == true" >
               <i class="el-icon-edit" ></i>书籍列表</el-menu-item>
-              <el-menu-item index="/back/book/addBook" v-if="user.permission.bookW == true">
+              <el-menu-item index="/book/addBook" v-if="user.permission.bookW == true">
                 <i class="el-icon-plus"></i>新增书籍</el-menu-item>
             </el-submenu>
-            <el-menu-item index="/back/category/categoryList" v-if="user.permission.categoryW == true">
+            <el-menu-item index="/category/categoryList" v-if="user.permission.categoryW == true">
               <i class="el-icon-s-promotion"></i>书籍分类
             </el-menu-item>
-            <el-submenu index="/back/borrowing" v-if="user.permission.borrowingR == true || user.permission.borrowingW == true">
+            <el-submenu index="/borrowing" v-if="user.permission.borrowingR == true || user.permission.borrowingW == true">
               <template slot="title">
                 <i class="el-icon-document"></i>借阅
               </template>
-              <el-menu-item index="/back/borrowing/borrowingList" v-if="user.permission.borrowingR == true">
+              <el-menu-item index="/borrowing/borrowingList" v-if="user.permission.borrowingR == true">
               <i class="el-icon-view"></i>借阅信息</el-menu-item>
-              <el-menu-item index="/back/borrowing/handleBorrowing" v-if="user.permission.borrowingW == true">
+              <el-menu-item index="/borrowing/handleBorrowing" v-if="user.permission.borrowingW == true">
               <i class="el-icon-edit"></i>处理借阅</el-menu-item>
-              <el-menu-item index="/back/borrowing/handleReturn" v-if="user.permission.borrowingW == true">
+              <el-menu-item index="/borrowing/handleReturn" v-if="user.permission.borrowingW == true">
               <i class="el-icon-edit"></i>处理归还</el-menu-item>
             </el-submenu>
-            <el-submenu index="/back/user" v-if="user.permission.userR == true || user.permission.userW == true" >
+            <el-submenu index="/user" v-if="user.permission.userR == true || user.permission.userW == true" >
               <template slot="title">
                 <i class="el-icon-user-solid"></i>读者
               </template>
               <el-menu-item-group>
-                <el-menu-item index="/back/user/userInfo" v-if="user.permission.userR == true">
+                <el-menu-item index="/user/userInfo" v-if="user.permission.userR == true">
                 <i class="el-icon-view"></i>用户信息</el-menu-item>
-                <el-menu-item index="/back/user/userList" v-if="user.permission.userW == true">
+                <el-menu-item index="/user/userList" v-if="user.permission.userW == true">
                 <i class="el-icon-edit"></i>用户列表</el-menu-item>
-                <el-menu-item index="/back/user/addUser" v-if="user.permission.userW == true">
+                <el-menu-item index="/user/addUser" v-if="user.permission.userW == true">
                 <i class="el-icon-plus"></i>添加用户</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
-            <el-submenu index="/back/statistics" v-if="user.permission.statisticsR == true">
+            <el-submenu index="/statistics" v-if="user.permission.statisticsR == true">
               <template slot="title">
                 <i class="el-icon-s-data"></i>统计
               </template>
-              <el-menu-item index="/back/statistics/userStatisticsByTime">
+              <el-menu-item index="/statistics/userStatisticsByTime">
                 <i class="el-icon-user"></i>用户统计</el-menu-item>
-              <el-menu-item index="/back/statistics/storageStatisticsByTime">
+              <el-menu-item index="/statistics/storageStatisticsByTime">
                 <i class="el-icon-s-marketing"></i>藏量统计</el-menu-item>
-              <el-menu-item index="/back/statistics/categoryStatistics">
+              <el-menu-item index="/statistics/categoryStatistics">
                 <i class="el-icon-date"></i>占比统计</el-menu-item>
             </el-submenu>
-            <el-submenu index="/back/sys">
+            <el-submenu index="/sys">
               <template slot="title" >
                 <i class="el-icon-setting"></i>系统管理
               </template>
-              <el-menu-item index="/back/sys/sendMessage">
+              <el-menu-item index="/sys/sendMessage">
                 <i class="el-icon-message"></i>消息推送
               </el-menu-item>
-              <el-menu-item index="/back/sys/log">
+              <el-menu-item index="/sys/log">
                 <i class="el-icon-postcard"></i>日志记录
               </el-menu-item>
-              <el-menu-item index="/back/sys/scheduling">
+              <el-menu-item index="/sys/scheduling">
                 <i class="el-icon-alarm-clock"></i>定时任务
               </el-menu-item>
-              <el-menu-item index="/back/sys/dictionary">
+              <el-menu-item index="/sys/dictionary">
                 <i class="el-icon-notebook-2"></i>字典管理
               </el-menu-item>
             </el-submenu>
-            <el-menu-item index="/back/grantPrivilege" v-if="user.role == '3'" >
+            <el-menu-item index="/grantPrivilege" v-if="user.role == '3'" >
               <i class="el-icon-lock"></i>权限
             </el-menu-item>
           </el-menu>
@@ -162,16 +162,16 @@ export default {
     },
     handleCommand (com) {
       if (com == 'userDetail') {
-        this.$router.push({path: '/back/personal'})
+        this.$router.push({path: '/personal'})
       }
       if (com == 'logout') {
         this.logout()
       }
       if (com == 'queryMessage') {
-        this.$router.push({path: '/back/messageInfo'})
+        this.$router.push({path: '/messageInfo'})
       }
       if (com == 'updatePassword') {
-        this.$router.push({path: '/back/updatePassword'})
+        this.$router.push({path: '/updatePassword'})
       }
     },
     logout () {
