@@ -28,7 +28,7 @@
           <el-menu-item v-if="user == null" index="/login" style="float: right;width: 100px"> <p>登录</p> </el-menu-item>
             <el-submenu index="" v-if="user != null"  style="float: right;width: 100px;">
               <template slot="title">
-                <el-avatar :size="50"  :src='user.avatar.substring(0, 7) == "http://" ? user.avatar : Server_URL + "/download/"+user.avatar' style="margin-right: 15px;">{{user.userName}}</el-avatar>
+                <el-avatar :size="50"  :src='(user.avatar != null && user.avatar.substring(0, 7) == "http://") ? user.avatar : Server_URL + "/download/"+user.avatar' style="margin-right: 15px;">{{user.userName}}</el-avatar>
               </template>
               <el-menu-item index="/front/personal">个人中心</el-menu-item>
               <el-badge v-if="messageList.length > 0" :value="messageList.length" :max="99" class="item">
@@ -189,8 +189,8 @@ export default {
 
 .el-container{
   margin-top: 30px;
-  margin-left: 200px;
-  margin-right: 200px
+  margin-left: 13%;
+  margin-right: 10%
 }
 
 .el-menu-item {

@@ -46,8 +46,8 @@
         <el-row :gutter="20" bodar>
           <el-col :span="3" v-for="(book,index) in bookList" :key="index" >
               <el-card :body-style="{ padding: '0px' }" style="width: 220px;height:300px">
-                <el-image v-if="book.img != null"  style="margin-left: 20px"
-                  :src='book.img.substring(0, 7) == "http://" ? book.img : Sever_URL + "/download/"+book.img'
+                <el-image  style="margin-left: 20px"
+                  :src='book.img != null && book.img.substring(0, 7) == "http://" ? book.img : Sever_URL + "/download/"+book.img'
                   @click="goToBookDetail(book.bookId)"
                   ></el-image>
                 <div style="padding-left: 20px;padding-right: 20px;">
