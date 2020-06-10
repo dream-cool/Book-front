@@ -116,7 +116,7 @@ export default {
                   window.localStorage.setItem('rememberPassword', this.user.password)
                 }
                 this.$router.push({path: '/home'})
-              } else if (res.data.code == 200 && res.data.data.userDetail.role == '0' &&res.data.data.userDetail.role != '1') {
+              } else if (res.data.code == 200) {
                 this.$message.error('登录失败，该账号为系统管理员账号，请登录后台系统')
               } else {
                 this.$message.error(res.data.message)
