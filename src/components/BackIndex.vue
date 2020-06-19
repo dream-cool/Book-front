@@ -2,7 +2,7 @@
   <div class="backIndex" style="width: 100%;height: 100%;" >
     <el-container style="width: 100%;height: 100%;">
         <el-aside width="200px" style="height: 100%;">
-          <el-menu  unique-opened  
+          <el-menu  unique-opened
             text-color="rgb(225,225,225)"
             background-color="#394458"
             default-active="/home" router >
@@ -85,7 +85,7 @@
           </el-menu>
         </el-aside>
       <el-container>
-        
+
         <el-header style="text-align: right; font-size: 12px; background-color: rgb(238, 241, 246)">
          <div class="navbar clearfix" style="margin-top: 2%;float:left">
               <el-breadcrumb  separator-class="el-icon-arrow-right" style="font-size:15px" >
