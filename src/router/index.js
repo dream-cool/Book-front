@@ -53,6 +53,7 @@ const RecoverPassword = resolve => require(['@/components/RecoverPassword.vue'],
 const SendMessage = resolve => require(['@/components/back/SendMessage.vue'], resolve)
 const Scheduling = resolve => require(['@/components/back/Scheduling.vue'], resolve)
 const SysLog = resolve => require(['@/components/back/SysLog.vue'], resolve)
+const Chatroom = resolve => require(['@/components/Chatroom.vue'], resolve)
 
 export default new Router({
   mode: 'history',
@@ -162,6 +163,7 @@ export default new Router({
           name: '我的信息',
           meta: { requireAuth: true }
         },
+        {path: '/chatroom/:id', component: Chatroom},
         {
           path: '/back/personal',
           component: Personal,

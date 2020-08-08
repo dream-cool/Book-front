@@ -177,6 +177,7 @@ export default {
     logout () {
       window.localStorage.removeItem('userDetail')
       window.localStorage.removeItem('token')
+      this.websocket.close()
       this.$router.push({path: '/login'})
     },
     getMessage (pageNum, pageSize, message) {

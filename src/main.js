@@ -12,13 +12,8 @@ import 'nprogress/nprogress.css'
 NProgress.inc(0.5)
 NProgress.configure({ easing: 'ease', speed: 800, showSpinner: false })
 
-<<<<<<< HEAD
 // axios.defaults.baseURL = 'http://39.97.239.108:8090'
 axios.defaults.baseURL = 'http://127.0.0.1:8443'
-=======
-axios.defaults.baseURL = 'http://39.97.239.108:8090'
-// axios.defaults.baseURL = 'http://localhost:8090'
->>>>>>> 9e82edda9372c0cb4905c86f155748907c64c0f4
 axios.defaults.timeout = 5000
 
 Vue.config.productionTip = false
@@ -133,6 +128,43 @@ router.beforeEach((to, from, next) => {
 router.afterEach(route => {
   NProgress.done()
 })
+
+Vue.prototype.websocket = null
+
+Vue.prototype.conectWebSocket =  function(userName) {
+
+    if ("WebSocket" in window) {
+      this.websocket = new WebSocket(
+        "ws://localhost:8443/websocket/" + userName
+      );
+    } else {
+      alert("不支持建立socket连接");
+    }
+
+    //连接发生错误的回调方法
+    this.websocket.onerror = function() {};
+    //连接成功建立的回调方法
+    this.websocket.onopen = function(event) {};
+    //接收到消息的回调方法
+    var that = this;
+    this.websocket.onmessage = function(event) {
+      var object = eval("("+ event.data+")")
+      console.log(object);
+      if (object.type == 0) {
+        that.$message('连接成功')
+      }
+      if (object.type == 1) {
+        that.messageList.push(object);
+      }
+    };
+    //连接关闭的回调方法
+    this.websocket.onclose = function() {}
+    
+    //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+    window.onbeforeunload = function() { this.websocket.close() }
+
+}
+
 
 /* eslint-disable no-new */
 new Vue({

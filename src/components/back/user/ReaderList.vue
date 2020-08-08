@@ -121,29 +121,29 @@
             prop="sex"
             :formatter="userSexFormatter"
             label="性别"
-            width="100">
+            width="50">
           </el-table-column>
           <el-table-column
             prop="sex"
             :formatter="userStatusFormatter"
             label="状态"
-            width="100">
+            width="70">
           </el-table-column>
           <el-table-column
             prop="tel"
             label="电话"
-            width="120">
+            width="100">
           </el-table-column>
           <el-table-column
             prop="address"
             label="地址"
             :formatter="userAddressFormatter"
-            width="200">
+            width="180">
           </el-table-column>
           <el-table-column
             prop="registerTime"
             label="注册时间"
-            width="200">
+            width="180">
           </el-table-column>
           <el-table-column
             prop="lastLoginTime"
@@ -152,9 +152,10 @@
           </el-table-column>
           <el-table-column
             label="操作"
-            width="350"
+            width="500"
             >
             <template slot-scope="scope">
+              <el-button type="primary" @click="handleSendMessage(scope.row)"    icon="el-icon-thumb">发送消息</el-button>
               <el-button type="primary" @click="handleEdit(scope.row)"    icon="el-icon-edit">编辑</el-button>
               <el-button type="primary" @click="handleResetPassword(scope.row)"  icon="el-icon-refresh"  >重置密码</el-button>
               <el-button @click="handleDelete(scope.row)" type="danger"   icon="el-icon-delete">删除</el-button>
@@ -260,6 +261,9 @@ export default {
     },
     handleSelectionChange (val) {
       this.multipleSelection = val
+    },
+    handleSendMessage (row) {
+      this.$router.push({path: '/chatroom/' + row.userId})
     },
     handleResetPassword (row) {
       this.$confirm('确认重置？')

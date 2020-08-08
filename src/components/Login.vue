@@ -48,6 +48,8 @@ import axios from 'axios'
 import login from '../assets/imgages/login_banenr.jpg'
 import SIdentify from '../components/common/SIdentify'
 
+
+
 export default {
   name: 'HelloWorld',
   components: {
@@ -78,7 +80,7 @@ export default {
           { required: true, message: '请输入密码', trigger: 'blur' }
         ],
         code: [
-          { required: true, message: '请输入验证码', trigger: 'blur' }
+          { required: false, message: '请输入验证码', trigger: 'blur' }
         ]
       },
       backgroundDiv: {
@@ -93,18 +95,20 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          const code = this.user.code.toUpperCase()
-          if (this.identifyCode !== code) {
-            this.$message.error('验证码错误，请重试')
-            this.user.code = ''
-            this.createCode()
-            return false
-          }
+          // const code = this.user.code.toUpperCase()
+          // if (this.identifyCode !== code) {
+          //   this.$message.error('验证码错误，请重试')
+          //   this.user.code = ''
+          //   this.createCode()
+          //   return false
+          // }
           if (!this.rememberMe) {
             window.localStorage.removeItem('rememberUserName')
             window.localStorage.removeItem('rememberPassword')
           }
           this.loading = true
+
+          debugger
           axios.get('/login?userName=' + this.user.userName + '&password=' + this.user.password).then(
             res => {
               if (res.data.code == 200) {
@@ -117,6 +121,7 @@ export default {
                 }
                 if (res.data.data.userDetail.role == '2' || res.data.data.userDetail.role == '3') {
                   this.$router.push({path: '/back/home'})
+                  // this.conectWebSocket(res.data.data.userDetail.userName)
                 } else {
                   this.$router.push({path: '/front'})
                 }
@@ -155,6 +160,42 @@ export default {
           window.location.href = res.data
         }
       })
+    },
+    conectWebSocket(userName) {
+        if ("WebSocket" in window) {
+          this.websocket = new WebSocket(
+            "ws://localhost:8443/websocket/" + userName
+          );
+          Vue.prototype.websocket = this.websocket
+        } else {
+          this.$message.error('该浏览器不支持建立socket连接，无法实现在线聊天')
+        }
+        //连接发生错误的回调方法
+        this.websocket.onerror = function() {
+          this.$message.error('socket连接建立失败，请检查网络')
+        };
+        var that = this
+        //连接成功建立的回调方法
+        this.websocket.onopen = function(event) {
+          var user = JSON.parse(window.localStorage.getItem('userDetail'))
+          axios.get('/message/unreadMessageCount/' + userName).then (res => {
+            if (res && res.status == 200 && res.data.data > 0){
+              var msgCount = res.data.data;
+              that.$notify.info({
+                title: '消息',
+                message: '您有'+ msgCount +'条未读消息',
+                onClick: function() {
+                            that.$router.push( {path: '/chatroom/' + user.userId} )
+                         }
+              });
+            }
+          })
+        };
+
+        //连接关闭的回调方法
+        this.websocket.onclose = function() {}
+        //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+        window.onbeforeunload = function() { this.websocket.close() }
     }
   }
 }
